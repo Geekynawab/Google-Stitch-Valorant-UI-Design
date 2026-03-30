@@ -1,0 +1,21 @@
+{
+  "general": {
+    "add_to_cart": "ADD TO LOADOUT",
+    "sold_out": "OUT OF STOCK",
+    "unavailable": "UNAVAILABLE",
+    "view_all": "VIEW ALL",
+    "quantity": "QTY",
+    "remove": "REMOVE",
+    "subtotal": "SUBTOTAL",
+    "checkout": "PROCEED TO CHECKOUT",
+    "continue_shopping": "CONTINUE SHOPPING",
+    "free_shipping_threshold": "FREE SHIPPING OVER $75"
+  },
+  "products": {
+    "product": {
+      "quantity": {
+        "label": "Quantity"
+      }
+    }
+  }
+}

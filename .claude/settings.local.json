@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__stitch__create_project",
+      "mcp__stitch__list_screens",
+      "mcp__stitch__list_projects",
+      "mcp__stitch__generate_screen_from_text",
+      "mcp__stitch__get_project",
+      "mcp__stitch__get_screen",
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "Bash(curl -s \"https://api.github.com/users/Geekynawab\")",
+      "Bash(curl -s \"https://api.github.com/users/geekynawab\")",
+      "Bash(curl -s \"https://api.github.com/users/Geekynawab/repos?per_page=100\")",
+      "Bash(node -e \"const d=require\\(''''fs''''\\).readFileSync\\(''''/dev/stdin'''',''''utf8''''\\); const r=JSON.parse\\(d\\); r.forEach\\(x=>console.log\\(x.name,''''|'''',x.private,''''|'''',x.default_branch\\)\\)\")",
+      "Bash(curl:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}
