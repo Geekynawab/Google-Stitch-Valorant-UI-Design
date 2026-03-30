@@ -1,0 +1,51 @@
+<header class="site-header" role="banner">
+  <div class="site-header__inner">
+
+    <a href="/" class="site-header__logo">
+      {{ section.settings.logo_text }}
+    </a>
+
+    <nav role="navigation" aria-label="Main navigation">
+      <ul class="site-header__nav">
+        {%- for link in linklists[section.settings.menu].links -%}
+          <li>
+            <a href="{{ link.url }}"
+               {%- if link.active %} class="active"{% endif -%}>
+              {{ link.title }}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <a href="/cart" class="site-header__cart-icon" aria-label="Cart ({{ cart.item_count }} items)">
+        <span class="material-symbols-outlined">shopping_bag</span>
+        {%- if cart.item_count > 0 -%}
+          <span class="cart-count">{{ cart.item_count }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "VALORANT REPLICAS"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}
