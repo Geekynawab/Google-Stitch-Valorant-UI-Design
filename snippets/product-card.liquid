@@ -1,0 +1,62 @@
+{%- comment -%}
+  Renders a product card with HUD hover overlay.
+  Usage: {% render 'product-card', product: product %}
+{%- endcomment -%}
+
+<div class="product-card">
+
+  {%- if product.tags contains 'limited' or product.tags contains 'Limited Edition' -%}
+    <div class="product-card__badge">Limited Edition</div>
+  {%- elsif product.tags contains 'bestseller' -%}
+    <div class="product-card__badge" style="background:var(--color-surface-bright);color:var(--color-on-surface);">Best Seller</div>
+  {%- endif -%}
+
+  <div class="product-card__image-wrap">
+    {%- if product.featured_image -%}
+      <img src="{{ product.featured_image | image_url: width: 600 }}"
+           alt="{{ product.featured_image.alt | escape | default: product.title }}"
+           width="600" height="600"
+           loading="lazy">
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag }}
+    {%- endif -%}
+
+    <div class="product-card__hud">
+      <div class="product-card__spec">
+        <span>Material</span>
+        <span>{{ product.type | upcase | default: '440C STEEL' }}</span>
+      </div>
+      <div class="product-card__spec">
+        <span>Weight</span>
+        <span>
+          {%- assign weight_g = product.variants.first.weight | times: 1000 | round -%}
+          {%- if weight_g > 0 -%}{{ weight_g }}G{%- else -%}&mdash;{%- endif -%}
+        </span>
+      </div>
+      <div class="product-card__spec">
+        <span>Vendor</span>
+        <span>{{ product.vendor | upcase | default: '&mdash;' }}</span>
+      </div>
+      <form action="/cart/add" method="post">
+        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="product-card__add-btn">
+          {{ 'general.add_to_cart' | t }}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="product-card__info">
+    <a href="{{ product.url }}">
+      <h4 class="product-card__title">{{ product.title }}</h4>
+    </a>
+    <div class="product-card__price-row">
+      {%- render 'price', product: product -%}
+      <span class="product-card__stock">
+        {%- if product.available -%}In Stock{%- else -%}Sold Out{%- endif -%}
+      </span>
+    </div>
+  </div>
+
+</div>

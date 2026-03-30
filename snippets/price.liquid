@@ -1,0 +1,16 @@
+{%- comment -%}
+  Renders price with optional compare-at.
+  Usage: {% render 'price', product: product %}
+         {% render 'price', variant: variant %}
+{%- endcomment -%}
+
+{%- assign target = variant | default: product -%}
+{%- assign compare_at = target.compare_at_price -%}
+{%- assign price = target.price -%}
+
+<span class="product-card__price">{{ price | money }}</span>
+{%- if compare_at > price -%}
+  <span class="product-card__compare-price" style="color:rgba(217,227,242,0.4);text-decoration:line-through;font-size:0.875rem;margin-left:0.5rem;">
+    {{ compare_at | money }}
+  </span>
+{%- endif -%}

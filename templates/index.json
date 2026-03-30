@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-banner",
+      "settings": {}
+    },
+    "trust": {
+      "type": "trust-bar",
+      "block_order": ["trust_1","trust_2","trust_3","trust_4"],
+      "blocks": {
+        "trust_1": { "type": "item", "settings": { "icon": "public", "label": "WORLDWIDE SHIPPING" } },
+        "trust_2": { "type": "item", "settings": { "icon": "verified_user", "label": "SECURE CHECKOUT" } },
+        "trust_3": { "type": "item", "settings": { "icon": "workspace_premium", "label": "SATISFACTION GUARANTEED" } },
+        "trust_4": { "type": "item", "settings": { "icon": "precision_manufacturing", "label": "HAND-FORGED QUALITY" } }
+      }
+    },
+    "categories": {
+      "type": "category-grid",
+      "block_order": ["cat_1","cat_2","cat_3","cat_4"],
+      "blocks": {
+        "cat_1": { "type": "category", "settings": { "title": "KARAMBITS" } },
+        "cat_2": { "type": "category", "settings": { "title": "BUTTERFLY KNIVES" } },
+        "cat_3": { "type": "category", "settings": { "title": "BAYONETS" } },
+        "cat_4": { "type": "category", "settings": { "title": "KEYCHAINS" } }
+      }
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {
+        "eyebrow": "Deployment Ready",
+        "heading": "BESTSELLERS",
+        "product_count": 4
+      }
+    }
+  },
+  "order": ["hero","trust","categories","featured"]
+}
