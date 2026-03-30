@@ -1,0 +1,43 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "KnivesFactory Stitch",
+    "theme_version": "1.0.0",
+    "theme_author": "KnivesFactory",
+    "theme_documentation_url": "https://github.com/Geekynawab/Google-Stitch-Valorant-UI-Design",
+    "theme_support_url": "https://github.com/Geekynawab/Google-Stitch-Valorant-UI-Design"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent color",
+        "default": "#ff5262",
+        "info": "Used for CTAs, prices, and active states"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Page background",
+        "default": "#0a141e"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "select",
+        "id": "heading_font",
+        "label": "Heading font",
+        "options": [
+          { "value": "'Space Grotesk', sans-serif", "label": "Space Grotesk" },
+          { "value": "'Inter', sans-serif", "label": "Inter" }
+        ],
+        "default": "'Space Grotesk', sans-serif"
+      }
+    ]
+  }
+]
