@@ -1,0 +1,70 @@
+<!-- About hero -->
+<div class="about-hero">
+  <div class="container">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;color:var(--color-primary);">
+      <span style="height:2px;width:3rem;background:var(--color-primary);display:inline-block;"></span>
+      <span class="label">{{ section.settings.eyebrow }}</span>
+    </div>
+    <h1>{{ section.settings.heading }}</h1>
+  </div>
+</div>
+
+<!-- About body -->
+<section class="about-body">
+  <div class="container">
+    <div class="about-body__grid">
+
+      <div>
+        <span class="section-header__eyebrow" style="margin-bottom:var(--space-4);display:block;">
+          {{ section.settings.subheading }}
+        </span>
+        <div style="color:var(--color-on-surface-variant);line-height:1.8;font-size:1.125rem;">
+          {{ section.settings.body | newline_to_br }}
+        </div>
+
+        <div class="about-disclaimer">
+          {{ section.settings.disclaimer }}
+        </div>
+      </div>
+
+      {%- if section.settings.image != blank -%}
+        <div class="about-body__image">
+          <img src="{{ section.settings.image | image_url: width: 900 }}"
+               alt="{{ section.settings.image.alt | escape | default: shop.name }}"
+               width="900" height="675"
+               loading="lazy">
+        </div>
+      {%- else -%}
+        <div class="about-body__image">
+          {{ 'product-2' | placeholder_svg_tag }}
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Page",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Our Story" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "OUR MISSION" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "FORGED FOR COLLECTORS" },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body text",
+      "default": "KnivesFactory was founded by a team of Valorant fans who couldn't find high-quality physical replicas of their favourite in-game skins. We hand-craft every piece from premium 440C stainless steel with meticulous attention to detail — so you can hold a piece of the game in your hands."
+    },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "Not affiliated with Riot Games. VALORANT and all related marks are trademarks of Riot Games, Inc."
+    }
+  ],
+  "presets": [{ "name": "About Page" }]
+}
+{% endschema %}

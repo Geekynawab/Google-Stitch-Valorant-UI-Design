@@ -1,0 +1,141 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<section class="product-page">
+  <div class="container">
+    <div class="product-page__grid">
+
+      <!-- Gallery -->
+      <div class="product-page__gallery">
+        <div class="product-gallery__main">
+          {%- if product.featured_image -%}
+            <img id="main-product-image"
+                 src="{{ current_variant.image | default: product.featured_image | image_url: width: 800 }}"
+                 alt="{{ product.featured_image.alt | escape | default: product.title }}"
+                 width="800" height="800">
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag }}
+          {%- endif -%}
+        </div>
+
+        {%- if product.images.size > 1 -%}
+          <div class="product-gallery__thumbs">
+            {%- for image in product.images limit: 6 -%}
+              <div class="product-gallery__thumb{%- if forloop.first %} active{%- endif -%}">
+                <img src="{{ image | image_url: width: 120 }}"
+                     alt="{{ image.alt | escape }}"
+                     width="120" height="120"
+                     loading="lazy">
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Info -->
+      <div class="product-info">
+
+        <h1 class="product-info__title">{{ product.title }}</h1>
+
+        <div class="product-info__price">
+          {%- render 'price', variant: current_variant -%}
+        </div>
+
+        <!-- HUD chips -->
+        <div class="hud-chips">
+          {%- if product.type != blank -%}
+            <div class="hud-chip">MATERIAL: {{ product.type | upcase }}</div>
+          {%- endif -%}
+          {%- assign weight_g = current_variant.weight | times: 1000 | round -%}
+          {%- if weight_g > 0 -%}
+            <div class="hud-chip">WEIGHT: {{ weight_g }}G</div>
+          {%- endif -%}
+          {%- if product.vendor != blank -%}
+            <div class="hud-chip">VENDOR: {{ product.vendor | upcase }}</div>
+          {%- endif -%}
+          {%- for tag in product.tags -%}
+            {%- if tag contains 'length:' -%}
+              <div class="hud-chip">{{ tag | upcase }}</div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <form action="/cart/add" method="post">
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+          <!-- Variants -->
+          {%- unless product.has_only_default_variant -%}
+            <div class="product-info__variants">
+              {%- for option in product.options_with_values -%}
+                <span class="variant-label">{{ option.name }}</span>
+                <div class="variant-buttons">
+                  {%- for value in option.values -%}
+                    {%- assign variant_for_value = product.variants | where: 'option1', value | first -%}
+                    <button type="button"
+                            class="variant-btn{%- if option.selected_value == value %} active{%- endif -%}"
+                            data-variant-id="{{ variant_for_value.id }}"
+                            {%- unless variant_for_value.available %} disabled{%- endunless -%}>
+                      {{ value }}
+                    </button>
+                  {%- endfor -%}
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endunless -%}
+
+          <!-- Quantity -->
+          <div class="product-info__quantity">
+            <span class="variant-label">Quantity</span>
+            <div class="quantity-stepper">
+              <button type="button" data-qty-minus aria-label="Decrease">&minus;</button>
+              <input type="number" name="quantity" value="1" min="1" aria-label="Quantity">
+              <button type="button" data-qty-plus aria-label="Increase">+</button>
+            </div>
+          </div>
+
+          {%- if current_variant.available -%}
+            <button type="submit" class="btn-primary product-info__add-btn">
+              {{ 'general.add_to_cart' | t }}
+            </button>
+          {%- else -%}
+            <button type="button" class="btn-primary product-info__add-btn" disabled style="opacity:0.5;cursor:not-allowed;">
+              {{ 'general.sold_out' | t }}
+            </button>
+          {%- endif -%}
+
+        </form>
+
+        {%- if product.description != blank -%}
+          <div class="product-info__description">
+            {{ product.description }}
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+
+    <!-- Related products -->
+    {%- if product.collections.size > 0 -%}
+      {%- assign related = collections[product.collections.first.handle] -%}
+      {%- if related.products.size > 1 -%}
+        <div style="margin-top:var(--space-24);">
+          <h2 style="margin-bottom:var(--space-8);">RELATED PRODUCTS</h2>
+          <div class="products-grid">
+            {%- for p in related.products limit: 5 -%}
+              {%- unless p.id == product.id -%}
+                {%- render 'product-card', product: p -%}
+              {%- endunless -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Page",
+  "settings": []
+}
+{% endschema %}

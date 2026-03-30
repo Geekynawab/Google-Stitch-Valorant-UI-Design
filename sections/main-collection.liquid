@@ -1,0 +1,61 @@
+<!-- Collection header -->
+<div class="collection-header">
+  <div class="container">
+    <div class="collection-header__eyebrow">
+      <span style="height:2px;width:3rem;background:var(--color-primary);display:inline-block;vertical-align:middle;margin-right:1rem;"></span>
+      <span class="label" style="color:var(--color-primary);">{{ collection.title }}</span>
+    </div>
+    <h1>{{ collection.title }}</h1>
+    <p class="collection-header__meta">{{ collection.products_count }} PRODUCTS</p>
+  </div>
+</div>
+
+<!-- Product grid -->
+<section class="section collection-grid-section">
+  <div class="container">
+
+    {%- paginate collection.products by section.settings.products_per_page -%}
+
+      <div class="collection-grid">
+        {%- for product in collection.products -%}
+          {%- render 'product-card', product: product -%}
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" aria-label="Pagination">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}">&larr;</a>
+          {%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}">{{ part.title }}</a>
+            {%- else -%}
+              <span {%- if part.title == paginate.current_page %} class="current"{%- endif -%}>{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}">&rarr;</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+
+    {%- endpaginate -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Page",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8, "max": 48, "step": 4,
+      "default": 12
+    }
+  ]
+}
+{% endschema %}

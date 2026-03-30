@@ -1,0 +1,98 @@
+<section class="cart-page">
+  <div class="container">
+
+    {%- if cart.item_count == 0 -%}
+      <div class="cart-empty">
+        <h2>YOUR ARSENAL IS EMPTY</h2>
+        <p style="margin-bottom:var(--space-8);">Add some tactical gear to get started.</p>
+        <a href="/collections/all" class="btn-primary">SHOP NOW</a>
+      </div>
+
+    {%- else -%}
+      <h1 style="margin-bottom:var(--space-12);">YOUR ARSENAL</h1>
+
+      <form action="/cart" method="post" class="cart-page__grid">
+
+        <!-- Line items -->
+        <div class="cart-items">
+          {%- for item in cart.items -%}
+            <div class="cart-item">
+              <div class="cart-item__image">
+                <a href="{{ item.url }}">
+                  <img src="{{ item.image | image_url: width: 200 }}"
+                       alt="{{ item.image.alt | escape | default: item.title }}"
+                       width="200" height="200"
+                       loading="lazy">
+                </a>
+              </div>
+
+              <div>
+                <h4 class="cart-item__title">
+                  <a href="{{ item.url }}">{{ item.product.title }}</a>
+                </h4>
+                {%- unless item.variant.title == 'Default Title' -%}
+                  <p class="cart-item__variant">{{ item.variant.title }}</p>
+                {%- endunless -%}
+
+                <div class="cart-item__actions">
+                  <div class="quantity-stepper">
+                    <button type="button" data-qty-minus aria-label="Decrease">&minus;</button>
+                    <input type="number"
+                           name="updates[]"
+                           data-cart-qty="{{ item.key }}"
+                           value="{{ item.quantity }}"
+                           min="0"
+                           aria-label="Quantity for {{ item.title | escape }}">
+                    <button type="button" data-qty-plus aria-label="Increase">+</button>
+                  </div>
+
+                  <span class="cart-item__price">{{ item.line_price | money }}</span>
+
+                  <button type="button"
+                          class="cart-item__remove"
+                          data-cart-remove="{{ item.key }}">
+                    {{ 'general.remove' | t }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <!-- Summary -->
+        <div class="cart-summary">
+          <h3 class="cart-summary__title">ORDER SUMMARY</h3>
+
+          <div class="cart-summary__row">
+            <span>{{ 'general.subtotal' | t }}</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+
+          <div class="cart-summary__total">
+            <span>TOTAL</span>
+            <span class="cart-summary__total-price">{{ cart.total_price | money }}</span>
+          </div>
+
+          <button type="submit" name="checkout" class="btn-primary" style="width:100%;">
+            {{ 'general.checkout' | t }}
+          </button>
+
+          <p class="cart-summary__note">Taxes and shipping calculated at checkout</p>
+
+          <a href="/collections/all" class="btn-secondary" style="width:100%;text-align:center;margin-top:var(--space-4);display:block;">
+            {{ 'general.continue_shopping' | t }}
+          </a>
+        </div>
+
+      </form>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "settings": []
+}
+{% endschema %}
