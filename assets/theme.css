@@ -202,7 +202,7 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .hero__eyebrow { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6); color: var(--color-primary); }
 .hero__eyebrow-line { height: 2px; width: 3rem; background-color: var(--color-primary); }
 .hero__heading { margin-bottom: var(--space-6); font-family: var(--font-valorant); }
-.hero__heading em { color: var(--color-primary); }
+.hero__heading em { color: var(--color-primary); font-style: normal; }
 .hero__subtext { font-size: 1.25rem; max-width: 32rem; margin-bottom: var(--space-10); line-height: 1.6; font-family: var(--font-body); }
 .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; }
 .hero__badge {
