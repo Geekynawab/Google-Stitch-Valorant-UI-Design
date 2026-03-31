@@ -31,7 +31,7 @@
   --color-outline-variant:           #5b4040;
   --color-error:                     #ffb4ab;
   --color-accent:         #FF4655;
-  --color-accent-teal:    #00FFC2;
+  --color-accent-teal:    #ffffff;
   --color-text-primary:   #d9e3f2;
   --color-text-secondary: #8B978F;
   --color-text-muted:     rgba(217,227,242,0.4);
@@ -317,12 +317,12 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 }
 .hero-banner__title {
   font-family: var(--font-valorant);
-  font-size: clamp(2rem, 4.5vw, 3.25rem); font-weight: 900;
+  font-size: clamp(2.75rem, 6vw, 5rem); font-weight: 900;
   letter-spacing: 0.04em; line-height: 1.05; margin-bottom: 1.25rem;
 }
 .hero-banner__title em { font-style: normal; color: var(--color-primary); }
 .hero-banner__subtitle {
-  font-size: 1rem; line-height: 1.6; color: var(--color-on-surface-variant);
+  font-size: 1.2rem; line-height: 1.6; color: var(--color-on-surface-variant);
   margin-bottom: 1.75rem; font-family: var(--font-body);
 }
 .hero-banner__actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }

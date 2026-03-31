@@ -22,10 +22,6 @@
 
       <!-- Left: Text content -->
       <div class="hero-banner__content">
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="hero-banner__eyebrow">{{ section.settings.eyebrow }}</p>
-        {%- endif -%}
-
         {%- if section.settings.heading != blank -%}
           <h1 class="hero-banner__title glitch" data-text="{{ section.settings.heading | split: '|' | join: '' | strip_html }}">
             {%- assign title_parts = section.settings.heading | split: '|' -%}
