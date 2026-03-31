@@ -2,13 +2,109 @@
    KnivesFactory Theme JS
    ============================================================ */
 
-// Sticky header scroll class
+// Header interactions
 (function () {
-  const header = document.querySelector('.site-header');
-  if (!header) return;
-  window.addEventListener('scroll', function () {
-    header.classList.toggle('scrolled', window.scrollY > 40);
-  }, { passive: true });
+  'use strict';
+
+  function $(sel, ctx) { return (ctx || document).querySelector(sel); }
+  function on(el, ev, fn) { if (el) el.addEventListener(ev, fn); }
+
+  // Sticky header scroll class
+  var header = $('.site-header');
+  if (header) {
+    window.addEventListener('scroll', function () {
+      header.classList.toggle('is-scrolled', window.scrollY > 40);
+    }, { passive: true });
+  }
+
+  // Mobile nav drawer
+  var MobileNav = {
+    init: function () {
+      this.hamburger = $('#hamburger-btn');
+      this.nav       = $('#mobile-nav');
+      this.overlay   = $('#mobile-nav-overlay');
+      if (!this.hamburger) return;
+      on(this.hamburger, 'click', function () { MobileNav.toggle(); });
+      if (this.overlay) on(this.overlay, 'click', function () { MobileNav.close(); });
+      on(this.nav, 'click', function (e) {
+        var toggle = e.target.closest('[data-mobile-toggle]');
+        if (!toggle) return;
+        var sub = $('#' + toggle.dataset.mobileToggle);
+        if (!sub) return;
+        var opening = !sub.classList.contains('open');
+        sub.classList.toggle('open', opening);
+        toggle.classList.toggle('open', opening);
+      });
+    },
+    toggle: function () {
+      var isOpen = this.hamburger.classList.toggle('open');
+      this.nav.classList.toggle('open', isOpen);
+      if (this.overlay) this.overlay.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    },
+    close: function () {
+      this.hamburger.classList.remove('open');
+      this.nav.classList.remove('open');
+      if (this.overlay) this.overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  };
+
+  // Desktop mega menu
+  var MegaMenu = {
+    timer: null,
+    init: function () {
+      this.item = $('#categories-nav-item');
+      this.menu = $('#mega-menu');
+      if (!this.item || !this.menu) return;
+      this.btn = this.item.querySelector('.desktop-nav__btn');
+      var self = this;
+      on(this.item, 'mouseenter', function () { clearTimeout(self.timer); self.open(); });
+      on(this.item, 'mouseleave', function () { self.timer = setTimeout(function () { self.close(); }, 160); });
+      on(this.menu, 'mouseenter', function () { clearTimeout(self.timer); });
+      on(this.menu, 'mouseleave', function () { self.timer = setTimeout(function () { self.close(); }, 160); });
+      on(document, 'click', function (e) {
+        if (!self.item.contains(e.target) && !self.menu.contains(e.target)) self.close();
+      });
+    },
+    open: function () {
+      this.menu.classList.add('open');
+      this.menu.setAttribute('aria-hidden', 'false');
+      if (this.btn) this.btn.classList.add('active');
+    },
+    close: function () {
+      this.menu.classList.remove('open');
+      this.menu.setAttribute('aria-hidden', 'true');
+      if (this.btn) this.btn.classList.remove('active');
+    }
+  };
+
+  // Inline search overlay
+  var SearchOverlay = {
+    init: function () {
+      this.bar   = $('#header-search');
+      this.input = $('#header-search-input');
+      if (!this.bar) return;
+      on($('#search-toggle'),       'click', function () { SearchOverlay.open(); });
+      on($('#header-search-close'), 'click', function () { SearchOverlay.close(); });
+      on(document, 'keydown', function (e) { if (e.key === 'Escape') SearchOverlay.close(); });
+    },
+    open: function () {
+      this.bar.classList.add('open');
+      this.bar.setAttribute('aria-hidden', 'false');
+      if (this.input) setTimeout(function () { SearchOverlay.input.focus(); }, 60);
+    },
+    close: function () {
+      this.bar.classList.remove('open');
+      this.bar.setAttribute('aria-hidden', 'true');
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    MobileNav.init();
+    MegaMenu.init();
+    SearchOverlay.init();
+  });
 })();
 
 // Quantity stepper

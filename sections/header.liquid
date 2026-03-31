@@ -1,51 +1,166 @@
 <header class="site-header" role="banner">
-  <div class="site-header__inner">
 
-    <a href="/" class="site-header__logo">
-      {{ section.settings.logo_text }}
-    </a>
+  <div class="container">
+    <div class="header-inner">
 
-    <nav role="navigation" aria-label="Main navigation">
-      <ul class="site-header__nav">
-        {%- for link in linklists[section.settings.menu].links -%}
-          <li>
-            <a href="{{ link.url }}"
-               {%- if link.active %} class="active"{% endif -%}>
-              {{ link.title }}
-            </a>
-          </li>
-        {%- endfor -%}
-      </ul>
-    </nav>
+      <!-- Mobile only: Hamburger + MENU label -->
+      <div class="header-left">
+        <button class="hamburger" id="hamburger-btn" aria-label="{{ 'accessibility.open_navigation' | t }}" aria-controls="mobile-nav" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <span class="header-menu-label">MENU</span>
+      </div>
 
-    <div class="site-header__actions">
-      <a href="/cart" class="site-header__cart-icon" aria-label="Cart ({{ cart.item_count }} items)">
-        <span class="material-symbols-outlined">shopping_bag</span>
-        {%- if cart.item_count > 0 -%}
-          <span class="cart-count">{{ cart.item_count }}</span>
+      <!-- Logo -->
+      <a href="/" class="site-logo" aria-label="{{ shop.name }} — Home">
+        {%- if settings.logo != blank -%}
+          <img
+            src="{{ settings.logo | image_url: width: settings.logo_width }}"
+            alt="{{ shop.name }}"
+            width="{{ settings.logo_width }}"
+            loading="eager">
+        {%- else -%}
+          <span class="site-logo__text">{{ settings.logo_text | default: 'KNIVES FACTORY' }}</span>
         {%- endif -%}
       </a>
+
+      <!-- Desktop only: Nav -->
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="/collections/all" class="desktop-nav__link">Shop All</a>
+
+        <div class="desktop-nav__item" id="categories-nav-item">
+          <button class="desktop-nav__link desktop-nav__btn" aria-expanded="false" aria-controls="mega-menu">
+            Categories
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+
+        <a href="/pages/contact" class="desktop-nav__link">Contact</a>
+      </nav>
+
+      <!-- Right: Action icons -->
+      <div class="header-actions">
+        <button class="header-icon" id="search-toggle" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+        <a href="/pages/wishlist" class="header-icon" aria-label="Wishlist">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </a>
+        <a href="/account" class="header-icon" aria-label="Account">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </a>
+        <button class="header-icon" data-cart-open aria-label="{{ 'accessibility.open_cart' | t }}" aria-expanded="false">
+          {% render 'icon-cart' %}
+          <span class="cart-count" aria-live="polite">{{ cart.item_count }}</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Inline header search (slides over header on search click) -->
+  <div class="header-search" id="header-search" aria-hidden="true">
+    <div class="container">
+      <form action="/search" method="get" class="header-search__form">
+        <input type="hidden" name="type" value="product">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="search"
+          name="q"
+          id="header-search-input"
+          class="header-search__input"
+          placeholder="Search products..."
+          autocomplete="off"
+          aria-label="Search products">
+        <button type="button" class="header-search__close" id="header-search-close" aria-label="Close search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mega menu (desktop only) -->
+  <div class="mega-menu" id="mega-menu" aria-hidden="true">
+    <div class="container">
+      <div class="mega-menu__grid">
+
+        <div class="mega-menu__col">
+          <p class="mega-menu__heading">Skins</p>
+          <a href="/collections/prime-1" class="mega-menu__link">Prime</a>
+          <a href="/collections/reaver-1" class="mega-menu__link">Reaver</a>
+          <a href="/collections/ion" class="mega-menu__link">Ion</a>
+          <a href="/collections/all" class="mega-menu__link mega-menu__link--all">Shop All Skins →</a>
+        </div>
+
+        <div class="mega-menu__col">
+          <p class="mega-menu__heading">Accessories</p>
+          <a href="/collections/keychains-1" class="mega-menu__link">Keychains</a>
+          <a href="/collections/toys-1" class="mega-menu__link">Toys</a>
+          <a href="/collections/mousepads-1" class="mega-menu__link">Mousepads</a>
+          <a href="/collections/all" class="mega-menu__link mega-menu__link--all">Shop All →</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav overlay (closes mobile drawer on outside click) -->
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" aria-hidden="true"></div>
+
+  <!-- Mobile nav drawer -->
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Site navigation">
+
+    <div class="mobile-nav__item">
+      <a href="/collections/all" class="mobile-nav__link">All Products</a>
     </div>
 
-  </div>
+    <div class="mobile-nav__item">
+      <button class="mobile-nav__link mobile-nav__toggle" data-mobile-toggle="mobile-sub-types">
+        Browse by Type
+        <span class="toggle-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="mobile-nav__sub" id="mobile-sub-types">
+        <a href="/collections/keychains-1">Keychains</a>
+        <a href="/collections/toys-1">Toys</a>
+        <a href="/collections/mousepads-1">Mousepads</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav__item">
+      <button class="mobile-nav__link mobile-nav__toggle" data-mobile-toggle="mobile-sub-collections">
+        Skins
+        <span class="toggle-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="mobile-nav__sub" id="mobile-sub-collections">
+        <a href="/collections/prime-1">Prime</a>
+        <a href="/collections/reaver-1">Reaver</a>
+        <a href="/collections/ion">Ion</a>
+      </div>
+    </div>
+
+    <div class="mobile-nav__item">
+      <a href="/pages/contact" class="mobile-nav__link">Contact</a>
+    </div>
+
+  </nav>
+
 </header>
 
 {% schema %}
 {
   "name": "Header",
-  "settings": [
-    {
-      "type": "text",
-      "id": "logo_text",
-      "label": "Logo text",
-      "default": "VALORANT REPLICAS"
-    },
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "Navigation menu",
-      "default": "main-menu"
-    }
-  ]
+  "limit": 1,
+  "settings": []
 }
 {% endschema %}
