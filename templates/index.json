@@ -4,15 +4,13 @@
       "type": "hero-banner",
       "settings": {}
     },
+    "weapon-categories": {
+      "type": "weapon-categories",
+      "settings": {}
+    },
     "trust": {
       "type": "trust-bar",
-      "block_order": ["trust_1","trust_2","trust_3","trust_4"],
-      "blocks": {
-        "trust_1": { "type": "item", "settings": { "icon": "public", "label": "WORLDWIDE SHIPPING" } },
-        "trust_2": { "type": "item", "settings": { "icon": "verified_user", "label": "SECURE CHECKOUT" } },
-        "trust_3": { "type": "item", "settings": { "icon": "workspace_premium", "label": "SATISFACTION GUARANTEED" } },
-        "trust_4": { "type": "item", "settings": { "icon": "precision_manufacturing", "label": "HAND-FORGED QUALITY" } }
-      }
+      "settings": {}
     },
     "categories": {
       "type": "category-grid",
@@ -33,5 +31,5 @@
       }
     }
   },
-  "order": ["hero","trust","categories","featured"]
+  "order": ["hero","weapon-categories","trust","categories","featured"]
 }
