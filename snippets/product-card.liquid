@@ -33,8 +33,8 @@
       <div class="product-card__spec">
         <span>Weight</span>
         <span>
-          {%- assign weight_lb = product.variants.first.weight | times: 2.20462 | round: 2 -%}
-          {%- if weight_lb > 0 -%}{{ weight_lb }} LB{%- else -%}&mdash;{%- endif -%}
+          {%- assign weight_lb = product.variants.first.weight | divided_by: 453.592 | round: 2 -%}
+          {%- if weight_lb > 0 -%}{{ weight_lb }} LBS{%- else -%}&mdash;{%- endif -%}
         </span>
       </div>
       <form action="/cart/add" method="post">
