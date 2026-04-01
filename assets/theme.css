@@ -12,31 +12,31 @@
 }
 
 :root {
-  --color-surface:                   #0a141e;
-  --color-surface-dim:               #0a141e;
-  --color-surface-container-lowest:  #050f19;
-  --color-surface-container-low:     #121c27;
-  --color-surface-container:         #17202b;
-  --color-surface-container-high:    #212b35;
-  --color-surface-container-highest: #2c3641;
-  --color-surface-bright:            #303a45;
-  --color-surface-variant:           #2c3641;
+  --color-surface:                   #000000;
+  --color-surface-dim:               #000000;
+  --color-surface-container-lowest:  #050505;
+  --color-surface-container-low:     #0d0d0d;
+  --color-surface-container:         #111111;
+  --color-surface-container-high:    #1a1a1a;
+  --color-surface-container-highest: #222222;
+  --color-surface-bright:            #2a2a2a;
+  --color-surface-variant:           #222222;
   --color-primary:                   #FF4655;
   --color-primary-container:         #ff5262;
   --color-on-primary:                #680016;
   --color-on-primary-container:      #5b0012;
-  --color-on-surface:                #d9e3f2;
+  --color-on-surface:                #f0f0f0;
   --color-on-surface-variant:        #e3bebd;
   --color-outline:                   #aa8988;
   --color-outline-variant:           #5b4040;
   --color-error:                     #ffb4ab;
   --color-accent:         #FF4655;
   --color-accent-teal:    #ffffff;
-  --color-text-primary:   #d9e3f2;
-  --color-text-secondary: #8B978F;
-  --color-text-muted:     rgba(217,227,242,0.4);
-  --color-bg-secondary:   #17202b;
-  --color-border:         #2A3A48;
+  --color-text-primary:   #f0f0f0;
+  --color-text-secondary: #888888;
+  --color-text-muted:     rgba(240,240,240,0.4);
+  --color-bg-secondary:   #111111;
+  --color-border:         #333333;
   --transition-fast:   0.15s ease;
   --transition-normal: 0.25s ease;
   --radius-sm: 4px;
@@ -293,10 +293,6 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
   display: flex; align-items: center; overflow: hidden;
   background-color: var(--color-surface-container-lowest);
 }
-.hero-banner__slideshow { position: absolute; inset: 0; z-index: 0; }
-.hero-banner__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; }
-.hero-banner__slide.active { opacity: 1; }
-.hero-banner__slide img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; filter: brightness(0.45) saturate(0.8); }
 .hero-banner__overlay { display: none; }
 .hero-banner__inner {
   display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
@@ -549,3 +545,46 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .text-primary  { color: var(--color-primary); }
 .bg-surface    { background-color: var(--color-surface); }
 .bg-surface-low { background-color: var(--color-surface-container-low); }
+
+/* ============================================================ DOME GALLERY */
+.dome-section { padding: var(--space-16) 0; background: var(--color-surface); overflow: hidden; }
+.dome-section__heading { font-family: var(--font-valorant); font-size: clamp(1.5rem, 4vw, 2.5rem); color: var(--color-primary); text-align: center; letter-spacing: 0.12em; margin-bottom: var(--space-8); }
+.dome-scene {
+  width: 100%;
+  height: 520px;
+  perspective: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.dome-scene:active { cursor: grabbing; }
+.dome-track {
+  position: relative;
+  width: 1px;
+  height: 1px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.dome-item {
+  width: 160px;
+  background: var(--color-surface-container);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--color-text-primary);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  backface-visibility: hidden;
+}
+.dome-item:hover { border-color: var(--color-primary); box-shadow: 0 0 18px rgba(255,70,85,0.35); }
+.dome-item__img { width: 100%; aspect-ratio: 1; overflow: hidden; }
+.dome-item__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.dome-item__title { display: block; padding: 0.4rem 0.6rem; font-size: 0.7rem; font-family: var(--font-body); letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dome-hint { text-align: center; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); margin-top: var(--space-4); }
+@media (max-width: 600px) {
+  .dome-scene { height: 380px; perspective: 700px; }
+  .dome-item { width: 110px; }
+}
