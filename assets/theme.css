@@ -403,10 +403,8 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .product-card__image-wrap { position: relative; aspect-ratio: 1/1; overflow: hidden; background-color: var(--color-surface-container); }
 .product-card__image-wrap img { width: 100%; height: 100%; object-fit: contain; padding: var(--space-8); transition: transform 0.5s ease; }
 .product-card:hover .product-card__image-wrap img { transform: scale(1.1); }
-.product-card__hud { position: absolute; bottom: 0; left: 0; right: 0; height: 20%; background-color: rgba(255,70,85,0.92); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: row; align-items: stretch; color: var(--color-on-primary); overflow: hidden; }
+.product-card__hud { position: absolute; bottom: 0; left: 0; right: 0; height: 20%; background-color: rgba(255,70,85,0.92); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; justify-content: center; }
 .product-card:hover .product-card__hud { transform: translateY(0); }
-.product-card__spec { flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.4rem; writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-headline); font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border: none; padding: 0; margin: 0; }
-.product-card__spec + .product-card__spec { border-left: 1px solid rgba(255,255,255,0.3); }
 .product-card__add-btn { width: 100%; background-color: var(--color-on-primary); color: var(--color-primary); font-family: var(--font-headline); font-weight: 900; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; padding: var(--space-3) var(--space-4); text-align: center; margin-top: var(--space-4); border: none; cursor: pointer; transition: transform 0.1s ease; }
 .product-card__add-btn:active { transform: scale(0.97); }
 .product-card__info { padding: var(--space-6); flex-grow: 1; display: flex; flex-direction: column; background-color: var(--color-surface-container-high); }

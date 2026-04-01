@@ -22,27 +22,10 @@
     {%- endif -%}
 
     <div class="product-card__hud">
-      <div class="product-card__spec">
-        <span>Length</span>
-        <span>{{ product.metafields.custom.length | default: '&mdash;' }}</span>
-      </div>
-      <div class="product-card__spec">
-        <span>Material</span>
-        <span>{{ product.type | upcase | default: '&mdash;' }}</span>
-      </div>
-      <div class="product-card__spec">
-        <span>Weight</span>
-        <span>
-          {%- assign weight_lb = product.variants.first.weight | divided_by: 453.592 | round: 2 -%}
-          {%- if weight_lb > 0 -%}{{ weight_lb }} LBS{%- else -%}&mdash;{%- endif -%}
-        </span>
-      </div>
       <form action="/cart/add" method="post">
         <input type="hidden" name="id" value="{{ product.variants.first.id }}">
         <input type="hidden" name="quantity" value="1">
-        <button type="submit" class="product-card__add-btn">
-          {{ 'general.add_to_cart' | t }}
-        </button>
+        <button type="submit" class="product-card__add-btn">Add to Loadout</button>
       </form>
     </div>
   </div>
