@@ -65,6 +65,109 @@
     </div>
   </div>
 
+  <!-- Related articles: tag-matched, or pseudo-random fallback -->
+  {%- assign related_count = 0 -%}
+
+  {%- capture related_cards -%}
+    {%- for other in blog.articles -%}
+      {%- if related_count >= 3 -%}{%- break -%}{%- endif -%}
+      {%- if other.id == article.id -%}{%- continue -%}{%- endif -%}
+      {%- assign matched = false -%}
+      {%- for tag in article.tags -%}
+        {%- unless tag contains 'patch:' -%}
+          {%- if other.tags contains tag -%}{%- assign matched = true -%}{%- endif -%}
+        {%- endunless -%}
+      {%- endfor -%}
+      {%- if matched -%}
+        {%- assign related_count = related_count | plus: 1 -%}
+        <a href="{{ other.url }}" class="blog-card blog-card--related">
+          <div class="blog-card__img-wrap">
+            {%- if other.image -%}
+              <img src="{{ other.image | image_url: width: 480 }}" alt="{{ other.image.alt | escape | default: other.title }}" loading="lazy" width="480" height="320">
+            {%- else -%}
+              <div class="blog-card__img-placeholder"></div>
+            {%- endif -%}
+          </div>
+          <div class="blog-card__body">
+            <span class="blog-card__date">{{ other.published_at | date: '%b %d, %Y' }}</span>
+            <h3 class="blog-card__title">{{ other.title }}</h3>
+            {%- if other.excerpt != blank -%}
+              <p class="blog-card__excerpt">{{ other.excerpt | strip_html | truncate: 90 }}</p>
+            {%- endif -%}
+            <span class="blog-card__read-more">Read more &rarr;</span>
+          </div>
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- if related_count == 0 and blog.articles.size > 1 -%}
+    {%- assign fallback_offset = article.id | modulo: blog.articles.size -%}
+    {%- assign fallback_count = 0 -%}
+    {%- capture related_cards -%}
+      {%- for other in blog.articles offset: fallback_offset -%}
+        {%- if fallback_count >= 3 -%}{%- break -%}{%- endif -%}
+        {%- if other.id == article.id -%}{%- continue -%}{%- endif -%}
+        {%- assign fallback_count = fallback_count | plus: 1 -%}
+        <a href="{{ other.url }}" class="blog-card blog-card--related">
+          <div class="blog-card__img-wrap">
+            {%- if other.image -%}
+              <img src="{{ other.image | image_url: width: 480 }}" alt="{{ other.image.alt | escape | default: other.title }}" loading="lazy" width="480" height="320">
+            {%- else -%}
+              <div class="blog-card__img-placeholder"></div>
+            {%- endif -%}
+          </div>
+          <div class="blog-card__body">
+            <span class="blog-card__date">{{ other.published_at | date: '%b %d, %Y' }}</span>
+            <h3 class="blog-card__title">{{ other.title }}</h3>
+            {%- if other.excerpt != blank -%}
+              <p class="blog-card__excerpt">{{ other.excerpt | strip_html | truncate: 90 }}</p>
+            {%- endif -%}
+            <span class="blog-card__read-more">Read more &rarr;</span>
+          </div>
+        </a>
+      {%- endfor -%}
+      {%- if fallback_count < 3 -%}
+        {%- for other in blog.articles -%}
+          {%- if fallback_count >= 3 -%}{%- break -%}{%- endif -%}
+          {%- if other.id == article.id -%}{%- continue -%}{%- endif -%}
+          {%- assign fallback_count = fallback_count | plus: 1 -%}
+          <a href="{{ other.url }}" class="blog-card blog-card--related">
+            <div class="blog-card__img-wrap">
+              {%- if other.image -%}
+                <img src="{{ other.image | image_url: width: 480 }}" alt="{{ other.image.alt | escape | default: other.title }}" loading="lazy" width="480" height="320">
+              {%- else -%}
+                <div class="blog-card__img-placeholder"></div>
+              {%- endif -%}
+            </div>
+            <div class="blog-card__body">
+              <span class="blog-card__date">{{ other.published_at | date: '%b %d, %Y' }}</span>
+              <h3 class="blog-card__title">{{ other.title }}</h3>
+              {%- if other.excerpt != blank -%}
+                <p class="blog-card__excerpt">{{ other.excerpt | strip_html | truncate: 90 }}</p>
+              {%- endif -%}
+              <span class="blog-card__read-more">Read more &rarr;</span>
+            </div>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endcapture -%}
+  {%- endif -%}
+
+  {%- unless related_cards == blank -%}
+    <div class="related-articles">
+      <div class="container">
+        <div class="related-articles__header">
+          <span class="related-articles__label">// RELATED</span>
+          <div class="related-articles__bar"></div>
+        </div>
+        <div class="related-articles__grid">
+          {{ related_cards }}
+        </div>
+      </div>
+    </div>
+  {%- endunless -%}
+
 </article>
 
 {% schema %}

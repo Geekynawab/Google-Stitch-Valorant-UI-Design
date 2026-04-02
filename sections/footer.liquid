@@ -10,8 +10,22 @@
     </div>
     <div class="site-footer__bottom">
       <p class="site-footer__copyright">
-        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.disclaimer }}
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}.
       </p>
+      <div class="esrb-badge">
+        <div class="esrb-badge__rating">
+          <span class="esrb-badge__age">TEEN</span>
+          <span class="esrb-badge__letter">T</span>
+          <span class="esrb-badge__org">ESRB<sup>&reg;</sup></span>
+        </div>
+        <ul class="esrb-badge__descriptors">
+          <li>Blood</li>
+          <li>Language</li>
+          <li>Violence</li>
+          <li>Users Interact</li>
+          <li>In-Game Purchases</li>
+        </ul>
+      </div>
     </div>
   </div>
 </footer>
