@@ -378,7 +378,7 @@ function ModelViewer({ url,
 const container = document.getElementById('model-viewer-mount-' + window._mvSectionId);
 if (container) {
   const src = container.dataset.src;
-  createRoot(container).render(html`<${ModelViewer} url=${src} autoRotate=${false} fadeIn=${true} />`);
+  createRoot(container).render(html`<${ModelViewer} url=${src} autoRotate=${false} fadeIn=${true} enableMouseParallax=${false} enableHoverRotation=${false} />`);
 }
 </script>
 {% endraw %}
