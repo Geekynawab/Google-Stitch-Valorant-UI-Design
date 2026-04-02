@@ -468,7 +468,7 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .valo-dropdown { position: relative; display: inline-block; }
 .valo-dropdown__btn { background: transparent; color: var(--color-primary); font-family: var(--font-headline); font-size: 1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; border: none; cursor: pointer; display: flex; align-items: center; gap: 2px; padding: 0.35rem 0.1rem 0.45rem; position: relative; }
 .valo-dropdown__btn::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--color-primary); }
-.valo-dropdown__menu { position: absolute; top: calc(100% + 4px); left: 0; background: #141923; min-width: 170px; list-style: none; padding: 0.5rem 0 0.75rem; z-index: 200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+.valo-dropdown__menu { position: absolute; top: calc(100% + 4px); left: 0; background: #141923; min-width: 200px; list-style: none; padding: 0.5rem 0 0.75rem; z-index: 200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.6); white-space: nowrap; }
 .valo-dropdown.is-open .valo-dropdown__menu { display: block; }
 .valo-dropdown__menu a { display: block; padding: 0.45rem 1.25rem; color: rgba(217,227,242,0.75); font-family: var(--font-headline); font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.1s; }
 .valo-dropdown__menu a:hover { color: #fff; }
