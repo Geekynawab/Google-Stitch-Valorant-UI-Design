@@ -416,7 +416,7 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .product-gallery__thumb { width: 5rem; height: 5rem; background-color: var(--color-surface-container); overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: border-color 0.15s ease; }
 .product-gallery__thumb.active, .product-gallery__thumb:hover { border-color: var(--color-primary); }
 .product-gallery__thumb img { width: 100%; height: 100%; object-fit: contain; padding: var(--space-2); }
-.product-info__title { margin-bottom: var(--space-4); }
+.product-info__title { margin-bottom: var(--space-4); font-size: clamp(1.5rem, 3vw, 2.2rem); }
 .product-info__price { font-family: var(--font-headline); font-weight: 900; font-size: 2rem; color: var(--color-primary); margin-bottom: var(--space-8); }
 .product-info__compare-price { font-size: 1rem; color: rgba(217,227,242,0.4); text-decoration: line-through; margin-left: var(--space-3); }
 .hud-chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-8); }

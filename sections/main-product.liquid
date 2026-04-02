@@ -41,23 +41,17 @@
         </div>
 
         <!-- HUD chips -->
+        {%- assign _has_length_tag = false -%}
+        {%- for tag in product.tags -%}{%- if tag contains 'length:' -%}{%- assign _has_length_tag = true -%}{%- endif -%}{%- endfor -%}
+        {%- if _has_length_tag -%}
         <div class="hud-chips">
-          {%- if product.type != blank -%}
-            <div class="hud-chip">MATERIAL: {{ product.type | upcase }}</div>
-          {%- endif -%}
-          {%- assign weight_g = current_variant.weight | times: 1000 | round -%}
-          {%- if weight_g > 0 -%}
-            <div class="hud-chip">WEIGHT: {{ weight_g }}G</div>
-          {%- endif -%}
-          {%- if product.vendor != blank -%}
-            <div class="hud-chip">VENDOR: {{ product.vendor | upcase }}</div>
-          {%- endif -%}
           {%- for tag in product.tags -%}
             {%- if tag contains 'length:' -%}
               <div class="hud-chip">{{ tag | upcase }}</div>
             {%- endif -%}
           {%- endfor -%}
         </div>
+        {%- endif -%}
 
         <form action="/cart/add" method="post">
           <input type="hidden" name="id" value="{{ current_variant.id }}">
