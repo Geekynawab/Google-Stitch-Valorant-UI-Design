@@ -1,0 +1,49 @@
+<div class="container">{% render 'breadcrumb' %}</div>
+
+<article class="article-page">
+
+  {%- if article.image -%}
+    <div class="article-hero">
+      <img src="{{ article.image | image_url: width: 1200 }}"
+           alt="{{ article.image.alt | escape | default: article.title }}"
+           width="1200" height="600" loading="eager">
+    </div>
+  {%- endif -%}
+
+  <div class="container">
+    <div class="article-layout">
+
+      <header class="article-header">
+        {%- if article.tags.size > 0 -%}
+          <div class="article-tags">
+            {%- for tag in article.tags -%}
+              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article-tag">{{ tag }}</a>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        <h1 class="article-title">{{ article.title }}</h1>
+        <p class="article-meta">
+          {{ article.published_at | date: '%B %d, %Y' }}
+          {%- if article.author != blank %} &mdash; {{ article.author }}{%- endif -%}
+        </p>
+      </header>
+
+      <div class="article-body rte">
+        {{ article.content }}
+      </div>
+
+      <footer class="article-footer">
+        <a href="{{ blog.url }}" class="article-back">
+          <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">arrow_back</span>
+          Back to {{ blog.title }}
+        </a>
+      </footer>
+
+    </div>
+  </div>
+
+</article>
+
+{% schema %}
+{ "name": "Article Page" }
+{% endschema %}

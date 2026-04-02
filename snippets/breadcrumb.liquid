@@ -23,6 +23,16 @@
     <span class="breadcrumb__sep">›</span>
     <span class="breadcrumb__item breadcrumb__item--current">{{ page.title }}</span>
 
+  {%- elsif template.name == 'blog' -%}
+    <span class="breadcrumb__sep">›</span>
+    <span class="breadcrumb__item breadcrumb__item--current">{{ blog.title }}</span>
+
+  {%- elsif template.name == 'article' -%}
+    <span class="breadcrumb__sep">›</span>
+    <a href="{{ blog.url }}" class="breadcrumb__item">{{ blog.title }}</a>
+    <span class="breadcrumb__sep">›</span>
+    <span class="breadcrumb__item breadcrumb__item--current">{{ article.title | truncate: 40 }}</span>
+
   {%- elsif template.name == 'search' -%}
     <span class="breadcrumb__sep">›</span>
     <span class="breadcrumb__item breadcrumb__item--current">
