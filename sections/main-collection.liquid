@@ -117,19 +117,17 @@
       <!-- Spacer -->
       <div style="flex:1;"></div>
 
-      <!-- Refine label + hover dropdown -->
-      <div style="display:flex;align-items:center;gap:0;">
-        <span class="valo-refine-label">REFINE</span>
-        <div class="valo-dropdown valo-dropdown--right" data-hover>
-          <button class="valo-dropdown__btn" aria-expanded="false" aria-haspopup="listbox" style="padding-left:0.1rem;">
-            <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">arrow_drop_down</span>
-          </button>
-          <ul class="valo-dropdown__menu" role="listbox">
-            <li><a href="#" data-sort-val="created-descending" class="{% if sort_by == 'created-descending' %}valo-dropdown__item--active{% endif %}">Newest</a></li>
-            <li><a href="#" data-sort-val="price-ascending"    class="{% if sort_by == 'price-ascending' %}valo-dropdown__item--active{% endif %}">Sort: L to H</a></li>
-            <li><a href="#" data-sort-val="price-descending"   class="{% if sort_by == 'price-descending' %}valo-dropdown__item--active{% endif %}">Sort: H to L</a></li>
-          </ul>
-        </div>
+      <!-- Refine dropdown (hover) -->
+      <div class="valo-dropdown valo-dropdown--right" data-hover>
+        <button class="valo-dropdown__btn" aria-expanded="false" aria-haspopup="listbox">
+          REFINE
+          <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">arrow_drop_down</span>
+        </button>
+        <ul class="valo-dropdown__menu" role="listbox">
+          <li><a href="#" data-sort-val="created-descending" class="{% if sort_by == 'created-descending' %}valo-dropdown__item--active{% endif %}">Newest</a></li>
+          <li><a href="#" data-sort-val="price-ascending"    class="{% if sort_by == 'price-ascending' %}valo-dropdown__item--active{% endif %}">Sort: L to H</a></li>
+          <li><a href="#" data-sort-val="price-descending"   class="{% if sort_by == 'price-descending' %}valo-dropdown__item--active{% endif %}">Sort: H to L</a></li>
+        </ul>
       </div>
 
     </div>
