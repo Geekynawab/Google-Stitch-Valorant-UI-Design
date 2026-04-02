@@ -466,16 +466,16 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 
 /* Valorant-style weapon dropdown */
 .valo-dropdown { position: relative; display: inline-block; }
-.valo-dropdown__btn { background: transparent; color: var(--color-primary); font-family: var(--font-headline); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; border: none; cursor: pointer; display: flex; align-items: center; gap: 2px; padding: 0.35rem 0.1rem 0.45rem; position: relative; }
+.valo-dropdown__btn { background: transparent; color: var(--color-primary); font-family: var(--font-headline); font-size: 1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; border: none; cursor: pointer; display: flex; align-items: center; gap: 2px; padding: 0.35rem 0.1rem 0.45rem; position: relative; }
 .valo-dropdown__btn::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--color-primary); }
 .valo-dropdown__menu { position: absolute; top: calc(100% + 4px); left: 0; background: #141923; min-width: 170px; list-style: none; padding: 0.5rem 0 0.75rem; z-index: 200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
 .valo-dropdown.is-open .valo-dropdown__menu { display: block; }
-.valo-dropdown__menu a { display: block; padding: 0.45rem 1.25rem; color: rgba(217,227,242,0.75); font-family: var(--font-headline); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.1s; }
+.valo-dropdown__menu a { display: block; padding: 0.45rem 1.25rem; color: rgba(217,227,242,0.75); font-family: var(--font-headline); font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.1s; }
 .valo-dropdown__menu a:hover { color: #fff; }
 .valo-dropdown__item--active { color: var(--color-primary) !important; }
 .valo-dropdown--right .valo-dropdown__menu { left: auto; right: 0; }
 .valo-refine-label { font-family: var(--font-headline); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-primary); line-height: 1; }
-.valo-dropdown__sep { font-family: var(--font-headline); font-size: 0.6rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.16em; padding: 0.7rem 1.25rem 0.25rem 0.85rem; border-left: 2px solid var(--color-primary); margin-top: 0.25rem; }
+.valo-dropdown__sep { font-family: var(--font-headline); font-size: 0.8rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.16em; padding: 0.7rem 1.25rem 0.25rem 0.85rem; border-left: 2px solid var(--color-primary); margin-top: 0.25rem; }
 .collection-empty { text-align: center; padding: var(--space-16); color: rgba(217,227,242,0.4); font-family: var(--font-headline); text-transform: uppercase; letter-spacing: 0.1em; }
 .collection-grid-section { background-color: var(--color-surface); }
 .collection-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
