@@ -13,14 +13,20 @@
 <!-- Filter bar -->
 {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 {%- assign current_tag = current_tags | first -%}
-{%- assign grp1 = section.settings.group_1_tags | split: ',' -%}
 {%- assign grp2 = section.settings.group_2_tags | split: ',' -%}
 {%- assign grp3 = section.settings.group_3_tags | split: ',' -%}
 {%- assign grp4 = section.settings.group_4_tags | split: ',' -%}
 
-{%- comment -%} Collection button label {%- endcomment -%}
+{%- comment -%} Collection button label — auto from all_tags minus weapon/knife/other {%- endcomment -%}
 {%- assign coll_btn_label = section.settings.group_1_label -%}
-{%- for t in grp1 -%}{%- assign tc = t | strip -%}{%- if tc != blank and current_tags contains tc -%}{%- assign coll_btn_label = tc -%}{%- endif -%}{%- endfor -%}
+{%- for tag in collection.all_tags -%}
+  {%- assign th = tag | handle -%}
+  {%- assign _excl = false -%}
+  {%- for e in grp2 -%}{%- if e | strip | handle == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
+  {%- for e in grp3 -%}{%- if e | strip | handle == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
+  {%- for e in grp4 -%}{%- if e | strip | handle == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
+  {%- unless _excl -%}{%- if current_tags contains tag -%}{%- assign coll_btn_label = tag -%}{%- endif -%}{%- endunless -%}
+{%- endfor -%}
 
 {%- comment -%} Weapon button label — default to Knife (group 3) {%- endcomment -%}
 {%- assign weapon_btn_label = section.settings.group_3_label -%}
@@ -49,24 +55,28 @@
         </a>
       {%- endif -%}
 
-      <!-- Collection dropdown -->
-      {%- if section.settings.group_1_label != blank and grp1.size > 0 -%}
+      <!-- Collection dropdown — auto-populated from all product tags, excluding weapon/knife/other -->
+      {%- if section.settings.group_1_label != blank -%}
         <div class="valo-dropdown" data-collection="{{ collection.url }}">
           <button class="valo-dropdown__btn" aria-expanded="false" aria-haspopup="listbox">
             {{ coll_btn_label | upcase }}
             <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">arrow_drop_down</span>
           </button>
           <ul class="valo-dropdown__menu" role="listbox">
-            {%- for tag in grp1 -%}
-              {%- assign t = tag | strip -%}
-              {%- if t != blank -%}
+            {%- for tag in collection.all_tags -%}
+              {%- assign th = tag | handle -%}
+              {%- assign _excl = false -%}
+              {%- for e in grp2 -%}{%- if e | strip | handle == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
+              {%- for e in grp3 -%}{%- if e | strip | handle == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
+              {%- for e in grp4 -%}{%- if e | strip | handle == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
+              {%- unless _excl -%}
                 <li>
-                  <a href="{{ collection.url }}/{{ t | handle }}"
-                     class="{% if current_tags contains t %}valo-dropdown__item--active{% endif %}">
-                    {{ t }}
+                  <a href="{{ collection.url }}/{{ th }}"
+                     class="{% if current_tags contains tag %}valo-dropdown__item--active{% endif %}">
+                    {{ tag }}
                   </a>
                 </li>
-              {%- endif -%}
+              {%- endunless -%}
             {%- endfor -%}
           </ul>
         </div>
@@ -226,9 +236,8 @@
       "min": 8, "max": 48, "step": 4,
       "default": 12
     },
-    { "type": "header", "content": "Filter Group 1 — Collections" },
-    { "type": "text", "id": "group_1_label", "label": "Group label", "default": "Collection" },
-    { "type": "text", "id": "group_1_tags",  "label": "Tags (comma-separated)", "default": "Reaver, Prime, Elderflame, Glitchpop" },
+    { "type": "header", "content": "Filter Group 1 — Collections (auto-detected)" },
+    { "type": "text", "id": "group_1_label", "label": "Dropdown button label", "default": "Collection" },
     { "type": "header", "content": "Filter Group 2 — Rifles" },
     { "type": "text", "id": "group_2_label", "label": "Group label", "default": "Rifle" },
     { "type": "text", "id": "group_2_tags",  "label": "Tags (comma-separated)", "default": "Vandal, Phantom, Spectre, Bulldog" },
