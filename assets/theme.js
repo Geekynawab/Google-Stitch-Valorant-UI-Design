@@ -172,6 +172,7 @@ document.addEventListener('click', function (e) {
   var btn = e.target.closest('.product-card__img-arrow');
   if (!btn) return;
   e.preventDefault();
+  e.stopPropagation();
   var wrap = btn.closest('.product-card__image-wrap');
   var img = wrap && wrap.querySelector('img[data-img-index]');
   if (!img || !wrap.dataset.images) return;

@@ -13,7 +13,8 @@
 
   {%- assign _img_urls = '' -%}
   {%- for img in product.images -%}
-    {%- assign _img_urls = _img_urls | append: img | image_url: width: 600 -%}
+    {%- assign _img_url = img | image_url: width: 600 -%}
+    {%- assign _img_urls = _img_urls | append: _img_url -%}
     {%- unless forloop.last -%}{%- assign _img_urls = _img_urls | append: '|' -%}{%- endunless -%}
   {%- endfor -%}
 
