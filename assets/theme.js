@@ -159,6 +159,14 @@ document.addEventListener('click', function (e) {
   if (input) input.value = variantId;
 });
 
+// Product card — click anywhere to navigate to product page
+document.addEventListener('click', function (e) {
+  var card = e.target.closest('[data-product-url]');
+  if (!card) return;
+  if (e.target.closest('a, button')) return;
+  window.location.href = card.dataset.productUrl;
+});
+
 // Product card image arrows
 document.addEventListener('click', function (e) {
   var btn = e.target.closest('.product-card__img-arrow');
