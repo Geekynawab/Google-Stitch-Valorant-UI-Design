@@ -5,27 +5,44 @@
   {%- endif -%}
 {%- endfor -%}
 
+<style>
+  .policy-wrap { max-width: 800px; padding: 2rem var(--space-12, 2rem); }
+  .policy-crumb { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(217,227,242,0.45); margin-bottom: 2rem; }
+  .policy-crumb a { color: rgba(217,227,242,0.45); text-decoration: none; }
+  .policy-crumb a:hover { color: #ff4655; }
+  .policy-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(217,227,242,0.1); }
+  .policy-accent { width: 4px; min-height: 2rem; background: #ff4655; border-radius: 2px; flex-shrink: 0; }
+  .policy-title { font-family: var(--font-headline, 'Oswald', sans-serif); font-size: 1.75rem !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; color: #d9e3f2; margin: 0 !important; line-height: 1.1; }
+  .policy-body { color: rgba(217,227,242,0.8); line-height: 1.75; font-size: 0.925rem; }
+  .policy-body h1, .policy-body h2, .policy-body h3, .policy-body h4 { font-family: var(--font-headline, 'Oswald', sans-serif); text-align: left !important; text-transform: uppercase; letter-spacing: 0.08em; margin: 1.75rem 0 0.5rem !important; }
+  .policy-body h1 { font-size: 1.1rem !important; color: #ff4655; }
+  .policy-body h2 { font-size: 1rem !important; color: #ff4655; }
+  .policy-body h3 { font-size: 0.875rem !important; color: #d9e3f2; }
+  .policy-body p { margin-bottom: 1rem; text-align: left !important; }
+  .policy-body ul, .policy-body ol { padding-left: 1.5rem; margin-bottom: 1rem; text-align: left !important; }
+  .policy-body li { margin-bottom: 0.4rem; }
+  .policy-body strong { color: #d9e3f2; font-weight: 600; }
+  .policy-body a { color: #ff4655; text-decoration: underline; }
+  .policy-body * { text-align: left !important; }
+</style>
+
 <div class="container">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="/" class="breadcrumb__item">Home</a>
-    <span class="breadcrumb__sep">›</span>
-    <span class="breadcrumb__item breadcrumb__item--current">{{ current_policy.title | default: page_title }}</span>
-  </nav>
-</div>
+  <div class="policy-wrap">
 
-<section class="section page-section">
-  <div class="container">
-    <div class="page-layout">
-
-      <div class="page-layout__header">
-        <div class="page-layout__accent"></div>
-        <h1 class="page-layout__title">{{ current_policy.title | default: page_title }}</h1>
-      </div>
-
-      <div class="page-layout__body">
-        {{ current_policy.body }}
-      </div>
-
+    <div class="policy-crumb">
+      <a href="/">Home</a>
+      <span style="margin:0 0.4rem;">›</span>
+      <span>{{ current_policy.title | default: page_title }}</span>
     </div>
+
+    <div class="policy-header">
+      <div class="policy-accent"></div>
+      <h1 class="policy-title">{{ current_policy.title | default: page_title }}</h1>
+    </div>
+
+    <div class="policy-body">
+      {{ current_policy.body }}
+    </div>
+
   </div>
-</section>
+</div>
