@@ -21,13 +21,11 @@
       {{ 'product-1' | placeholder_svg_tag }}
     {%- endif -%}
 
-    <div class="product-card__hud">
-      <form action="/cart/add" method="post">
-        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-        <input type="hidden" name="quantity" value="1">
-        <button type="submit" class="product-card__add-btn">Add to Loadout</button>
-      </form>
-    </div>
+    <button class="product-card__wishlist"
+            aria-label="Add to wishlist"
+            data-variant-id="{{ product.variants.first.id }}">
+      <span class="material-symbols-outlined product-card__heart">favorite</span>
+    </button>
   </div>
 
   <div class="product-card__info">

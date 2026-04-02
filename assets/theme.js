@@ -194,6 +194,27 @@ document.addEventListener('click', function (e) {
   if (body) body.classList.toggle('open', !isOpen);
 });
 
+// Wishlist heart — add to cart on click
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest('.product-card__wishlist');
+  if (!btn) return;
+  e.preventDefault();
+  if (btn.classList.contains('is-wishlisted')) return;
+  var variantId = btn.dataset.variantId;
+  if (!variantId) return;
+  btn.disabled = true;
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: variantId, quantity: 1 })
+  }).then(function () {
+    btn.classList.add('is-wishlisted');
+    btn.disabled = false;
+  }).catch(function () {
+    btn.disabled = false;
+  });
+});
+
 // Cart quantity update (AJAX)
 document.addEventListener('change', function (e) {
   if (!e.target.matches('[data-cart-qty]')) return;
