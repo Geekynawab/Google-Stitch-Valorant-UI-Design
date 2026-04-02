@@ -8,7 +8,10 @@
 
 .eb-canvas-container {
   position: absolute;
-  inset: 0;
+  top: -30px;
+  left: -30px;
+  width: calc(100% + 60px);
+  height: calc(100% + 60px);
   pointer-events: none;
   z-index: 100;
 }
