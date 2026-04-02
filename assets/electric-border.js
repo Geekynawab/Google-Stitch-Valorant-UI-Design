@@ -187,7 +187,7 @@ const ElectricBorder = (() => {
   function autoInit() {
     document.querySelectorAll('[data-electric-border]').forEach(el => {
       const color   = el.dataset.electricColor   || '#FF4655';
-      const chaos   = parseFloat(el.dataset.electricChaos  || '0.32');
+      const chaos   = parseFloat(el.dataset.electricChaos  || '0.2');
       const speed   = parseFloat(el.dataset.electricSpeed  || '1.8');
       const radius  = parseFloat(el.dataset.electricRadius || '16');
       const hover   = el.dataset.electricHover !== 'false';
