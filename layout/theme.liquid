@@ -24,6 +24,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
   {{ 'theme.css' | asset_url | stylesheet_tag }}
+  {{ 'electric-border.css' | asset_url | stylesheet_tag }}
 
   {{ content_for_header }}
 
@@ -44,6 +45,7 @@
   {%- section 'footer' -%}
 
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  <script src="{{ 'electric-border.js' | asset_url }}" defer></script>
 
 </body>
 </html>

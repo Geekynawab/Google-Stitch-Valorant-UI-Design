@@ -3,7 +3,7 @@
   Usage: {% render 'product-card', product: product %}
 {%- endcomment -%}
 
-<div class="product-card">
+<div class="product-card" data-electric-border>
 
   {%- if product.tags contains 'limited' or product.tags contains 'Limited Edition' -%}
     <div class="product-card__badge">Limited Edition</div>
