@@ -37,7 +37,11 @@
                 {%- else -%}
                   <div class="blog-card__img-placeholder"></div>
                 {%- endif -%}
-                <div class="blog-card__patch-badge">// {{ patch_num }}</div>
+                {%- if patch_num contains '.' and patch_num != blank -%}
+                  {%- unless patch_num == article.published_at | date: '%y.%m' -%}
+                    <div class="blog-card__patch-badge">// {{ patch_num }}</div>
+                  {%- endunless -%}
+                {%- endif -%}
               </div>
 
               <div class="blog-card__body">
@@ -53,6 +57,7 @@
                 {%- if article.excerpt != blank -%}
                   <p class="blog-card__excerpt">{{ article.excerpt | strip_html | truncate: 110 }}</p>
                 {%- endif -%}
+                <span class="blog-card__read-more">Read more &rarr;</span>
               </div>
 
             </a>
