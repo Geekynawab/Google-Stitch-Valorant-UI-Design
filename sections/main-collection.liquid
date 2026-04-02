@@ -10,17 +10,60 @@
   </div>
 </div>
 
+<!-- Filter bar -->
+{%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+<div class="collection-filter-bar">
+  <div class="container">
+    <div class="collection-filter-bar__inner">
+
+      <!-- Tag chips -->
+      <div class="collection-filter-bar__tags">
+        <span class="collection-filter-bar__label">Filter</span>
+        <a href="{{ collection.url }}"
+           class="filter-chip{% unless current_tags %} filter-chip--active{% endunless %}">
+          All
+        </a>
+        {%- for tag in collection.all_tags -%}
+          {%- if current_tags contains tag -%}
+            <a href="{{ collection.url }}" class="filter-chip filter-chip--active">{{ tag }}</a>
+          {%- else -%}
+            <a href="{{ collection.url }}/{{ tag | handle }}" class="filter-chip">{{ tag }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <!-- Sort dropdown -->
+      <div class="collection-filter-bar__sort">
+        <span class="collection-filter-bar__label">Sort</span>
+        <select class="filter-sort-select" id="collection-sort" aria-label="Sort products">
+          <option value="relevance"        {% if sort_by == 'relevance' %}selected{% endif %}>Relevance</option>
+          <option value="best-selling"     {% if sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
+          <option value="price-ascending"  {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+          <option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
+          <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
+          <option value="title-ascending"  {% if sort_by == 'title-ascending' %}selected{% endif %}>A – Z</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- Product grid -->
 <section class="section collection-grid-section">
   <div class="container">
 
     {%- paginate collection.products by section.settings.products_per_page -%}
 
-      <div class="collection-grid">
-        {%- for product in collection.products -%}
-          {%- render 'product-card', product: product -%}
-        {%- endfor -%}
-      </div>
+      {%- if collection.products.size == 0 -%}
+        <p class="collection-empty">No products found.</p>
+      {%- else -%}
+        <div class="collection-grid">
+          {%- for product in collection.products -%}
+            {%- render 'product-card', product: product -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
 
       {%- if paginate.pages > 1 -%}
         <nav class="pagination" aria-label="Pagination">
@@ -44,6 +87,14 @@
 
   </div>
 </section>
+
+<script>
+  document.getElementById('collection-sort').addEventListener('change', function () {
+    var url = new URL(window.location.href);
+    url.searchParams.set('sort_by', this.value);
+    window.location = url.toString();
+  });
+</script>
 
 {% schema %}
 {
