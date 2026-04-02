@@ -33,10 +33,11 @@
         "id": "heading_font",
         "label": "Heading font",
         "options": [
-          { "value": "'Space Grotesk', sans-serif", "label": "Space Grotesk" },
+          { "value": "'Bebas Neue', sans-serif", "label": "Bebas Neue" },
+          { "value": "'Oswald', sans-serif", "label": "Oswald" },
           { "value": "'Inter', sans-serif", "label": "Inter" }
         ],
-        "default": "'Space Grotesk', sans-serif"
+        "default": "'Bebas Neue', sans-serif"
       }
     ]
   }

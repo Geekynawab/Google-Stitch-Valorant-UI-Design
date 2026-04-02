@@ -18,6 +18,106 @@
 
   <link rel="canonical" href="{{ canonical_url }}">
 
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:title" content="{{ page_title | escape }}">
+  <meta property="og:description" content="{{ page_description | default: shop.description | escape }}">
+  <meta property="og:locale" content="en_US">
+  {%- if template.name == 'product' -%}
+    <meta property="og:type" content="product">
+    {%- if product.featured_image -%}
+      <meta property="og:image" content="{{ product.featured_image | image_url: width: 1200 }}">
+    {%- endif -%}
+  {%- elsif template.name == 'article' -%}
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S' }}">
+    <meta property="article:author" content="{{ article.author }}">
+    {%- if article.image -%}
+      <meta property="og:image" content="{{ article.image | image_url: width: 1200 }}">
+    {%- endif -%}
+  {%- else -%}
+    <meta property="og:type" content="website">
+    {%- if settings.logo -%}
+      <meta property="og:image" content="{{ settings.logo | image_url: width: 1200 }}">
+    {%- endif -%}
+  {%- endif -%}
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title | escape }}">
+  <meta name="twitter:description" content="{{ page_description | default: shop.description | escape }}">
+
+  <!-- JSON-LD Structured Data -->
+  {%- if template.name == 'index' -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "{{ shop.name | escape }}",
+    "url": "{{ shop.url }}",
+    "description": "{{ shop.description | escape }}",
+    "logo": "{{ settings.logo | image_url: width: 400 }}",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "{{ shop.url }}/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  {%- endif -%}
+
+  {%- if template.name == 'product' -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ product.title | escape }}",
+    "description": "{{ product.description | strip_html | escape }}",
+    "url": "{{ canonical_url }}",
+    "image": "{{ product.featured_image | image_url: width: 1200 }}",
+    "brand": {
+      "@type": "Brand",
+      "name": "{{ shop.name | escape }}"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "{{ product.price | money_without_currency }}",
+      "priceCurrency": "{{ cart.currency.iso_code }}",
+      "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+      "url": "{{ canonical_url }}",
+      "seller": {
+        "@type": "Organization",
+        "name": "{{ shop.name | escape }}"
+      }
+    }
+  }
+  </script>
+  {%- endif -%}
+
+  {%- if template.name == 'article' -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ article.title | escape }}",
+    "description": "{{ article.excerpt | default: article.content | strip_html | truncate: 160 | escape }}",
+    "url": "{{ canonical_url }}",
+    "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S' }}",
+    "dateModified": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S' }}",
+    "author": { "@type": "Person", "name": "{{ article.author | escape }}" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "{{ shop.name | escape }}",
+      "logo": { "@type": "ImageObject", "url": "{{ settings.logo | image_url: width: 400 }}" }
+    }
+    {%- if article.image -%}
+    ,"image": "{{ article.image | image_url: width: 1200 }}"
+    {%- endif -%}
+  }
+  </script>
+  {%- endif -%}
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">

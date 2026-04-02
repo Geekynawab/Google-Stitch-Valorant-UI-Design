@@ -1,0 +1,162 @@
+{%- if section.settings.collection != blank -%}
+  {%- assign col = collections[section.settings.collection] -%}
+{%- else -%}
+  {%- assign col = collections.all -%}
+{%- endif -%}
+{%- if col != blank and col.products_count > 0 -%}
+
+<section class="dome-section section" id="dome-{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="dome-section__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+  </div>
+
+  <div class="dome-scene" id="dome-scene-{{ section.id }}">
+    <div class="dome-track" id="dome-track-{{ section.id }}">
+      {%- for product in col.products limit: section.settings.product_limit -%}
+        <a href="{{ product.url }}" class="dome-item" data-index="{{ forloop.index0 }}">
+          <div class="dome-item__img">
+            {%- if product.featured_image -%}
+              <img src="{{ product.featured_image | image_url: width: 400 }}"
+                   alt="{{ product.title | escape }}"
+                   loading="lazy" width="400" height="400">
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag }}
+            {%- endif -%}
+          </div>
+          <span class="dome-item__title">{{ product.title }}</span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <p class="dome-hint">Drag to explore</p>
+</section>
+
+<script>
+(function () {
+  var scene = document.getElementById('dome-scene-{{ section.id }}');
+  var track = document.getElementById('dome-track-{{ section.id }}');
+  if (!scene || !track) return;
+
+  var items  = Array.from(track.querySelectorAll('.dome-item'));
+  var count  = items.length;
+  if (count === 0) return;
+
+  // Grid layout
+  var cols   = Math.ceil(Math.sqrt(count * 1.5));
+  var rows   = Math.ceil(count / cols);
+  var radius = Math.max(340, cols * 90);
+  var spreadH = Math.min(360, cols * 52);
+  var spreadV = Math.min(50, rows * 22);
+
+  items.forEach(function (item, i) {
+    var col = i % cols;
+    var row = Math.floor(i / cols);
+    var ry  = cols > 1 ? (col / (cols - 1)) * spreadH - spreadH / 2 : 0;
+    var rx  = rows > 1 ? (row / (rows - 1)) * spreadV - spreadV / 2 : 0;
+    item.style.cssText += [
+      'position:absolute',
+      'top:50%',
+      'left:50%',
+      'transform:rotateY(' + ry + 'deg) rotateX(' + (-rx) + 'deg) translateZ(' + radius + 'px) translate(-50%,-50%)',
+      'transform-origin:center center'
+    ].join(';');
+  });
+
+  var rotX = 0, rotY = 0;
+  var velX = 0, velY = 0;
+  var dragging = false;
+  var lastX = 0, lastY = 0;
+  var raf = null;
+
+  function applyTransform() {
+    track.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
+  }
+
+  function inertia() {
+    if (Math.abs(velX) < 0.02 && Math.abs(velY) < 0.02) return;
+    velX *= 0.94;
+    velY *= 0.94;
+    rotX = Math.max(-25, Math.min(25, rotX + velX));
+    rotY += velY;
+    applyTransform();
+    raf = requestAnimationFrame(inertia);
+  }
+
+  scene.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('a')) e.preventDefault();
+    dragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    velX = 0; velY = 0;
+    cancelAnimationFrame(raf);
+    scene.setPointerCapture(e.pointerId);
+  });
+
+  scene.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    var dx = e.clientX - lastX;
+    var dy = e.clientY - lastY;
+    velY = dx * 0.25;
+    velX = -dy * 0.15;
+    rotX = Math.max(-25, Math.min(25, rotX + velX));
+    rotY += velY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    applyTransform();
+  });
+
+  scene.addEventListener('pointerup', function (e) {
+    dragging = false;
+    raf = requestAnimationFrame(inertia);
+    // Allow link click only if barely moved
+    var dist = Math.abs(velX) + Math.abs(velY);
+    if (dist < 1) {
+      var link = e.target.closest('.dome-item');
+      if (link) window.location.href = link.href;
+    }
+  });
+})();
+</script>
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Dome Gallery",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "THE ARMORY"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "label": "Max products",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dome Gallery",
+      "settings": {
+        "heading": "THE ARMORY",
+        "product_limit": 12
+      }
+    }
+  ]
+}
+{% endschema %}

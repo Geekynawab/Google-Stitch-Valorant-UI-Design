@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weapon Selector</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f0f16;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 1px rgba(255,70,85,.12), 0 0 40px rgba(255,70,85,.06); }
+      50%       { box-shadow: 0 0 0 1px rgba(255,70,85,.30), 0 0 65px rgba(255,70,85,.14); }
+    }
+
+    /* ── Sphere: clips everything to a circle ─────────────────────────────── */
+    .sphere {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1.5px solid rgba(255,70,85,.80);
+      background: radial-gradient(circle at 50% 50%,
+        rgba(255,70,85,.06) 0%, rgba(10,10,18,.95) 100%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    /* ── Grid: the entire hex field, translated by JS ─────────────────────── */
+    #grid {
+      position: absolute;
+      will-change: transform;
+      /* left / top set in JS to centre the grid */
+    }
+
+    /* ── Individual tile ──────────────────────────────────────────────────── */
+    .tile {
+      position: absolute;
+      /* centred on (left, top) via negative margin */
+      margin-left: -40px;   /* -TILE_W/2 */
+      margin-top:  -34.5px; /* -TILE_H/2 */
+      width:  80px;
+      height: 69px;
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+      background: #FF4655;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      will-change: transform;
+      transform-origin: center center;
+      /* only colour transition – scale is driven by rAF */
+      transition: filter .14s ease;
+    }
+
+    .tile:hover  { filter: brightness(1.28); }
+    .tile.active { filter: brightness(1.18) drop-shadow(0 0 7px rgba(255,255,255,.9)); }
+
+    .tile__icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+    .tile__icon svg { width: 100%; height: 100%; }
+    .tile__icon img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      filter: invert(1);
+      mix-blend-mode: screen;
+      transform: scaleX(-1);
+    }
+
+    .tile__name {
+      font-size: 5.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: rgba(255,255,255,.80);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="sphere" id="sphere">
+    <div id="grid"></div>
+  </div>
+
+  <script>
+  // ─── CONFIG ────────────────────────────────────────────────────────────────
+  const SPHERE_R     = 150;   // px — sphere is 300×300
+  const TILE_W       = 80;    // flat-top hex width
+  const TILE_H       = 69;    // ≈ TILE_W * √3 / 2
+  const COL_PITCH    = 60;    // TILE_W × 0.75  (perfect tessellation)
+  const ROW_PITCH    = TILE_H;
+  const Y_HALF       = TILE_H / 2;   // odd-col y offset (34.5)
+  const COLS         = 7;
+  const ROWS         = 7;
+  const PAN_STRENGTH = 0.42;  // grid travel per px of cursor offset from centre
+  const SPRING_K     = 0.10;  // spring stiffness (higher = snappier)
+  const FRICTION     = 0.80;  // velocity damping (lower = more friction)
+  const SCALE_CTR    = 1.28;  // fisheye scale at sphere centre
+  const SCALE_EDGE   = 0.80;  // fisheye scale at sphere rim
+
+  // ─── WEAPONS ───────────────────────────────────────────────────────────────
+  const WEAPONS = [
+    { name: 'Butterfly', type: 'svg', key: 'butterfly' },
+    { name: 'Knife',     type: 'svg', key: 'knife'     },
+    { name: 'Karambit',  type: 'svg', key: 'karambit'  },
+    { name: 'Axe',       type: 'svg', key: 'axe'       },
+    { name: 'Sword',     type: 'svg', key: 'sword'     },
+    { name: 'Claws',     type: 'svg', key: 'claws'     },
+    { name: 'Vandal',   type: 'img', key: 'assets/vandal-silhouette.png'    },
+    { name: 'Phantom',  type: 'img', key: 'assets/phantom-silhouette.jpeg'  },
+    { name: 'Sheriff',  type: 'img', key: 'assets/sheriff-silhouette.png'   },
+    { name: 'Classic',  type: 'img', key: 'assets/classic-silhouette.png'   },
+    { name: 'Spectre',  type: 'img', key: 'assets/spectre-silhouette.png'   },
+    { name: 'Guardian', type: 'img', key: 'assets/guardian-silhouette.jpeg' },
+  ];
+
+  const ICONS = {
+    butterfly: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 18 L18 13 L19 16 L6 21Z"  fill="currentColor" opacity=".8"/>
+      <path d="M5 22 L18 27 L19 24 L6 19Z"  fill="currentColor" opacity=".8"/>
+      <path d="M18 18 L37 19.5 L18 22Z"     fill="currentColor"/>
+      <circle cx="37" cy="19.5" r="1.5" fill="white"/>
+    </svg>`,
+    knife: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 34 L10 32 L30 10 L28 8 L26 10 L8 32Z" fill="currentColor" opacity=".9"/>
+      <rect x="18" y="19" width="8" height="2.5" rx="1" fill="currentColor" opacity=".6"
+            transform="rotate(45 22 20)"/>
+      <circle cx="29" cy="9" r="2" fill="white"/>
+    </svg>`,
+    karambit: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 30 Q8 14 24 12 Q36 12 36 22 Q36 32 26 32"
+            stroke="currentColor" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <circle cx="10" cy="30" r="5" fill="none" stroke="currentColor"
+              stroke-width="2" opacity=".7"/>
+      <circle cx="26" cy="32" r="2" fill="white"/>
+    </svg>`,
+    axe: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="16" y="4" width="3.5" height="32" rx="1.5" fill="currentColor" opacity=".7"/>
+      <path d="M19.5 7 Q32 9 32 20 Q32 29 19.5 32Z" fill="currentColor" opacity=".9"/>
+      <circle cx="32" cy="20" r="2" fill="white"/>
+    </svg>`,
+    sword: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 35 Q20 28 34 5" stroke="currentColor"
+            stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <ellipse cx="12" cy="28" rx="5" ry="2" fill="currentColor" opacity=".65"
+               transform="rotate(-55 12 28)"/>
+      <circle cx="34" cy="5" r="2" fill="white"/>
+    </svg>`,
+    claws: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="12" y="22" width="16" height="9" rx="2" fill="currentColor" opacity=".75"/>
+      <path d="M15 22 L9 6"  stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <path d="M20 22 L20 4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <path d="M25 22 L31 6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="9"  cy="6" r="2" fill="white"/>
+      <circle cx="20" cy="4" r="2" fill="white"/>
+      <circle cx="31" cy="6" r="2" fill="white"/>
+    </svg>`,
+  };
+
+  // ─── BUILD TILE GRID ───────────────────────────────────────────────────────
+  const sphereEl = document.getElementById('sphere');
+  const gridEl   = document.getElementById('grid');
+
+  // Centre the grid on the middle tile: col 3 (odd), row 3
+  // localX/Y of that tile:
+  const CTR_LOCAL_X = 3 * COL_PITCH + TILE_W / 2;           // 220
+  const CTR_LOCAL_Y = Y_HALF + Y_HALF + 3 * ROW_PITCH;      // 276
+
+  const GRID_OX = SPHERE_R - CTR_LOCAL_X;   // −70
+  const GRID_OY = SPHERE_R - CTR_LOCAL_Y;   // −126
+
+  gridEl.style.left = GRID_OX + 'px';
+  gridEl.style.top  = GRID_OY + 'px';
+
+  const tiles = [];   // { el, lx, ly }  — local coords
+
+  for (let col = 0; col < COLS; col++) {
+    const lx   = col * COL_PITCH + TILE_W / 2;
+    const yOff = (col & 1) ? Y_HALF : 0;          // odd cols shift down
+    for (let row = 0; row < ROWS; row++) {
+      const ly = Y_HALF + yOff + row * ROW_PITCH;
+      const w  = WEAPONS[(col * ROWS + row) % WEAPONS.length];
+
+      const btn = document.createElement('button');
+      btn.className = 'tile';
+      btn.style.left = lx + 'px';
+      btn.style.top  = ly + 'px';
+
+      const icon = w.type === 'img'
+        ? `<img src="${w.key}" alt="${w.name}">`
+        : ICONS[w.key];
+
+      btn.innerHTML =
+        `<div class="tile__icon">${icon}</div>` +
+        `<span class="tile__name">${w.name}</span>`;
+
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tile.active')
+          .forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+      });
+
+      gridEl.appendChild(btn);
+      tiles.push({ el: btn, lx, ly });
+    }
+  }
+
+  // ─── ANIMATION STATE ───────────────────────────────────────────────────────
+  let targetX = 0, targetY = 0;
+  let panX    = 0, panY    = 0;
+  let velX    = 0, velY    = 0;
+
+  // ─── INPUT ─────────────────────────────────────────────────────────────────
+  sphereEl.addEventListener('mousemove', e => {
+    const r  = sphereEl.getBoundingClientRect();
+    const dx = e.clientX - r.left  - SPHERE_R;
+    const dy = e.clientY - r.top   - SPHERE_R;
+    targetX  = -dx * PAN_STRENGTH;
+    targetY  = -dy * PAN_STRENGTH;
+  });
+
+  sphereEl.addEventListener('mouseleave', () => {
+    targetX = 0;
+    targetY = 0;
+  });
+
+  // Touch support
+  sphereEl.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const r  = sphereEl.getBoundingClientRect();
+    const t  = e.touches[0];
+    const dx = t.clientX - r.left  - SPHERE_R;
+    const dy = t.clientY - r.top   - SPHERE_R;
+    targetX  = -dx * PAN_STRENGTH;
+    targetY  = -dy * PAN_STRENGTH;
+  }, { passive: false });
+
+  sphereEl.addEventListener('touchend', () => {
+    targetX = 0;
+    targetY = 0;
+  });
+
+  // ─── RAF LOOP ──────────────────────────────────────────────────────────────
+  function tick() {
+    // Spring physics — smooth snap toward target, momentum on release
+    velX = (velX + (targetX - panX) * SPRING_K) * FRICTION;
+    velY = (velY + (targetY - panY) * SPRING_K) * FRICTION;
+    panX += velX;
+    panY += velY;
+
+    // Hard clamp — grid never exposes sphere bg (grid extends ~180px beyond rim)
+    const CLAMP = 80;
+    const cpx = Math.max(-CLAMP, Math.min(CLAMP, panX));
+    const cpy = Math.max(-CLAMP, Math.min(CLAMP, panY));
+
+    // Translate the whole grid
+    gridEl.style.transform = `translate(${cpx.toFixed(2)}px,${cpy.toFixed(2)}px)`;
+
+    // Per-tile fisheye: scale from SCALE_CTR (centre) to SCALE_EDGE (rim)
+    for (const { el, lx, ly } of tiles) {
+      const sx = lx + GRID_OX + cpx - SPHERE_R;   // signed offset from sphere centre
+      const sy = ly + GRID_OY + cpy - SPHERE_R;
+      const d  = Math.sqrt(sx * sx + sy * sy);
+      const t  = Math.min(d / SPHERE_R, 1);
+      const s  = (SCALE_CTR - t * (SCALE_CTR - SCALE_EDGE)).toFixed(3);
+      el.style.transform = `scale(${s})`;
+      el.style.zIndex    = Math.round(+s * 20);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  tick();
+  </script>
+</body>
+</html>

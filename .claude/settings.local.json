@@ -16,7 +16,10 @@
       "Bash(curl:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(shopify theme:*)",
+      "Bash(find /c/Users/Sanketh -maxdepth 4 -type d -name *.git)",
+      "Bash(ls:*)"
     ]
   }
 }

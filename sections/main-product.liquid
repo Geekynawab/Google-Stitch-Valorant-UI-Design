@@ -10,11 +10,15 @@
         <div class="product-gallery__main">
           {%- if product.featured_image -%}
             <img id="main-product-image"
-                 src="{{ current_variant.image | default: product.featured_image | image_url: width: 800 }}"
+                 src="{{ current_variant.image | default: product.featured_image | image_url: width: 1600 }}"
                  alt="{{ product.featured_image.alt | escape | default: product.title }}"
-                 width="800" height="800">
+                 width="1600" height="1600">
           {%- else -%}
             {{ 'product-1' | placeholder_svg_tag }}
+          {%- endif -%}
+          {%- if product.images.size > 1 -%}
+            <button class="gallery-arrow gallery-arrow--prev" aria-label="Previous image">&#8249;</button>
+            <button class="gallery-arrow gallery-arrow--next" aria-label="Next image">&#8250;</button>
           {%- endif -%}
         </div>
 
@@ -22,9 +26,10 @@
           <div class="product-gallery__thumbs">
             {%- for image in product.images limit: 6 -%}
               <div class="product-gallery__thumb{%- if forloop.first %} active{%- endif -%}">
-                <img src="{{ image | image_url: width: 120 }}"
+                <img src="{{ image | image_url: width: 240 }}"
+                     data-full-src="{{ image | image_url: width: 1600 }}"
                      alt="{{ image.alt | escape }}"
-                     width="120" height="120"
+                     width="240" height="240"
                      loading="lazy">
               </div>
             {%- endfor -%}
@@ -109,7 +114,32 @@
         <!-- Accordions -->
         <div class="product-accordions">
 
-          {%- if section.settings.materials_content != blank -%}
+          {%- assign _lore_value = product.metafields.custom.fun_fact.value -%}
+          {%- if _lore_value != blank -%}
+          <div class="product-accordion product-accordion--lore">
+            <button class="product-accordion__trigger" aria-expanded="false">
+              <span class="product-accordion__icon">
+                <span class="material-symbols-outlined">auto_stories</span>
+              </span>
+              <span class="product-accordion__label">Lore!</span>
+              <span class="material-symbols-outlined product-accordion__chevron">expand_more</span>
+            </button>
+            <div class="product-accordion__body">
+              <div class="product-accordion__content">{{ _lore_value | newline_to_br }}</div>
+            </div>
+          </div>
+          {%- endif -%}
+
+          {%- assign _ptype = product.type | downcase -%}
+          {%- if _ptype contains 'knife' or _ptype contains 'karambit' or _ptype contains 'melee' -%}
+            {%- assign _materials_text = product.title | prepend: 'The ' | append: ' is crafted from high-quality zinc alloy, replicating every minute detail straight from the game. Built to look and feel as close to the in-game skin as possible.' -%}
+          {%- elsif _ptype contains 'weapon' or _ptype contains 'rifle' or _ptype contains 'vandal' or _ptype contains 'gun' -%}
+            {%- assign _materials_text = product.title | prepend: 'The ' | append: ' is crafted from high-quality zinc alloy, replicating every minute detail straight from the game. Built to look and feel as close to the in-game skin as possible.' -%}
+          {%- elsif _ptype contains 'keychain' -%}
+            {%- assign _materials_text = product.title | prepend: 'The ' | append: ' is crafted from high-quality zinc alloy, replicating every minute detail straight from the game. Compact, durable, and faithful to the original in-game design.' -%}
+          {%- else -%}
+            {%- assign _materials_text = product.title | prepend: 'The ' | append: ' is crafted from high-quality zinc alloy, replicating every minute detail straight from the game. Built to look and feel as close to the in-game skin as possible.' -%}
+          {%- endif -%}
           <div class="product-accordion">
             <button class="product-accordion__trigger" aria-expanded="false">
               <span class="product-accordion__icon">
@@ -119,27 +149,25 @@
               <span class="material-symbols-outlined product-accordion__chevron">expand_more</span>
             </button>
             <div class="product-accordion__body">
-              <div class="product-accordion__content">{{ section.settings.materials_content }}</div>
+              <div class="product-accordion__content">{{ _materials_text }}</div>
             </div>
           </div>
-          {%- endif -%}
 
-          {%- if section.settings.dimensions_content != blank -%}
+          {%- if product.metafields.custom.dimensions != blank -%}
           <div class="product-accordion">
             <button class="product-accordion__trigger" aria-expanded="false">
               <span class="product-accordion__icon">
                 <span class="material-symbols-outlined">straighten</span>
               </span>
-              <span class="product-accordion__label">Dimensions</span>
+              <span class="product-accordion__label">Dimensions &amp; Weight</span>
               <span class="material-symbols-outlined product-accordion__chevron">expand_more</span>
             </button>
             <div class="product-accordion__body">
-              <div class="product-accordion__content">{{ section.settings.dimensions_content }}</div>
+              <div class="product-accordion__content">{{ product.metafields.custom.dimensions.value | newline_to_br }}</div>
             </div>
           </div>
           {%- endif -%}
 
-          {%- if section.settings.shipping_content != blank -%}
           <div class="product-accordion">
             <button class="product-accordion__trigger" aria-expanded="false">
               <span class="product-accordion__icon">
@@ -149,25 +177,9 @@
               <span class="material-symbols-outlined product-accordion__chevron">expand_more</span>
             </button>
             <div class="product-accordion__body">
-              <div class="product-accordion__content">{{ section.settings.shipping_content }}</div>
+              <div class="product-accordion__content">Ships in 1–3 business days. Standard delivery 5–8 days ($5, free over $70). Expedited available at checkout. International orders may be subject to customs fees — these are the buyer's responsibility.<br><br>Returns accepted within 15 days of delivery. Item must be unused, with tags, and in original packaging. Contact us to start a return. Refunds processed within 10 business days of approval. No returns on sale items.</div>
             </div>
           </div>
-          {%- endif -%}
-
-          {%- if section.settings.fun_facts_content != blank -%}
-          <div class="product-accordion">
-            <button class="product-accordion__trigger" aria-expanded="false">
-              <span class="product-accordion__icon">
-                <span class="material-symbols-outlined">favorite</span>
-              </span>
-              <span class="product-accordion__label">Fun Facts</span>
-              <span class="material-symbols-outlined product-accordion__chevron">expand_more</span>
-            </button>
-            <div class="product-accordion__body">
-              <div class="product-accordion__content">{{ section.settings.fun_facts_content }}</div>
-            </div>
-          </div>
-          {%- endif -%}
 
         </div>
 
@@ -203,47 +215,6 @@
 {% schema %}
 {
   "name": "Product Page",
-  "settings": [
-    {
-      "type": "header",
-      "content": "Accordion — Materials"
-    },
-    {
-      "type": "richtext",
-      "id": "materials_content",
-      "label": "Materials content",
-      "default": "<p>High-grade stainless steel blade with a zinc alloy handle. Each piece is crafted with precision and finished with a matte black coating for durability.</p>"
-    },
-    {
-      "type": "header",
-      "content": "Accordion — Dimensions"
-    },
-    {
-      "type": "richtext",
-      "id": "dimensions_content",
-      "label": "Dimensions content",
-      "default": "<p>Overall length: 30 cm / 11.8 in<br>Blade length: 15 cm / 5.9 in<br>Weight: 220 g / 7.7 oz</p>"
-    },
-    {
-      "type": "header",
-      "content": "Accordion — Shipping & Returns"
-    },
-    {
-      "type": "richtext",
-      "id": "shipping_content",
-      "label": "Shipping & Returns content",
-      "default": "<p>Free shipping on orders over $50. Delivered in 5–10 business days. Returns accepted within 30 days of delivery — item must be unused and in original packaging.</p>"
-    },
-    {
-      "type": "header",
-      "content": "Accordion — Fun Facts"
-    },
-    {
-      "type": "richtext",
-      "id": "fun_facts_content",
-      "label": "Fun Facts content",
-      "default": "<p>This knife skin was inspired by the Valorant Champions 2021 tournament. Only a handful of players in the world earned it in-game — now you can own a physical replica.</p>"
-    }
-  ]
+  "settings": []
 }
 {% endschema %}
