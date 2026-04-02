@@ -79,6 +79,8 @@
 }
 </style>
 
+<script>var _mvSectionId = {{ section.id | json }};</script>
+{% raw %}
 <script type="module">
 import htm from 'https://esm.sh/htm@3';
 import React, { Suspense, useRef, useLayoutEffect, useEffect, useMemo } from 'https://esm.sh/react@18';
@@ -338,12 +340,13 @@ function ModelViewer({ url,
 }
 
 /* ── Mount ───────────────────────────────────────────────────────── */
-const container = document.getElementById('model-viewer-mount-{{ section.id }}');
+const container = document.getElementById('model-viewer-mount-' + window._mvSectionId);
 if (container) {
   const src = container.dataset.src;
   createRoot(container).render(html`<${ModelViewer} url=${src} autoRotate=${true} fadeIn=${true} />`);
 }
 </script>
+{% endraw %}
 
 {% schema %}
 {
