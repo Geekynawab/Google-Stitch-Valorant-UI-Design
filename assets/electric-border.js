@@ -25,11 +25,10 @@ const ElectricBorder = (() => {
 
   function octavedNoise(x, time, seed, chaos) {
     const octaves = 10, lacunarity = 1.6, gain = 0.7;
-    const amplitude = chaos, frequency = 10, baseFlatness = 0;
+    const amplitude = chaos, frequency = 10;
     let y = 0, amp = amplitude, freq = frequency;
     for (let i = 0; i < octaves; i++) {
-      const octAmp = i === 0 ? amp * baseFlatness : amp;
-      y += octAmp * noise2D(freq * x + seed * 100, time * freq * 0.3);
+      y += amp * noise2D(freq * x + seed * 100, time * freq * 0.3);
       freq *= lacunarity;
       amp *= gain;
     }
@@ -75,8 +74,8 @@ const ElectricBorder = (() => {
       onlyOnHover  = true
     } = opts;
 
-    const OFFSET = 3;
-    const DISPLACEMENT = 8;
+    const OFFSET = 8;
+    const DISPLACEMENT = 28;
 
     // Wrap if not already wrapped
     if (!container.classList.contains('eb-host')) {
