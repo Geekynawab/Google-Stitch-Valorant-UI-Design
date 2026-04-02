@@ -16,6 +16,7 @@
 {%- assign grp2 = section.settings.group_2_tags | split: ',' -%}
 {%- assign grp3 = section.settings.group_3_tags | split: ',' -%}
 {%- assign grp4 = section.settings.group_4_tags | split: ',' -%}
+{%- assign grpX = section.settings.exclude_misc | split: ',' -%}
 
 {%- comment -%} Collection button label — auto from all_tags minus weapon/knife/other {%- endcomment -%}
 {%- assign coll_btn_label = section.settings.group_1_label -%}
@@ -25,6 +26,7 @@
   {%- for e in grp2 -%}{%- assign eh = e | strip | handle -%}{%- if eh == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
   {%- for e in grp3 -%}{%- assign eh = e | strip | handle -%}{%- if eh == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
   {%- for e in grp4 -%}{%- assign eh = e | strip | handle -%}{%- if eh == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
+  {%- for e in grpX -%}{%- assign eh = e | strip | handle -%}{%- if eh == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
   {%- unless _excl -%}{%- if current_tags contains tag -%}{%- assign coll_btn_label = tag -%}{%- endif -%}{%- endunless -%}
 {%- endfor -%}
 
@@ -246,7 +248,9 @@
     { "type": "text", "id": "group_3_tags",  "label": "Tags (comma-separated)", "default": "Karambit, Kunai, Butterfly" },
     { "type": "header", "content": "Filter Group 4 — Other" },
     { "type": "text", "id": "group_4_label", "label": "Group label", "default": "Type" },
-    { "type": "text", "id": "group_4_tags",  "label": "Tags (comma-separated)", "default": "Keychain" }
+    { "type": "text", "id": "group_4_tags",  "label": "Tags (comma-separated)", "default": "Keychain" },
+    { "type": "header", "content": "Hide from Collection filter" },
+    { "type": "text", "id": "exclude_misc", "label": "Misc tags to exclude (comma-separated)", "default": "featured, new-arrival, sale, limited, bestseller" }
   ]
 }
 {% endschema %}
