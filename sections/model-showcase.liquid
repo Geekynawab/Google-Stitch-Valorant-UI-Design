@@ -21,6 +21,7 @@
         <model-viewer
           src="{{ section.settings.model_file | default: 'katana_valorant_draft.glb' | asset_url }}"
           camera-controls
+          camera-orbit="0deg 75deg 70%"
           shadow-intensity="1"
           shadow-softness="0.5"
           exposure="0.9"
