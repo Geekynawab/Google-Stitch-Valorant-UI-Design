@@ -459,6 +459,11 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .product-share-btn .material-symbols-outlined { font-size: 1.1rem; font-variation-settings: 'FILL' 0, 'wght' 300; }
 
 /* ============================================================ COLLECTION PAGE */
+.breadcrumb { display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem; padding: 0.75rem 0; font-family: var(--font-headline); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.breadcrumb__item { color: rgba(217,227,242,0.45); transition: color 0.15s; }
+.breadcrumb__item:hover { color: #fff; }
+.breadcrumb__item--current { color: rgba(217,227,242,0.75); pointer-events: none; }
+.breadcrumb__sep { color: rgba(217,227,242,0.25); font-size: 0.85rem; }
 .collection-header { background-color: var(--color-surface-container-lowest); padding: var(--space-16) 0 var(--space-12); }
 .collection-header__eyebrow { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6); color: var(--color-primary); }
 .collection-header__meta { font-family: var(--font-headline); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(217,227,242,0.4); margin-top: var(--space-4); }

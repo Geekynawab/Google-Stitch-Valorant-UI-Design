@@ -1,0 +1,29 @@
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="/" class="breadcrumb__item">Home</a>
+
+  {%- if template.name == 'product' -%}
+    {%- if product.collections.size > 0 -%}
+      <span class="breadcrumb__sep">›</span>
+      <a href="{{ product.collections.first.url }}" class="breadcrumb__item">{{ product.collections.first.title }}</a>
+    {%- endif -%}
+    <span class="breadcrumb__sep">›</span>
+    <span class="breadcrumb__item breadcrumb__item--current">{{ product.title }}</span>
+
+  {%- elsif template.name == 'collection' -%}
+    <span class="breadcrumb__sep">›</span>
+    {%- if current_tags -%}
+      <a href="{{ collection.url }}" class="breadcrumb__item">{{ collection.title }}</a>
+      <span class="breadcrumb__sep">›</span>
+      <span class="breadcrumb__item breadcrumb__item--current">{{ current_tags | first }}</span>
+    {%- else -%}
+      <span class="breadcrumb__item breadcrumb__item--current">{{ collection.title }}</span>
+    {%- endif -%}
+
+  {%- elsif template.name == 'search' -%}
+    <span class="breadcrumb__sep">›</span>
+    <span class="breadcrumb__item breadcrumb__item--current">
+      {%- if search.performed -%}Search: &ldquo;{{ search.terms | escape }}&rdquo;{%- else -%}Search{%- endif -%}
+    </span>
+
+  {%- endif -%}
+</nav>
