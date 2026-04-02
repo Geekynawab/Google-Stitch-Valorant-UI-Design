@@ -213,20 +213,15 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .mega-menu__link--all { font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.5rem; }
 .mega-menu__link--all:hover { color: var(--color-accent); }
 .header-search {
-  position: absolute; right: 0; top: 0; height: 100%;
   width: 0; overflow: hidden;
-  background: rgba(8,16,26,0.98);
-  border-left: 1px solid rgba(255,255,255,0.12);
-  z-index: 102; display: flex; align-items: center;
-  opacity: 0; pointer-events: none;
-  transition: width 0.28s ease, opacity 0.2s ease;
+  display: flex; align-items: center;
+  transition: width 0.28s ease;
 }
-.header-search.open { width: 380px; opacity: 1; pointer-events: auto; }
-.header-search .container { width: 380px; padding: 0 1.25rem; }
-.header-search__form { display: flex; align-items: center; gap: 0.75rem; color: rgba(255,255,255,0.5); white-space: nowrap; }
-.header-search__input { flex: 1; min-width: 0; background: none; border: none; outline: none; color: #fff; font-size: 1rem; font-weight: 500; caret-color: var(--color-primary); }
+.header-search.open { width: 260px; }
+.header-search__form { display: flex; align-items: center; gap: 0.5rem; width: 260px; padding: 0.3rem 0.75rem; background: rgba(8,16,26,0.95); border: 1px solid rgba(255,255,255,0.18); border-radius: 2px; white-space: nowrap; }
+.header-search__input { flex: 1; min-width: 0; background: none; border: none; outline: none; color: #fff; font-size: 0.9rem; font-weight: 500; caret-color: var(--color-primary); }
 .header-search__input::placeholder { color: rgba(255,255,255,0.35); }
-.header-search__close { display: flex; align-items: center; color: rgba(255,255,255,0.5); transition: color var(--transition-fast); flex-shrink: 0; }
+.header-search__close { display: flex; align-items: center; color: rgba(255,255,255,0.45); transition: color var(--transition-fast); flex-shrink: 0; background: none; border: none; cursor: pointer; padding: 0; }
 .header-search__close:hover { color: #fff; }
 .header-actions { display: flex; align-items: center; gap: 0.75rem; justify-self: end; }
 .header-icon { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; color: #fff; transition: color var(--transition-fast); position: relative; }
