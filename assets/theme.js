@@ -159,6 +159,25 @@ document.addEventListener('click', function (e) {
   if (input) input.value = variantId;
 });
 
+// Buy Now — add to cart then go straight to checkout
+document.addEventListener('click', function (e) {
+  if (!e.target.matches('.product-info__buy-btn')) return;
+  var form = e.target.closest('form');
+  if (!form) return;
+  var id  = form.querySelector('[name="id"]').value;
+  var qty = parseInt(form.querySelector('[name="quantity"]').value || '1', 10);
+  e.target.disabled = true;
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: parseInt(id), quantity: qty })
+  }).then(function () {
+    window.location.href = '/checkout';
+  }).catch(function () {
+    e.target.disabled = false;
+  });
+});
+
 // Product card — click anywhere to navigate to product page
 document.addEventListener('click', function (e) {
   var card = e.target.closest('[data-product-url]');
