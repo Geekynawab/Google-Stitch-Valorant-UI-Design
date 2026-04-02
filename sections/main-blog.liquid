@@ -39,20 +39,13 @@
                 {%- endif -%}
                 {%- if patch_num contains '.' and patch_num != blank -%}
                   {%- unless patch_num == article.published_at | date: '%y.%m' -%}
-                    <div class="blog-card__patch-badge">// {{ patch_num }}</div>
+                    <div class="blog-card__patch-badge">v{{ patch_num }}</div>
                   {%- endunless -%}
                 {%- endif -%}
               </div>
 
               <div class="blog-card__body">
-                <div class="blog-card__meta-row">
-                  {%- if article.tags.size > 0 -%}
-                    {%- assign display_tag = article.tags | first -%}
-                    {%- if display_tag contains 'patch:' -%}{%- assign display_tag = article.tags[1] | default: 'UPDATE' -%}{%- endif -%}
-                    <span class="blog-card__tag">{{ display_tag | upcase }}</span>
-                  {%- endif -%}
-                  <span class="blog-card__date">{{ article.published_at | date: '%b %d, %Y' }}</span>
-                </div>
+                <span class="blog-card__date">{{ article.published_at | date: '%b %d, %Y' }}</span>
                 <h2 class="blog-card__title">{{ article.title }}</h2>
                 {%- if article.excerpt != blank -%}
                   <p class="blog-card__excerpt">{{ article.excerpt | strip_html | truncate: 110 }}</p>
