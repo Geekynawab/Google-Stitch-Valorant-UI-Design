@@ -96,14 +96,14 @@
 /* ── Sphere background ───────────────────────────────────────────── */
 #dome-bg-{{ section.id }} {
   position: absolute;
-  inset: 0 -6vw; /* bleed past hero edges so no gap */
+  inset: 0 -12vw; /* bleed past hero edges so no gap */
   z-index: 0;
   --segments-x: 22;
   --segments-y: 22;
   --overlay-blur-color: #050f19;
   --image-filter: brightness(0.5);
   --tile-radius: 12px;
-  --radius: 3000px;
+  --radius: 1500px;
   --circ: calc(var(--radius) * 3.14159);
   --rot-y: calc(360deg / var(--segments-x) / 2);
   --rot-x: calc(360deg / var(--segments-y) / 2);
@@ -319,8 +319,8 @@
 
 <script>
 (function () {
-  var FIT      = 2.0;
-  var MIN_R    = 3000;
+  var FIT      = 0.9;
+  var MIN_R    = 1500;
   var SEG      = 22;
   var MAX_VERT = 20;
   var SENS     = 20;
@@ -548,7 +548,8 @@
     var cr = entries[0].contentRect;
     var w  = Math.max(1, cr.width);
     var h  = Math.max(1, cr.height);
-    var radius = Math.max(w * FIT, h * FIT, MIN_R);
+    var basis  = w / h >= 1.3 ? w : Math.min(w, h);
+    var radius = Math.max(basis * FIT, MIN_R);
     root.style.setProperty('--radius', Math.round(radius) + 'px');
     applyTransform(rot.x, rot.y);
   }).observe(root);
