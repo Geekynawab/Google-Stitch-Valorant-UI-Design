@@ -35,6 +35,9 @@
           {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
             <a href="{{ section.settings.cta_link }}" class="btn-primary">{{ section.settings.cta_label }}</a>
           {%- endif -%}
+          <a href="{{ section.settings.shop_link | default: '/collections/all' }}" class="btn-primary">
+            {{ section.settings.shop_label | default: 'Shop Collection' }}
+          </a>
         </div>
       </div>
 
@@ -521,6 +524,17 @@
       "type": "url",
       "id": "cta_link",
       "label": "CTA button link"
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Shop button text",
+      "default": "Shop Collection"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Shop button link"
     },
     {
       "type": "collection",
