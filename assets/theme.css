@@ -546,11 +546,13 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .page-layout { max-width: 760px; }
 .page-layout__header { display: flex; align-items: center; gap: var(--space-6); margin-bottom: var(--space-12); padding-bottom: var(--space-8); border-bottom: 1px solid var(--color-outline-variant); }
 .page-layout__accent { width: 4px; height: 2.5rem; background: var(--color-primary); border-radius: 2px; flex-shrink: 0; }
-.page-layout__title { font-family: var(--font-headline); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-on-surface); margin: 0; line-height: 1; }
+.page-layout__title { font-family: var(--font-headline) !important; font-size: 1.75rem !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.04em !important; color: var(--color-on-surface) !important; margin: 0 !important; line-height: 1.1 !important; text-align: left !important; }
 .page-layout__body { color: rgba(217,227,242,0.8); line-height: 1.75; font-size: 0.925rem; text-align: left; }
 .page-layout__body * { text-align: left !important; }
-.page-layout__body h2 { font-family: var(--font-headline); font-size: 1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-primary); margin: 2rem 0 0.5rem; }
-.page-layout__body h3 { font-family: var(--font-headline); font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-on-surface); margin: 1.5rem 0 0.4rem; }
+.page-layout__body h1, .page-layout__body h2, .page-layout__body h3, .page-layout__body h4 { text-align: left !important; }
+.page-layout__body h1 { font-size: 1.2rem !important; font-weight: 900; color: var(--color-primary); margin: 2rem 0 0.5rem !important; letter-spacing: 0.06em; }
+.page-layout__body h2 { font-size: 1rem !important; font-weight: 900; color: var(--color-primary); margin: 2rem 0 0.5rem !important; letter-spacing: 0.1em; }
+.page-layout__body h3 { font-size: 0.875rem !important; font-weight: 700; color: var(--color-on-surface); margin: 1.5rem 0 0.4rem !important; letter-spacing: 0.08em; }
 .page-layout__body p { margin-bottom: 1rem; }
 .page-layout__body a { color: var(--color-primary); text-decoration: underline; }
 .page-layout__body ul, .page-layout__body ol { padding-left: 1.5rem; margin-bottom: 1rem; }
