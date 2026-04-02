@@ -542,12 +542,20 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .site-footer__links { display: flex; flex-wrap: wrap; gap: var(--space-8); list-style: none; }
 .site-footer__links a { font-family: var(--font-body); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(217,227,242,0.5); transition: color 0.15s ease; }
 .site-footer__links a:hover { color: var(--color-primary); }
-.page-content { max-width: 720px; color: rgba(217,227,242,0.85); line-height: 1.7; font-size: 0.95rem; }
-.page-content h2, .page-content h3 { font-family: var(--font-headline); color: var(--color-on-surface); margin-top: 2rem; margin-bottom: 0.5rem; }
-.page-content p { margin-bottom: 1rem; }
-.page-content a { color: var(--color-primary); text-decoration: underline; }
-.page-content ul, .page-content ol { padding-left: 1.5rem; margin-bottom: 1rem; }
-.page-content li { margin-bottom: 0.4rem; }
+.page-section { background: var(--color-surface); }
+.page-layout { max-width: 760px; }
+.page-layout__header { display: flex; align-items: center; gap: var(--space-6); margin-bottom: var(--space-12); padding-bottom: var(--space-8); border-bottom: 1px solid var(--color-outline-variant); }
+.page-layout__accent { width: 4px; height: 2.5rem; background: var(--color-primary); border-radius: 2px; flex-shrink: 0; }
+.page-layout__title { font-family: var(--font-headline); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-on-surface); margin: 0; line-height: 1; }
+.page-layout__body { color: rgba(217,227,242,0.8); line-height: 1.75; font-size: 0.925rem; text-align: left; }
+.page-layout__body * { text-align: left !important; }
+.page-layout__body h2 { font-family: var(--font-headline); font-size: 1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-primary); margin: 2rem 0 0.5rem; }
+.page-layout__body h3 { font-family: var(--font-headline); font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-on-surface); margin: 1.5rem 0 0.4rem; }
+.page-layout__body p { margin-bottom: 1rem; }
+.page-layout__body a { color: var(--color-primary); text-decoration: underline; }
+.page-layout__body ul, .page-layout__body ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+.page-layout__body li { margin-bottom: 0.4rem; }
+.page-layout__body strong { color: var(--color-on-surface); font-weight: 600; }
 
 /* ============================================================ WEAPON CATEGORIES */
 .weapon-categories { padding-top: 2.5rem; padding-bottom: 2rem; background: transparent; position: relative; }
