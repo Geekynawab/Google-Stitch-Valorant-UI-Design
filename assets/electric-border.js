@@ -75,8 +75,8 @@ const ElectricBorder = (() => {
       onlyOnHover  = true
     } = opts;
 
-    const OFFSET = 4;
-    const DISPLACEMENT = 12;
+    const OFFSET = 20;
+    const DISPLACEMENT = 30;
 
     // Wrap if not already wrapped
     if (!container.classList.contains('eb-host')) {
@@ -104,11 +104,13 @@ const ElectricBorder = (() => {
 
     function resize() {
       const rect = container.getBoundingClientRect();
+      const w = rect.width + OFFSET * 2;
+      const h = rect.height + OFFSET * 2;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = rect.width + 'px';
-      canvas.style.height = rect.height + 'px';
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
     }
 
     function draw(now) {

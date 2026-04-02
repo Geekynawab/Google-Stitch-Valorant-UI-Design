@@ -386,7 +386,8 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(4, 1fr); } }
 
 /* ============================================================ PRODUCT CARD */
-.product-card { position: relative; display: flex; flex-direction: column; height: 100%; background-color: var(--color-surface-container-lowest); }
+.product-card { position: relative; display: flex; flex-direction: column; height: 100%; background-color: var(--color-surface-container-lowest); z-index: 0; transition: z-index 0s; }
+.product-card:hover { z-index: 10; }
 .product-card__badge { position: absolute; top: var(--space-4); left: var(--space-4); z-index: 2; background-color: var(--color-primary); color: var(--color-on-primary); font-family: var(--font-headline); font-size: 0.625rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; padding: 0.25rem 0.75rem; }
 .product-card__image-wrap { position: relative; aspect-ratio: 1/1; overflow: hidden; background-color: var(--color-surface-container); }
 .product-card__image-wrap img { width: 100%; height: 100%; object-fit: contain; padding: var(--space-8); transition: transform 0.5s ease; }
