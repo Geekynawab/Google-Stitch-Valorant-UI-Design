@@ -283,3 +283,68 @@ document.addEventListener('change', function (e) {
     body: JSON.stringify({ id: key, quantity: qty })
   }).then(function () { window.location.reload(); });
 });
+
+// ============================================================ CLICK SPARK
+(function () {
+  var canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99999;';
+  document.body.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
+
+  var SPARK_COLOR  = '#ff4655';
+  var SPARK_SIZE   = 10;
+  var SPARK_RADIUS = 22;
+  var SPARK_COUNT  = 8;
+  var DURATION     = 450;
+
+  var sparks    = [];
+  var animating = false;
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function easeOut(t) { return t * (2 - t); }
+
+  function draw(ts) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    sparks = sparks.filter(function (s) {
+      var elapsed = ts - s.startTime;
+      if (elapsed >= DURATION) return false;
+      var p  = elapsed / DURATION;
+      var ep = easeOut(p);
+      var dist = ep * SPARK_RADIUS;
+      var len  = SPARK_SIZE * (1 - ep);
+      var x1 = s.x + dist * Math.cos(s.angle);
+      var y1 = s.y + dist * Math.sin(s.angle);
+      var x2 = s.x + (dist + len) * Math.cos(s.angle);
+      var y2 = s.y + (dist + len) * Math.sin(s.angle);
+      ctx.globalAlpha = 1 - ep;
+      ctx.strokeStyle = SPARK_COLOR;
+      ctx.lineWidth   = 2;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      return true;
+    });
+    ctx.globalAlpha = 1;
+    if (sparks.length > 0) {
+      requestAnimationFrame(draw);
+    } else {
+      animating = false;
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    var now = performance.now();
+    for (var i = 0; i < SPARK_COUNT; i++) {
+      sparks.push({ x: e.clientX, y: e.clientY, angle: (2 * Math.PI * i) / SPARK_COUNT, startTime: now });
+    }
+    if (!animating) { animating = true; requestAnimationFrame(draw); }
+  });
+})();
+
