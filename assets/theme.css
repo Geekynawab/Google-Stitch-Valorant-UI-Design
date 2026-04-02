@@ -542,6 +542,12 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .site-footer__links { display: flex; flex-wrap: wrap; gap: var(--space-8); list-style: none; }
 .site-footer__links a { font-family: var(--font-body); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(217,227,242,0.5); transition: color 0.15s ease; }
 .site-footer__links a:hover { color: var(--color-primary); }
+.page-content { max-width: 720px; color: rgba(217,227,242,0.85); line-height: 1.7; font-size: 0.95rem; }
+.page-content h2, .page-content h3 { font-family: var(--font-headline); color: var(--color-on-surface); margin-top: 2rem; margin-bottom: 0.5rem; }
+.page-content p { margin-bottom: 1rem; }
+.page-content a { color: var(--color-primary); text-decoration: underline; }
+.page-content ul, .page-content ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+.page-content li { margin-bottom: 0.4rem; }
 
 /* ============================================================ WEAPON CATEGORIES */
 .weapon-categories { padding-top: 2.5rem; padding-bottom: 2rem; background: transparent; position: relative; }
