@@ -14,6 +14,15 @@
 {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 {%- assign current_tag = current_tags | first -%}
 
+{%- comment -%} Determine weapon dropdown label {%- endcomment -%}
+{%- assign weapon_btn_label = section.settings.group_3_label -%}
+{%- assign grp2 = section.settings.group_2_tags | split: ',' -%}
+{%- assign grp3 = section.settings.group_3_tags | split: ',' -%}
+{%- assign grp4 = section.settings.group_4_tags | split: ',' -%}
+{%- for t in grp2 -%}{%- assign tc = t | strip -%}{%- if tc != blank and current_tags contains tc -%}{%- assign weapon_btn_label = tc -%}{%- endif -%}{%- endfor -%}
+{%- for t in grp3 -%}{%- assign tc = t | strip -%}{%- if tc != blank and current_tags contains tc -%}{%- assign weapon_btn_label = tc -%}{%- endif -%}{%- endfor -%}
+{%- for t in grp4 -%}{%- assign tc = t | strip -%}{%- if tc != blank and current_tags contains tc -%}{%- assign weapon_btn_label = tc -%}{%- endif -%}{%- endfor -%}
+
 <div class="collection-filter-bar">
   <div class="container">
     <div class="collection-filter-bar__inner">
@@ -26,31 +35,77 @@
         </a>
       {%- endif -%}
 
-      <!-- Group dropdowns -->
-      {%- assign groups = '1,2,3,4' | split: ',' -%}
-      {%- for g in groups -%}
-        {%- assign label_key = 'group_' | append: g | append: '_label' -%}
-        {%- assign tags_key  = 'group_' | append: g | append: '_tags' -%}
-        {%- assign grp_label = section.settings[label_key] -%}
-        {%- assign grp_tags  = section.settings[tags_key] | split: ',' -%}
-        {%- if grp_label != blank and grp_tags.size > 0 -%}
-          <select class="filter-group-select filter-sort-select"
-                  data-collection="{{ collection.url }}"
-                  aria-label="Filter by {{ grp_label }}">
-            <option value="">{{ grp_label }}</option>
-            {%- for tag in grp_tags -%}
+      <!-- Collection select (Group 1) -->
+      {%- assign grp1 = section.settings.group_1_tags | split: ',' -%}
+      {%- if section.settings.group_1_label != blank and grp1.size > 0 -%}
+        <select class="filter-group-select filter-sort-select"
+                data-collection="{{ collection.url }}"
+                aria-label="Filter by {{ section.settings.group_1_label }}">
+          <option value="">{{ section.settings.group_1_label }}</option>
+          {%- for tag in grp1 -%}
+            {%- assign t = tag | strip -%}
+            {%- if t != blank -%}
+              <option value="{{ t | handle }}" {% if current_tags contains t %}selected{% endif %}>{{ t }}</option>
+            {%- endif -%}
+          {%- endfor -%}
+        </select>
+      {%- endif -%}
+
+      <!-- Combined Weapon Type — Valorant-style dropdown (Groups 2 + 3 + 4) -->
+      <div class="valo-dropdown" data-collection="{{ collection.url }}">
+        <button class="valo-dropdown__btn" aria-expanded="false" aria-haspopup="listbox">
+          {{ weapon_btn_label | upcase }}
+          <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">arrow_drop_down</span>
+        </button>
+        <ul class="valo-dropdown__menu" role="listbox">
+
+          {%- if section.settings.group_2_label != blank and grp2.size > 0 -%}
+            <li class="valo-dropdown__sep">{{ section.settings.group_2_label }}</li>
+            {%- for tag in grp2 -%}
               {%- assign t = tag | strip -%}
               {%- if t != blank -%}
-                <option value="{{ t | handle }}"
-                  {%- if current_tag == t or current_tag == t and current_tags -%} selected{%- endif -%}
-                  {%- if current_tags contains t %} selected{%- endif -%}>
-                  {{ t }}
-                </option>
+                <li>
+                  <a href="{{ collection.url }}/{{ t | handle }}"
+                     class="{% if current_tags contains t %}valo-dropdown__item--active{% endif %}">
+                    {{ t }}
+                  </a>
+                </li>
               {%- endif -%}
             {%- endfor -%}
-          </select>
-        {%- endif -%}
-      {%- endfor -%}
+          {%- endif -%}
+
+          {%- if section.settings.group_3_label != blank and grp3.size > 0 -%}
+            <li class="valo-dropdown__sep">{{ section.settings.group_3_label }}</li>
+            {%- for tag in grp3 -%}
+              {%- assign t = tag | strip -%}
+              {%- if t != blank -%}
+                <li>
+                  <a href="{{ collection.url }}/{{ t | handle }}"
+                     class="{% if current_tags contains t %}valo-dropdown__item--active{% endif %}">
+                    {{ t }}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- if section.settings.group_4_label != blank and grp4.size > 0 -%}
+            <li class="valo-dropdown__sep">{{ section.settings.group_4_label }}</li>
+            {%- for tag in grp4 -%}
+              {%- assign t = tag | strip -%}
+              {%- if t != blank -%}
+                <li>
+                  <a href="{{ collection.url }}/{{ t | handle }}"
+                     class="{% if current_tags contains t %}valo-dropdown__item--active{% endif %}">
+                    {{ t }}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+
+        </ul>
+      </div>
 
       <!-- Spacer -->
       <div style="flex:1;"></div>
@@ -112,7 +167,23 @@
 </section>
 
 <script>
-  // Group filter dropdowns
+  // Valo dropdown toggle
+  document.querySelectorAll('.valo-dropdown').forEach(function (dd) {
+    var btn = dd.querySelector('.valo-dropdown__btn');
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = dd.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open);
+    });
+  });
+  document.addEventListener('click', function () {
+    document.querySelectorAll('.valo-dropdown.is-open').forEach(function (dd) {
+      dd.classList.remove('is-open');
+      dd.querySelector('.valo-dropdown__btn').setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Group filter selects (Collection)
   document.querySelectorAll('.filter-group-select').forEach(function (sel) {
     sel.addEventListener('change', function () {
       var base = this.dataset.collection;
@@ -124,7 +195,7 @@
     });
   });
 
-  // Sort dropdown
+  // Sort
   document.getElementById('collection-sort').addEventListener('change', function () {
     var url = new URL(window.location.href);
     url.searchParams.set('sort_by', this.value);
@@ -143,16 +214,16 @@
       "min": 8, "max": 48, "step": 4,
       "default": 12
     },
-    { "type": "header", "content": "Filter Group 1" },
+    { "type": "header", "content": "Filter Group 1 — Collections" },
     { "type": "text", "id": "group_1_label", "label": "Group label", "default": "Collection" },
     { "type": "text", "id": "group_1_tags",  "label": "Tags (comma-separated)", "default": "Reaver, Prime, Elderflame, Glitchpop" },
-    { "type": "header", "content": "Filter Group 2" },
+    { "type": "header", "content": "Filter Group 2 — Rifles" },
     { "type": "text", "id": "group_2_label", "label": "Group label", "default": "Rifle" },
     { "type": "text", "id": "group_2_tags",  "label": "Tags (comma-separated)", "default": "Vandal, Phantom, Spectre, Bulldog" },
-    { "type": "header", "content": "Filter Group 3" },
+    { "type": "header", "content": "Filter Group 3 — Knives" },
     { "type": "text", "id": "group_3_label", "label": "Group label", "default": "Knife" },
     { "type": "text", "id": "group_3_tags",  "label": "Tags (comma-separated)", "default": "Karambit, Kunai, Butterfly" },
-    { "type": "header", "content": "Filter Group 4" },
+    { "type": "header", "content": "Filter Group 4 — Other" },
     { "type": "text", "id": "group_4_label", "label": "Group label", "default": "Type" },
     { "type": "text", "id": "group_4_tags",  "label": "Tags (comma-separated)", "default": "Keychain" }
   ]

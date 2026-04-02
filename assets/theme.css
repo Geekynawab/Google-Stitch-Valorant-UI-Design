@@ -466,6 +466,17 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .filter-sort-select option { background-color: #151f2b; }
 .filter-clear { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-headline); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.3rem 0.75rem; background-color: var(--color-primary); color: #fff; border: 1px solid var(--color-primary); white-space: nowrap; transition: background 0.15s; }
 .filter-clear:hover { background-color: transparent; color: var(--color-primary); }
+
+/* Valorant-style weapon dropdown */
+.valo-dropdown { position: relative; display: inline-block; }
+.valo-dropdown__btn { background: transparent; color: var(--color-primary); font-family: var(--font-headline); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; border: none; cursor: pointer; display: flex; align-items: center; gap: 2px; padding: 0.35rem 0.1rem 0.45rem; position: relative; }
+.valo-dropdown__btn::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--color-primary); }
+.valo-dropdown__menu { position: absolute; top: calc(100% + 4px); left: 0; background: #141923; min-width: 170px; list-style: none; padding: 0.5rem 0 0.75rem; z-index: 200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+.valo-dropdown.is-open .valo-dropdown__menu { display: block; }
+.valo-dropdown__menu a { display: block; padding: 0.45rem 1.25rem; color: rgba(217,227,242,0.75); font-family: var(--font-headline); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.1s; }
+.valo-dropdown__menu a:hover { color: #fff; }
+.valo-dropdown__item--active { color: var(--color-primary) !important; }
+.valo-dropdown__sep { font-family: var(--font-headline); font-size: 0.55rem; font-weight: 900; color: rgba(217,227,242,0.3); text-transform: uppercase; letter-spacing: 0.18em; padding: 0.75rem 1.25rem 0.2rem; }
 .collection-empty { text-align: center; padding: var(--space-16); color: rgba(217,227,242,0.4); font-family: var(--font-headline); text-transform: uppercase; letter-spacing: 0.1em; }
 .collection-grid-section { background-color: var(--color-surface); }
 .collection-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
