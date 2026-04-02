@@ -29,7 +29,24 @@
         "heading": "BESTSELLERS",
         "product_count": 4
       }
+    },
+    "dome": {
+      "type": "dome-gallery",
+      "settings": {
+        "heading": "THE ARMORY",
+        "product_limit": 12
+      }
+    },
+    "model-showcase": {
+      "type": "model-showcase",
+      "settings": {
+        "eyebrow": "Featured Weapon",
+        "title": "Champions Butterfly Knife",
+        "description": "The rarest knife in Valorant history. Crafted to mark the 2021 World Championship, this blade is more than a weapon — it's a trophy.",
+        "cta_label": "Shop Now",
+        "model_file": "valorant_champions_butterfly_knife.glb"
+      }
     }
   },
-  "order": ["hero","weapon-categories","trust","categories","featured"]
+  "order": ["hero","weapon-categories","trust","categories","featured","dome","model-showcase"]
 }

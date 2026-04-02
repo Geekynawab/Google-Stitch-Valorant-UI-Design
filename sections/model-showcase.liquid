@@ -1,0 +1,409 @@
+<section class="model-showcase" id="model-showcase-{{ section.id }}">
+  <div class="container">
+    <div class="model-showcase__layout">
+
+      <div class="model-showcase__text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="model-showcase__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="model-showcase__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <p class="model-showcase__desc">{{ section.settings.description }}</p>
+        {%- endif -%}
+        {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
+          <a href="{{ section.settings.cta_link }}" class="btn-primary">{{ section.settings.cta_label }}</a>
+        {%- endif -%}
+      </div>
+
+      <div
+        id="model-viewer-mount-{{ section.id }}"
+        class="model-showcase__canvas"
+        data-src="{{ section.settings.model_file | default: 'valorant_champions_butterfly_knife.glb' | asset_url }}"
+      ></div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+.model-showcase {
+  padding: var(--space-24) 0;
+  background: var(--color-surface);
+  overflow: hidden;
+}
+.model-showcase__layout {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+}
+.model-showcase__text {
+  flex: 0 0 auto;
+  max-width: 420px;
+}
+.model-showcase__eyebrow {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--color-accent);
+  margin-bottom: var(--space-4);
+}
+.model-showcase__title {
+  font-family: var(--font-valorant);
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  line-height: 1.1; text-transform: uppercase;
+  color: var(--color-text-primary); margin-bottom: var(--space-4);
+}
+.model-showcase__desc {
+  font-size: 1rem; line-height: 1.6;
+  color: var(--color-on-surface-variant); margin-bottom: var(--space-8);
+}
+.model-showcase__canvas {
+  flex: 1;
+  height: 520px;
+  min-width: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: transparent;
+}
+.model-showcase__canvas canvas { display: block; }
+.model-showcase__loading {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; color: var(--color-text-secondary);
+  font-family: var(--font-headline); font-size: 0.75rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+}
+@media (max-width: 900px) {
+  .model-showcase__layout { flex-direction: column-reverse; }
+  .model-showcase__canvas { width: 100%; height: 380px; }
+  .model-showcase__text { max-width: 100%; }
+}
+</style>
+
+<script type="module">
+import htm from 'https://esm.sh/htm@3';
+import React, { Suspense, useRef, useLayoutEffect, useEffect, useMemo } from 'https://esm.sh/react@18';
+import { createRoot } from 'https://esm.sh/react-dom@18/client';
+import { Canvas, useFrame, useThree, invalidate } from 'https://esm.sh/@react-three/fiber@8?deps=react@18,three@0.158.0';
+import { OrbitControls, useGLTF, useProgress, Html, Environment, ContactShadows } from 'https://esm.sh/@react-three/drei@9?deps=react@18,three@0.158.0,@react-three/fiber@8';
+import * as THREE from 'https://esm.sh/three@0.158.0';
+
+const html = htm.bind(React.createElement);
+
+/* ── Constants (from ReactBits) ─────────────────────────────────── */
+const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+const deg2rad = d => (d * Math.PI) / 180;
+const ROTATE_SPEED = 0.005;
+const INERTIA = 0.925;
+const PARALLAX_MAG = 0.05;
+const PARALLAX_EASE = 0.12;
+const HOVER_MAG = deg2rad(6);
+const HOVER_EASE = 0.15;
+
+/* ── Loader ─────────────────────────────────────────────────────── */
+function Loader() {
+  const { progress } = useProgress();
+  return html`<${Html} center><div class="model-showcase__loading">Loading ${Math.round(progress)}%</div></${Html}>`;
+}
+
+/* ── Desktop orbit controls ─────────────────────────────────────── */
+function DesktopControls({ pivot, min, max, zoomEnabled }) {
+  const ref = useRef(null);
+  useFrame(() => ref.current?.target.copy(pivot));
+  return html`
+    <${OrbitControls}
+      ref=${ref}
+      makeDefault
+      enablePan=${false}
+      enableRotate=${false}
+      enableZoom=${zoomEnabled}
+      minDistance=${min}
+      maxDistance=${max}
+    />
+  `;
+}
+
+/* ── Model inner (ReactBits source, GLB only) ───────────────────── */
+function ModelInner({ url, xOff, yOff, pivot, initYaw, initPitch, minZoom, maxZoom,
+  enableMouseParallax, enableManualRotation, enableHoverRotation,
+  autoFrame, fadeIn, autoRotate, autoRotateSpeed, onLoaded }) {
+
+  const outer = useRef(null);
+  const inner = useRef(null);
+  const { camera, gl } = useThree();
+
+  const vel  = useRef({ x: 0, y: 0 });
+  const tPar = useRef({ x: 0, y: 0 });
+  const cPar = useRef({ x: 0, y: 0 });
+  const tHov = useRef({ x: 0, y: 0 });
+  const cHov = useRef({ x: 0, y: 0 });
+
+  const { scene } = useGLTF(url);
+  const content = useMemo(() => scene.clone(), [scene]);
+
+  const pivotW = useRef(new THREE.Vector3());
+
+  useLayoutEffect(() => {
+    if (!content || !inner.current) return;
+    const g = inner.current;
+    g.updateWorldMatrix(true, true);
+
+    const sphere = new THREE.Box3().setFromObject(g).getBoundingSphere(new THREE.Sphere());
+    const s = 1 / (sphere.radius * 2);
+    g.position.set(-sphere.center.x, -sphere.center.y, -sphere.center.z);
+    g.scale.setScalar(s);
+
+    g.traverse(o => {
+      if (o.isMesh) {
+        o.castShadow = true;
+        o.receiveShadow = true;
+        if (fadeIn) { o.material.transparent = true; o.material.opacity = 0; }
+      }
+    });
+
+    g.getWorldPosition(pivotW.current);
+    pivot.copy(pivotW.current);
+    outer.current.rotation.set(initPitch, initYaw, 0);
+
+    if (autoFrame && camera.isPerspectiveCamera) {
+      const fitR = sphere.radius * s;
+      const d = (fitR * 1.2) / Math.sin((camera.fov * Math.PI) / 180 / 2);
+      camera.position.set(pivotW.current.x, pivotW.current.y, pivotW.current.z + d);
+      camera.near = d / 10; camera.far = d * 10;
+      camera.updateProjectionMatrix();
+    }
+
+    if (fadeIn) {
+      let t = 0;
+      const id = setInterval(() => {
+        t += 0.05;
+        const v = Math.min(t, 1);
+        g.traverse(o => { if (o.isMesh) o.material.opacity = v; });
+        invalidate();
+        if (v === 1) { clearInterval(id); onLoaded?.(); }
+      }, 16);
+      return () => clearInterval(id);
+    } else onLoaded?.();
+  }, [content]);
+
+  /* Desktop drag rotation */
+  useEffect(() => {
+    if (!enableManualRotation || isTouch) return;
+    const el = gl.domElement;
+    let drag = false, lx = 0, ly = 0;
+    const down = e => {
+      if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+      drag = true; lx = e.clientX; ly = e.clientY;
+      window.addEventListener('pointerup', up);
+    };
+    const move = e => {
+      if (!drag) return;
+      const dx = e.clientX - lx, dy = e.clientY - ly;
+      lx = e.clientX; ly = e.clientY;
+      outer.current.rotation.y += dx * ROTATE_SPEED;
+      outer.current.rotation.x += dy * ROTATE_SPEED;
+      vel.current = { x: dx * ROTATE_SPEED, y: dy * ROTATE_SPEED };
+      invalidate();
+    };
+    const up = () => (drag = false);
+    el.addEventListener('pointerdown', down);
+    el.addEventListener('pointermove', move);
+    return () => {
+      el.removeEventListener('pointerdown', down);
+      el.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+  }, [gl, enableManualRotation]);
+
+  /* Mouse parallax + hover tilt */
+  useEffect(() => {
+    if (isTouch) return;
+    const mm = e => {
+      if (e.pointerType !== 'mouse') return;
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = (e.clientY / window.innerHeight) * 2 - 1;
+      if (enableMouseParallax) tPar.current = { x: -nx * PARALLAX_MAG, y: -ny * PARALLAX_MAG };
+      if (enableHoverRotation) tHov.current = { x: ny * HOVER_MAG, y: nx * HOVER_MAG };
+      invalidate();
+    };
+    window.addEventListener('pointermove', mm);
+    return () => window.removeEventListener('pointermove', mm);
+  }, [enableMouseParallax, enableHoverRotation]);
+
+  /* Animation frame */
+  useFrame((_, dt) => {
+    let need = false;
+    cPar.current.x += (tPar.current.x - cPar.current.x) * PARALLAX_EASE;
+    cPar.current.y += (tPar.current.y - cPar.current.y) * PARALLAX_EASE;
+    const phx = cHov.current.x, phy = cHov.current.y;
+    cHov.current.x += (tHov.current.x - cHov.current.x) * HOVER_EASE;
+    cHov.current.y += (tHov.current.y - cHov.current.y) * HOVER_EASE;
+
+    const ndc = pivotW.current.clone().project(camera);
+    ndc.x += xOff + cPar.current.x;
+    ndc.y += yOff + cPar.current.y;
+    outer.current.position.copy(ndc.unproject(camera));
+
+    outer.current.rotation.x += cHov.current.x - phx;
+    outer.current.rotation.y += cHov.current.y - phy;
+
+    if (autoRotate) { outer.current.rotation.y += autoRotateSpeed * dt; need = true; }
+    outer.current.rotation.y += vel.current.x;
+    outer.current.rotation.x += vel.current.y;
+    vel.current.x *= INERTIA; vel.current.y *= INERTIA;
+    if (Math.abs(vel.current.x) > 1e-4 || Math.abs(vel.current.y) > 1e-4) need = true;
+    if (Math.abs(cPar.current.x - tPar.current.x) > 1e-4 || Math.abs(cPar.current.y - tPar.current.y) > 1e-4 ||
+        Math.abs(cHov.current.x - tHov.current.x) > 1e-4 || Math.abs(cHov.current.y - tHov.current.y) > 1e-4) need = true;
+    if (need) invalidate();
+  });
+
+  if (!content) return null;
+  return html`
+    <group ref=${outer}>
+      <group ref=${inner}>
+        <primitive object=${content} />
+      </group>
+    </group>
+  `;
+}
+
+/* ── ModelViewer (ReactBits source) ─────────────────────────────── */
+function ModelViewer({ url,
+  defaultRotationX = -50, defaultRotationY = 20, defaultZoom = 0.5,
+  minZoomDistance = 0.5, maxZoomDistance = 10,
+  enableMouseParallax = true, enableManualRotation = true,
+  enableHoverRotation = true, enableManualZoom = true,
+  ambientIntensity = 0.3, keyLightIntensity = 1,
+  fillLightIntensity = 0.5, rimLightIntensity = 0.8,
+  environmentPreset = 'forest',
+  autoFrame = false, fadeIn = true,
+  autoRotate = true, autoRotateSpeed = 0.35
+}) {
+  useEffect(() => { useGLTF.preload(url); }, [url]);
+
+  const pivot     = useRef(new THREE.Vector3()).current;
+  const contactRef  = useRef(null);
+  const rendererRef = useRef(null);
+  const sceneRef    = useRef(null);
+  const cameraRef   = useRef(null);
+
+  const initYaw   = deg2rad(defaultRotationX);
+  const initPitch = deg2rad(defaultRotationY);
+  const camZ = Math.min(Math.max(defaultZoom, minZoomDistance), maxZoomDistance);
+
+  return html`
+    <div style=${{ width: '100%', height: '100%', touchAction: 'pan-y pinch-zoom', position: 'relative' }}>
+      <${Canvas}
+        shadows=${true}
+        frameloop="demand"
+        gl=${{ preserveDrawingBuffer: true, alpha: true, antialias: true }}
+        onCreated=${({ gl, scene, camera }) => {
+          rendererRef.current = gl;
+          sceneRef.current = scene;
+          cameraRef.current = camera;
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.outputColorSpace = THREE.SRGBColorSpace;
+          gl.setClearColor(0x000000, 0);
+        }}
+        camera=${{ fov: 50, position: [0, 0, camZ], near: 0.01, far: 100 }}
+        style=${{ background: 'transparent' }}
+      >
+        ${environmentPreset !== 'none' && html`<${Environment} preset=${environmentPreset} background=${false} />`}
+        <ambientLight intensity=${ambientIntensity} />
+        <directionalLight position=${[5, 5, 5]} intensity=${keyLightIntensity} castShadow=${true} />
+        <directionalLight position=${[-5, 2, 5]} intensity=${fillLightIntensity} />
+        <directionalLight position=${[0, 4, -5]} intensity=${rimLightIntensity} />
+        <${ContactShadows} ref=${contactRef} position=${[0, -0.5, 0]} opacity=${0.35} scale=${10} blur=${2} />
+        <${Suspense} fallback=${html`<${Loader} />`}>
+          <${ModelInner}
+            url=${url}
+            xOff=${0} yOff=${0}
+            pivot=${pivot}
+            initYaw=${initYaw}
+            initPitch=${initPitch}
+            minZoom=${minZoomDistance}
+            maxZoom=${maxZoomDistance}
+            enableMouseParallax=${enableMouseParallax}
+            enableManualRotation=${enableManualRotation}
+            enableHoverRotation=${enableHoverRotation}
+            autoFrame=${autoFrame}
+            fadeIn=${fadeIn}
+            autoRotate=${autoRotate}
+            autoRotateSpeed=${autoRotateSpeed}
+          />
+        </${Suspense}>
+        ${!isTouch && html`<${DesktopControls} pivot=${pivot} min=${minZoomDistance} max=${maxZoomDistance} zoomEnabled=${enableManualZoom} />`}
+      </${Canvas}>
+    </div>
+  `;
+}
+
+/* ── Mount ───────────────────────────────────────────────────────── */
+const container = document.getElementById('model-viewer-mount-{{ section.id }}');
+if (container) {
+  const src = container.dataset.src;
+  createRoot(container).render(html`<${ModelViewer} url=${src} autoRotate=${true} fadeIn=${true} />`);
+}
+</script>
+
+{% schema %}
+{
+  "name": "Model Showcase",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Featured Weapon"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Champions Butterfly Knife"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "The rarest knife in Valorant history. Crafted to mark the 2021 World Championship, this blade is more than a weapon — it's a trophy."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "model_file",
+      "label": "3D Model",
+      "options": [
+        { "value": "valorant_champions_butterfly_knife.glb", "label": "Champions Butterfly Knife" },
+        { "value": "karambit_prime_2.0_valorant.glb",        "label": "Prime 2.0 Karambit" },
+        { "value": "reaver_karambit.glb",                    "label": "Reaver Karambit" },
+        { "value": "valorant_glitchpop_dagger.glb",          "label": "Glitchpop Dagger" },
+        { "value": "katana_valorant_draft.glb",              "label": "Katana Draft" }
+      ],
+      "default": "valorant_champions_butterfly_knife.glb"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Model Showcase",
+      "settings": {
+        "eyebrow": "Featured Weapon",
+        "title": "Champions Butterfly Knife",
+        "description": "The rarest knife in Valorant history. Crafted to mark the 2021 World Championship, this blade is more than a weapon — it's a trophy.",
+        "cta_label": "Shop Now",
+        "model_file": "valorant_champions_butterfly_knife.glb"
+      }
+    }
+  ]
+}
+{% endschema %}
