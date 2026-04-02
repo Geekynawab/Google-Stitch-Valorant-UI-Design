@@ -1,0 +1,24 @@
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/" class="breadcrumb__item">Home</a>
+    <span class="breadcrumb__sep">›</span>
+    <span class="breadcrumb__item breadcrumb__item--current">{{ page_title }}</span>
+  </nav>
+</div>
+
+<section class="section page-section">
+  <div class="container">
+    <div class="page-layout">
+
+      <div class="page-layout__header">
+        <div class="page-layout__accent"></div>
+        <h1 class="page-layout__title">{{ page_title }}</h1>
+      </div>
+
+      <div class="page-layout__body">
+        {{ content_for_layout }}
+      </div>
+
+    </div>
+  </div>
+</section>
