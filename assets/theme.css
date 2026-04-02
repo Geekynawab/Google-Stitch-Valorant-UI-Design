@@ -435,7 +435,9 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .quantity-stepper { display: flex; align-items: center; width: fit-content; }
 .quantity-stepper button { width: 2.5rem; height: 2.5rem; background-color: var(--color-surface-container); color: var(--color-on-surface); font-size: 1.25rem; font-weight: 700; border: 1px solid var(--color-outline-variant); cursor: pointer; transition: background-color 0.15s; }
 .quantity-stepper button:hover { background-color: var(--color-primary); color: var(--color-on-primary); }
-.quantity-stepper input { width: 3.5rem; height: 2.5rem; background-color: var(--color-surface-container-lowest); color: var(--color-on-surface); font-family: var(--font-headline); font-weight: 700; text-align: center; border: 1px solid var(--color-outline-variant); border-left: none; border-right: none; }
+.quantity-stepper input { width: 3.5rem; height: 2.5rem; background-color: var(--color-surface-container-lowest); color: var(--color-on-surface); font-family: var(--font-headline); font-weight: 700; text-align: center; border: 1px solid var(--color-outline-variant); border-left: none; border-right: none; -moz-appearance: textfield; appearance: textfield; }
+.quantity-stepper input::-webkit-inner-spin-button,
+.quantity-stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .product-info__add-btn { width: 100%; margin-bottom: var(--space-4); }
 .product-info__description { border-top: 1px solid var(--color-surface-container-high); padding-top: var(--space-8); margin-top: var(--space-8); color: var(--color-on-surface-variant); line-height: 1.8; }
 

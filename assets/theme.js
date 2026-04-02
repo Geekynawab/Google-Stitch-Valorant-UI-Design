@@ -112,11 +112,36 @@ document.addEventListener('click', function (e) {
   if (e.target.matches('[data-qty-minus]')) {
     const input = e.target.closest('.quantity-stepper').querySelector('input');
     const val = parseInt(input.value, 10);
-    if (val > 1) input.value = val - 1;
+    const cartKey = input.dataset.cartQty;
+    if (val > 1) {
+      input.value = val - 1;
+      if (cartKey) {
+        fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: cartKey, quantity: val - 1 })
+        }).then(function () { window.location.reload(); });
+      }
+    } else if (val === 1 && cartKey) {
+      fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: cartKey, quantity: 0 })
+      }).then(function () { window.location.reload(); });
+    }
   }
   if (e.target.matches('[data-qty-plus]')) {
     const input = e.target.closest('.quantity-stepper').querySelector('input');
-    input.value = parseInt(input.value, 10) + 1;
+    const val = parseInt(input.value, 10) + 1;
+    input.value = val;
+    const cartKey = input.dataset.cartQty;
+    if (cartKey) {
+      fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: cartKey, quantity: val })
+      }).then(function () { window.location.reload(); });
+    }
   }
 });
 
