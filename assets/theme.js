@@ -2,6 +2,23 @@
    KnivesFactory Theme JS
    ============================================================ */
 
+// Policy page override — Shopify injects its own policy CSS after theme.css,
+// so we inject a <style> tag via JS which loads last and wins.
+if (window.location.pathname.indexOf('/policies/') === 0) {
+  document.body.classList.add('kf-policy');
+  var policyStyle = document.createElement('style');
+  policyStyle.textContent = [
+    '.kf-policy #main-content { padding: 2rem 0 4rem; }',
+    '.kf-policy #main-content h1 { font-size: 1.6rem !important; text-align: left !important; padding: 0 2rem; margin: 0 0 1.5rem !important; line-height: 1.2 !important; color: #d9e3f2 !important; }',
+    '.kf-policy #main-content h2 { font-size: 1rem !important; text-align: left !important; color: #ff4655 !important; margin: 2rem 0 0.5rem !important; }',
+    '.kf-policy #main-content h3 { font-size: 0.875rem !important; text-align: left !important; color: #d9e3f2 !important; margin: 1.5rem 0 0.4rem !important; }',
+    '.kf-policy #main-content p, .kf-policy #main-content li { font-size: 0.925rem !important; line-height: 1.75 !important; color: rgba(217,227,242,0.8) !important; text-align: left !important; }',
+    '.kf-policy #main-content ul, .kf-policy #main-content ol { padding-left: 3.5rem !important; }',
+    '.kf-policy #main-content * { text-align: left !important; max-width: none !important; }'
+  ].join(' ');
+  document.head.appendChild(policyStyle);
+}
+
 // Header interactions
 (function () {
   'use strict';
