@@ -1,47 +1,53 @@
-{%- comment -%} Derive patch number {%- endcomment -%}
 {%- assign patch_num = nil -%}
 {%- for tag in article.tags -%}
   {%- if tag contains 'patch:' -%}{%- assign patch_num = tag | remove: 'patch:' -%}{%- endif -%}
 {%- endfor -%}
-{%- assign patch_num = patch_num | default: article.published_at | date: '%y.%m' -%}
 
 <div class="container">{% render 'breadcrumb' %}</div>
 
 <article class="article-page">
 
-  <div class="article-patch-header">
-    <div class="container">
-      <span class="article-patch-eyebrow">// PATCH NOTES</span>
-      <span class="article-patch-number">{{ patch_num }}</span>
+  <!-- Blurred hero + centered image -->
+  {%- if article.image -%}
+    <div class="article-hero-wrap">
+      <div class="article-hero-bg" style="background-image:url('{{ article.image | image_url: width: 1400 }}');"></div>
+      <div class="article-hero-dim"></div>
+      <div class="article-hero-img">
+        <img src="{{ article.image | image_url: width: 860 }}"
+             alt="{{ article.image.alt | escape | default: article.title }}"
+             loading="eager">
+      </div>
     </div>
-  </div>
+  {%- endif -%}
 
+  <!-- Title + meta -->
   <div class="container">
     <div class="article-layout">
 
-      {%- if article.image -%}
-        <div class="article-hero">
-          <img src="{{ article.image | image_url: width: 1200 }}"
-               alt="{{ article.image.alt | escape | default: article.title }}"
-               loading="eager">
-        </div>
+      {%- if patch_num != blank -%}
+        <p class="article-patch-label">// PATCH NOTES &nbsp; <strong>{{ patch_num }}</strong></p>
       {%- endif -%}
 
       <h1 class="article-title">{{ article.title }}</h1>
 
+      <!-- Valorant-style divider -->
+      <div class="article-divider">
+        <span class="article-divider__bar"></span>
+        <span class="article-divider__diamond"></span>
+        <span class="article-divider__bar"></span>
+      </div>
+
       <div class="article-meta-bar">
-        <span class="article-meta__date">{{ article.published_at | date: '%B %d, %Y' }}</span>
+        <span class="article-meta__date">{{ article.published_at | date: '%b %d, %Y' | upcase }}</span>
         {%- if article.author != blank -%}
           <span class="article-meta__sep">//</span>
           <span class="article-meta__author">{{ article.author | upcase }}</span>
         {%- endif -%}
-        {%- if article.tags.size > 0 -%}
-          {%- for tag in article.tags -%}
-            {%- unless tag contains 'patch:' -%}
-              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article-tag">{{ tag }}</a>
-            {%- endunless -%}
-          {%- endfor -%}
-        {%- endif -%}
+        {%- for tag in article.tags -%}
+          {%- unless tag contains 'patch:' -%}
+            <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article-tag">{{ tag }}</a>
+          {%- endunless -%}
+        {%- endfor -%}
       </div>
 
       <div class="article-body rte">

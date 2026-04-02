@@ -570,10 +570,26 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .article-patch-header { background: var(--color-surface-container-lowest); border-bottom: 2px solid var(--color-primary); padding: 0.6rem 0; }
 .article-patch-eyebrow { font-family: var(--font-headline); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; color: var(--color-primary); margin-right: 1rem; }
 .article-patch-number { font-family: var(--font-headline); font-size: 0.7rem; font-weight: 900; letter-spacing: 0.2em; color: rgba(217,227,242,0.5); }
-.article-hero { text-align: center; margin-bottom: 1.5rem; }
-.article-hero img { max-width: 100%; height: auto; display: inline-block; }
-.article-title { font-family: var(--font-headline); font-size: clamp(1.4rem, 3vw, 2.2rem) !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.03em; color: var(--color-on-surface) !important; margin: 0 0 0.25rem !important; line-height: 1.15; }
-.article-layout { max-width: 800px; padding-top: 2rem; }
+/* Article hero */
+.article-hero-wrap { position: relative; width: 100%; height: 480px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.article-hero-bg { position: absolute; inset: -20px; background-size: cover; background-position: center; filter: blur(28px); transform: scale(1.08); opacity: 0.55; }
+.article-hero-dim { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,20,30,0.55) 0%, rgba(10,20,30,0.7) 100%); }
+.article-hero-img { position: relative; z-index: 1; width: min(760px, 88%); }
+.article-hero-img img { width: 100%; height: auto; display: block; box-shadow: 0 8px 48px rgba(0,0,0,0.6); }
+/* Article layout */
+.article-layout { max-width: 800px; padding-top: 2.5rem; }
+.article-patch-label { font-family: var(--font-headline); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--color-primary); margin: 0 0 0.6rem; }
+.article-patch-label strong { color: rgba(217,227,242,0.6); }
+.article-title { font-family: var(--font-headline); font-size: clamp(1.6rem, 4vw, 2.6rem) !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-on-surface) !important; margin: 0 0 1.5rem !important; line-height: 1.1; }
+/* Valorant divider */
+.article-divider { display: flex; align-items: center; gap: 0; margin-bottom: 1rem; }
+.article-divider__bar { flex: 1; height: 2px; background: var(--color-primary); }
+.article-divider__diamond { width: 8px; height: 8px; background: var(--color-primary); transform: rotate(45deg); margin: 0 6px; flex-shrink: 0; }
+/* Meta bar */
+.article-meta-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; padding-bottom: 2rem; }
+.article-meta__date { font-family: var(--font-headline); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; color: rgba(217,227,242,0.45); }
+.article-meta__sep { color: var(--color-primary); font-weight: 900; font-size: 0.8rem; }
+.article-meta__author { font-family: var(--font-headline); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; color: rgba(217,227,242,0.45); }
 .article-meta-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem; padding: 1.2rem 0 1.5rem; border-bottom: 1px solid var(--color-outline-variant); margin-bottom: 2rem; }
 .article-meta__date { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(217,227,242,0.35); }
 .article-meta__sep { color: var(--color-primary); font-weight: 900; font-size: 0.75rem; }
