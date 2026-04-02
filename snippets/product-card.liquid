@@ -11,14 +11,27 @@
     <div class="product-card__badge" style="background:var(--color-surface-bright);color:var(--color-on-surface);">Best Seller</div>
   {%- endif -%}
 
-  <div class="product-card__image-wrap">
+  {%- assign _img_urls = '' -%}
+  {%- for img in product.images -%}
+    {%- assign _img_urls = _img_urls | append: img | image_url: width: 600 -%}
+    {%- unless forloop.last -%}{%- assign _img_urls = _img_urls | append: '|' -%}{%- endunless -%}
+  {%- endfor -%}
+
+  <div class="product-card__image-wrap"
+       {%- if product.images.size > 1 %} data-images="{{ _img_urls }}"{% endif %}>
     {%- if product.featured_image -%}
       <img src="{{ product.featured_image | image_url: width: 600 }}"
            alt="{{ product.featured_image.alt | escape | default: product.title }}"
            width="600" height="600"
-           loading="lazy">
+           loading="lazy"
+           data-img-index="0">
     {%- else -%}
       {{ 'product-1' | placeholder_svg_tag }}
+    {%- endif -%}
+
+    {%- if product.images.size > 1 -%}
+      <button class="product-card__img-arrow product-card__img-prev" aria-label="Previous image">&#8249;</button>
+      <button class="product-card__img-arrow product-card__img-next" aria-label="Next image">&#8250;</button>
     {%- endif -%}
 
     <button class="product-card__wishlist"

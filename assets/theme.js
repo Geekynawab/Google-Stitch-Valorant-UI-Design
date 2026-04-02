@@ -159,6 +159,23 @@ document.addEventListener('click', function (e) {
   if (input) input.value = variantId;
 });
 
+// Product card image arrows
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest('.product-card__img-arrow');
+  if (!btn) return;
+  e.preventDefault();
+  var wrap = btn.closest('.product-card__image-wrap');
+  var img = wrap && wrap.querySelector('img[data-img-index]');
+  if (!img || !wrap.dataset.images) return;
+  var images = wrap.dataset.images.split('|');
+  var idx = parseInt(img.dataset.imgIndex || '0', 10);
+  idx = btn.classList.contains('product-card__img-prev')
+    ? (idx - 1 + images.length) % images.length
+    : (idx + 1) % images.length;
+  img.src = images[idx];
+  img.dataset.imgIndex = idx;
+});
+
 // Product gallery thumbnail switcher
 document.addEventListener('click', function (e) {
   if (!e.target.matches('.product-gallery__thumb img')) return;
