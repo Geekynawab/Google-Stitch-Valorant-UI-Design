@@ -12,36 +12,59 @@
 
 <!-- Filter bar -->
 {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+{%- assign current_tag = current_tags | first -%}
+
 <div class="collection-filter-bar">
   <div class="container">
     <div class="collection-filter-bar__inner">
 
-      <!-- Tag chips -->
-      <div class="collection-filter-bar__tags">
-        <span class="collection-filter-bar__label">Filter</span>
-        <a href="{{ collection.url }}"
-           class="filter-chip{% unless current_tags %} filter-chip--active{% endunless %}">
-          All
+      <!-- Active filter badge + clear -->
+      {%- if current_tag -%}
+        <a href="{{ collection.url }}" class="filter-clear">
+          <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">close</span>
+          {{ current_tag }}
         </a>
-        {%- for tag in collection.all_tags -%}
-          {%- if current_tags contains tag -%}
-            <a href="{{ collection.url }}" class="filter-chip filter-chip--active">{{ tag }}</a>
-          {%- else -%}
-            <a href="{{ collection.url }}/{{ tag | handle }}" class="filter-chip">{{ tag }}</a>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
+      {%- endif -%}
+
+      <!-- Group dropdowns -->
+      {%- assign groups = '1,2,3,4' | split: ',' -%}
+      {%- for g in groups -%}
+        {%- assign label_key = 'group_' | append: g | append: '_label' -%}
+        {%- assign tags_key  = 'group_' | append: g | append: '_tags' -%}
+        {%- assign grp_label = section.settings[label_key] -%}
+        {%- assign grp_tags  = section.settings[tags_key] | split: ',' -%}
+        {%- if grp_label != blank and grp_tags.size > 0 -%}
+          <select class="filter-group-select filter-sort-select"
+                  data-collection="{{ collection.url }}"
+                  aria-label="Filter by {{ grp_label }}">
+            <option value="">{{ grp_label }}</option>
+            {%- for tag in grp_tags -%}
+              {%- assign t = tag | strip -%}
+              {%- if t != blank -%}
+                <option value="{{ t | handle }}"
+                  {%- if current_tag == t or current_tag == t and current_tags -%} selected{%- endif -%}
+                  {%- if current_tags contains t %} selected{%- endif -%}>
+                  {{ t }}
+                </option>
+              {%- endif -%}
+            {%- endfor -%}
+          </select>
+        {%- endif -%}
+      {%- endfor -%}
+
+      <!-- Spacer -->
+      <div style="flex:1;"></div>
 
       <!-- Sort dropdown -->
       <div class="collection-filter-bar__sort">
         <span class="collection-filter-bar__label">Sort</span>
         <select class="filter-sort-select" id="collection-sort" aria-label="Sort products">
-          <option value="relevance"        {% if sort_by == 'relevance' %}selected{% endif %}>Relevance</option>
-          <option value="best-selling"     {% if sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
-          <option value="price-ascending"  {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
-          <option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
+          <option value="relevance"          {% if sort_by == 'relevance' %}selected{% endif %}>Relevance</option>
+          <option value="best-selling"       {% if sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
+          <option value="price-ascending"    {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+          <option value="price-descending"   {% if sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
           <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
-          <option value="title-ascending"  {% if sort_by == 'title-ascending' %}selected{% endif %}>A – Z</option>
+          <option value="title-ascending"    {% if sort_by == 'title-ascending' %}selected{% endif %}>A – Z</option>
         </select>
       </div>
 
@@ -89,6 +112,19 @@
 </section>
 
 <script>
+  // Group filter dropdowns
+  document.querySelectorAll('.filter-group-select').forEach(function (sel) {
+    sel.addEventListener('change', function () {
+      var base = this.dataset.collection;
+      var tag  = this.value;
+      var sort = new URLSearchParams(window.location.search).get('sort_by');
+      var url  = tag ? (base + '/' + tag) : base;
+      if (sort) url += '?sort_by=' + sort;
+      window.location = url;
+    });
+  });
+
+  // Sort dropdown
   document.getElementById('collection-sort').addEventListener('change', function () {
     var url = new URL(window.location.href);
     url.searchParams.set('sort_by', this.value);
@@ -106,7 +142,19 @@
       "label": "Products per page",
       "min": 8, "max": 48, "step": 4,
       "default": 12
-    }
+    },
+    { "type": "header", "content": "Filter Group 1" },
+    { "type": "text", "id": "group_1_label", "label": "Group label", "default": "Collection" },
+    { "type": "text", "id": "group_1_tags",  "label": "Tags (comma-separated)", "default": "Reaver, Prime, Elderflame, Glitchpop" },
+    { "type": "header", "content": "Filter Group 2" },
+    { "type": "text", "id": "group_2_label", "label": "Group label", "default": "Rifle" },
+    { "type": "text", "id": "group_2_tags",  "label": "Tags (comma-separated)", "default": "Vandal, Phantom, Spectre, Bulldog" },
+    { "type": "header", "content": "Filter Group 3" },
+    { "type": "text", "id": "group_3_label", "label": "Group label", "default": "Knife" },
+    { "type": "text", "id": "group_3_tags",  "label": "Tags (comma-separated)", "default": "Karambit, Kunai, Butterfly" },
+    { "type": "header", "content": "Filter Group 4" },
+    { "type": "text", "id": "group_4_label", "label": "Group label", "default": "" },
+    { "type": "text", "id": "group_4_tags",  "label": "Tags (comma-separated)", "default": "" }
   ]
 }
 {% endschema %}
