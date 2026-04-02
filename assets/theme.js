@@ -85,9 +85,11 @@
       this.bar   = $('#header-search');
       this.input = $('#header-search-input');
       if (!this.bar) return;
-      on($('#search-toggle'),       'click', function () { SearchOverlay.open(); });
-      on($('#header-search-close'), 'click', function () { SearchOverlay.close(); });
+      on($('#search-toggle'), 'click', function () { SearchOverlay.toggle(); });
       on(document, 'keydown', function (e) { if (e.key === 'Escape') SearchOverlay.close(); });
+    },
+    toggle: function () {
+      this.bar.classList.contains('open') ? this.close() : this.open();
     },
     open: function () {
       this.bar.classList.add('open');
