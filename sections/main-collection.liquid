@@ -209,26 +209,8 @@
 </section>
 
 <script>
-  // Toggle click-based valo dropdowns
-  document.querySelectorAll('.valo-dropdown:not([data-hover])').forEach(function (dd) {
-    var btn = dd.querySelector('.valo-dropdown__btn');
-    btn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var opening = !dd.classList.contains('is-open');
-      // close all first
-      document.querySelectorAll('.valo-dropdown.is-open').forEach(function (x) {
-        x.classList.remove('is-open');
-        x.querySelector('.valo-dropdown__btn').setAttribute('aria-expanded', 'false');
-      });
-      if (opening) {
-        dd.classList.add('is-open');
-        btn.setAttribute('aria-expanded', 'true');
-      }
-    });
-  });
-
-  // Hover-based valo dropdowns (Refine)
-  document.querySelectorAll('.valo-dropdown[data-hover]').forEach(function (dd) {
+  // Hover-based valo dropdowns (all)
+  document.querySelectorAll('.valo-dropdown').forEach(function (dd) {
     var btn = dd.querySelector('.valo-dropdown__btn');
     var timer;
     dd.addEventListener('mouseenter', function () {
