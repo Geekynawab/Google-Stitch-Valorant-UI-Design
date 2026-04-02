@@ -214,16 +214,17 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .mega-menu__link--all:hover { color: var(--color-accent); }
 .header-search {
   width: 0; overflow: hidden;
-  display: flex; align-items: center;
+  display: flex; align-items: stretch;
   transition: width 0.28s ease;
+  align-self: stretch;
 }
-.header-search.open { width: 260px; }
-.header-search__form { display: flex; align-items: center; gap: 0.5rem; width: 260px; padding: 0.3rem 0.75rem; background: rgba(8,16,26,0.95); border: 1px solid rgba(255,255,255,0.18); border-radius: 2px; white-space: nowrap; }
-.header-search__input { flex: 1; min-width: 0; background: none; border: none; outline: none; color: #fff; font-size: 0.9rem; font-weight: 500; caret-color: var(--color-primary); }
-.header-search__input::placeholder { color: rgba(255,255,255,0.35); }
-.header-search__close { display: flex; align-items: center; color: rgba(255,255,255,0.45); transition: color var(--transition-fast); flex-shrink: 0; background: none; border: none; cursor: pointer; padding: 0; }
+.header-search.open { width: 280px; }
+.header-search__form { display: flex; align-items: center; gap: 0.5rem; width: 280px; padding: 0 1rem; background: var(--color-primary); white-space: nowrap; flex: 1; }
+.header-search__input { flex: 1; min-width: 0; background: none; border: none; outline: none; color: #fff; font-size: 0.95rem; font-weight: 600; font-family: var(--font-headline); caret-color: #fff; }
+.header-search__input::placeholder { color: rgba(255,255,255,0.6); }
+.header-search__close { display: flex; align-items: center; color: rgba(255,255,255,0.7); transition: color var(--transition-fast); flex-shrink: 0; background: none; border: none; cursor: pointer; padding: 0; }
 .header-search__close:hover { color: #fff; }
-.header-actions { display: flex; align-items: center; gap: 0.75rem; justify-self: end; }
+.header-actions { display: flex; align-items: center; gap: 0.75rem; justify-self: end; align-self: stretch; }
 .header-icon { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; color: #fff; transition: color var(--transition-fast); position: relative; }
 .header-icon:hover { color: var(--color-primary); }
 .cart-count {
