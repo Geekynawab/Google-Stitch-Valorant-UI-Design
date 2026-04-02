@@ -117,20 +117,19 @@
       <!-- Spacer -->
       <div style="flex:1;"></div>
 
-      <!-- Sort dropdown -->
-      <div class="valo-dropdown valo-dropdown--right">
-        <button class="valo-dropdown__btn" aria-expanded="false" aria-haspopup="listbox">
-          {{ sort_label | upcase }}
-          <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">arrow_drop_down</span>
-        </button>
-        <ul class="valo-dropdown__menu" role="listbox">
-          <li><a href="#" data-sort-val="relevance"          class="{% if sort_by == 'relevance' %}valo-dropdown__item--active{% endif %}">Relevance</a></li>
-          <li><a href="#" data-sort-val="best-selling"       class="{% if sort_by == 'best-selling' %}valo-dropdown__item--active{% endif %}">Best Selling</a></li>
-          <li><a href="#" data-sort-val="price-ascending"    class="{% if sort_by == 'price-ascending' %}valo-dropdown__item--active{% endif %}">Price: Low to High</a></li>
-          <li><a href="#" data-sort-val="price-descending"   class="{% if sort_by == 'price-descending' %}valo-dropdown__item--active{% endif %}">Price: High to Low</a></li>
-          <li><a href="#" data-sort-val="created-descending" class="{% if sort_by == 'created-descending' %}valo-dropdown__item--active{% endif %}">Newest</a></li>
-          <li><a href="#" data-sort-val="title-ascending"    class="{% if sort_by == 'title-ascending' %}valo-dropdown__item--active{% endif %}">A – Z</a></li>
-        </ul>
+      <!-- Refine label + hover dropdown -->
+      <div style="display:flex;align-items:center;gap:0;">
+        <span class="valo-refine-label">REFINE</span>
+        <div class="valo-dropdown valo-dropdown--right" data-hover>
+          <button class="valo-dropdown__btn" aria-expanded="false" aria-haspopup="listbox" style="padding-left:0.1rem;">
+            <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">arrow_drop_down</span>
+          </button>
+          <ul class="valo-dropdown__menu" role="listbox">
+            <li><a href="#" data-sort-val="created-descending" class="{% if sort_by == 'created-descending' %}valo-dropdown__item--active{% endif %}">Newest</a></li>
+            <li><a href="#" data-sort-val="price-ascending"    class="{% if sort_by == 'price-ascending' %}valo-dropdown__item--active{% endif %}">Sort: L to H</a></li>
+            <li><a href="#" data-sort-val="price-descending"   class="{% if sort_by == 'price-descending' %}valo-dropdown__item--active{% endif %}">Sort: H to L</a></li>
+          </ul>
+        </div>
       </div>
 
     </div>
@@ -147,9 +146,46 @@
         <p class="collection-empty">No products found.</p>
       {%- else -%}
         <div class="collection-grid">
+
+          {%- comment -%} Pass 1 — Knives (grp3) {%- endcomment -%}
           {%- for product in collection.products -%}
-            {%- render 'product-card', product: product -%}
+            {%- assign _show = false -%}
+            {%- for tag in grp3 -%}{%- assign _t = tag | strip -%}{%- if _t != blank and product.tags contains _t -%}{%- assign _show = true -%}{%- endif -%}{%- endfor -%}
+            {%- if _show -%}{%- render 'product-card', product: product -%}{%- endif -%}
           {%- endfor -%}
+
+          {%- comment -%} Pass 2 — Rifles (grp2), skip if already a knife {%- endcomment -%}
+          {%- for product in collection.products -%}
+            {%- assign _show = false -%}
+            {%- assign _skip = false -%}
+            {%- for tag in grp3 -%}{%- assign _t = tag | strip -%}{%- if _t != blank and product.tags contains _t -%}{%- assign _skip = true -%}{%- endif -%}{%- endfor -%}
+            {%- unless _skip -%}
+              {%- for tag in grp2 -%}{%- assign _t = tag | strip -%}{%- if _t != blank and product.tags contains _t -%}{%- assign _show = true -%}{%- endif -%}{%- endfor -%}
+            {%- endunless -%}
+            {%- if _show -%}{%- render 'product-card', product: product -%}{%- endif -%}
+          {%- endfor -%}
+
+          {%- comment -%} Pass 3 — Keychains (grp4), skip if knife or rifle {%- endcomment -%}
+          {%- for product in collection.products -%}
+            {%- assign _show = false -%}
+            {%- assign _skip = false -%}
+            {%- for tag in grp3 -%}{%- assign _t = tag | strip -%}{%- if _t != blank and product.tags contains _t -%}{%- assign _skip = true -%}{%- endif -%}{%- endfor -%}
+            {%- unless _skip -%}{%- for tag in grp2 -%}{%- assign _t = tag | strip -%}{%- if _t != blank and product.tags contains _t -%}{%- assign _skip = true -%}{%- endif -%}{%- endfor -%}{%- endunless -%}
+            {%- unless _skip -%}
+              {%- for tag in grp4 -%}{%- assign _t = tag | strip -%}{%- if _t != blank and product.tags contains _t -%}{%- assign _show = true -%}{%- endif -%}{%- endfor -%}
+            {%- endunless -%}
+            {%- if _show -%}{%- render 'product-card', product: product -%}{%- endif -%}
+          {%- endfor -%}
+
+          {%- comment -%} Pass 4 — Everything else (not knife, rifle, or keychain) {%- endcomment -%}
+          {%- for product in collection.products -%}
+            {%- assign _skip = false -%}
+            {%- for tag in grp3 -%}{%- assign _t = tag | strip -%}{%- if _t != blank and product.tags contains _t -%}{%- assign _skip = true -%}{%- endif -%}{%- endfor -%}
+            {%- unless _skip -%}{%- for tag in grp2 -%}{%- assign _t = tag | strip -%}{%- if _t != blank and product.tags contains _t -%}{%- assign _skip = true -%}{%- endif -%}{%- endfor -%}{%- endunless -%}
+            {%- unless _skip -%}{%- for tag in grp4 -%}{%- assign _t = tag | strip -%}{%- if _t != blank and product.tags contains _t -%}{%- assign _skip = true -%}{%- endif -%}{%- endfor -%}{%- endunless -%}
+            {%- unless _skip -%}{%- render 'product-card', product: product -%}{%- endunless -%}
+          {%- endfor -%}
+
         </div>
       {%- endif -%}
 
@@ -173,8 +209,8 @@
 </section>
 
 <script>
-  // Toggle all valo dropdowns
-  document.querySelectorAll('.valo-dropdown').forEach(function (dd) {
+  // Toggle click-based valo dropdowns
+  document.querySelectorAll('.valo-dropdown:not([data-hover])').forEach(function (dd) {
     var btn = dd.querySelector('.valo-dropdown__btn');
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
@@ -188,6 +224,27 @@
         dd.classList.add('is-open');
         btn.setAttribute('aria-expanded', 'true');
       }
+    });
+  });
+
+  // Hover-based valo dropdowns (Refine)
+  document.querySelectorAll('.valo-dropdown[data-hover]').forEach(function (dd) {
+    var btn = dd.querySelector('.valo-dropdown__btn');
+    var timer;
+    dd.addEventListener('mouseenter', function () {
+      clearTimeout(timer);
+      document.querySelectorAll('.valo-dropdown.is-open').forEach(function (x) {
+        x.classList.remove('is-open');
+        x.querySelector('.valo-dropdown__btn').setAttribute('aria-expanded', 'false');
+      });
+      dd.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+    });
+    dd.addEventListener('mouseleave', function () {
+      timer = setTimeout(function () {
+        dd.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+      }, 120);
     });
   });
   document.addEventListener('click', function () {
