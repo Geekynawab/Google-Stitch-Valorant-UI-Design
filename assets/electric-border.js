@@ -75,7 +75,7 @@ const ElectricBorder = (() => {
     } = opts;
 
     const OFFSET = 30;
-    const DISPLACEMENT = 18;
+    const DISPLACEMENT = 40;
 
     // Wrap if not already wrapped
     if (!container.classList.contains('eb-host')) {
@@ -187,8 +187,8 @@ const ElectricBorder = (() => {
   function autoInit() {
     document.querySelectorAll('[data-electric-border]').forEach(el => {
       const color   = el.dataset.electricColor   || '#FF4655';
-      const chaos   = parseFloat(el.dataset.electricChaos  || '0.12');
-      const speed   = parseFloat(el.dataset.electricSpeed  || '1');
+      const chaos   = parseFloat(el.dataset.electricChaos  || '0.45');
+      const speed   = parseFloat(el.dataset.electricSpeed  || '1.8');
       const radius  = parseFloat(el.dataset.electricRadius || '16');
       const hover   = el.dataset.electricHover !== 'false';
       init(el, { color, chaos, speed, borderRadius: radius, onlyOnHover: hover });
