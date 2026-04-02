@@ -37,11 +37,10 @@
                 {%- else -%}
                   <div class="blog-card__img-placeholder"></div>
                 {%- endif -%}
-                {%- if patch_num contains '.' and patch_num != blank -%}
-                  {%- unless patch_num == article.published_at | date: '%y.%m' -%}
-                    <div class="blog-card__patch-badge">v{{ patch_num }}</div>
-                  {%- endunless -%}
-                {%- endif -%}
+                {%- assign _date_fallback = article.published_at | date: '%y.%m' -%}
+                {%- unless patch_num == _date_fallback -%}
+                  <div class="blog-card__patch-badge">v{{ patch_num }}</div>
+                {%- endunless -%}
               </div>
 
               <div class="blog-card__body">
