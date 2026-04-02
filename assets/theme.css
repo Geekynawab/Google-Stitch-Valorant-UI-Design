@@ -478,7 +478,7 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .valo-dropdown__item--active { color: var(--color-primary) !important; }
 .valo-dropdown--right .valo-dropdown__menu { left: auto; right: 0; }
 .valo-refine-label { font-family: var(--font-headline); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-primary); line-height: 1; }
-.valo-dropdown__sep { font-family: var(--font-headline); font-size: 0.8rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.16em; padding: 0.7rem 1.25rem 0.25rem 0.85rem; border-left: 2px solid var(--color-primary); margin-top: 0.25rem; }
+.valo-dropdown__sep { font-family: var(--font-headline); font-size: 0.8rem; font-weight: 900; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.16em; padding: 0.7rem 1.25rem 0.25rem 0.85rem; border-left: 2px solid var(--color-primary); margin-top: 0.25rem; }
 .collection-empty { text-align: center; padding: var(--space-16); color: rgba(217,227,242,0.4); font-family: var(--font-headline); text-transform: uppercase; letter-spacing: 0.1em; }
 .collection-grid-section { background-color: var(--color-surface); }
 .collection-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
