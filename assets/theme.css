@@ -570,12 +570,10 @@ p  { font-family: var(--font-body); line-height: 1.6; color: var(--color-on-surf
 .article-patch-header { background: var(--color-surface-container-lowest); border-bottom: 2px solid var(--color-primary); padding: 0.6rem 0; }
 .article-patch-eyebrow { font-family: var(--font-headline); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; color: var(--color-primary); margin-right: 1rem; }
 .article-patch-number { font-family: var(--font-headline); font-size: 0.7rem; font-weight: 900; letter-spacing: 0.2em; color: rgba(217,227,242,0.5); }
-.article-hero { position: relative; width: 100%; overflow: hidden; max-height: 420px; }
-.article-hero img { width: 100%; height: 420px; object-fit: cover; display: block; }
-.article-hero__overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(10,20,30,0.92) 0%, rgba(10,20,30,0.4) 60%, transparent 100%); padding: 2rem 0 1.5rem; }
-.article-title { font-family: var(--font-headline); font-size: clamp(1.4rem, 3vw, 2.2rem) !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.03em; color: #fff !important; margin: 0 !important; line-height: 1.1; }
-.article-title--no-hero { color: var(--color-on-surface) !important; padding-top: 1.5rem; }
-.article-layout { max-width: 800px; }
+.article-hero { text-align: center; margin-bottom: 1.5rem; }
+.article-hero img { max-width: 100%; height: auto; display: inline-block; }
+.article-title { font-family: var(--font-headline); font-size: clamp(1.4rem, 3vw, 2.2rem) !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.03em; color: var(--color-on-surface) !important; margin: 0 0 0.25rem !important; line-height: 1.15; }
+.article-layout { max-width: 800px; padding-top: 2rem; }
 .article-meta-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem; padding: 1.2rem 0 1.5rem; border-bottom: 1px solid var(--color-outline-variant); margin-bottom: 2rem; }
 .article-meta__date { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(217,227,242,0.35); }
 .article-meta__sep { color: var(--color-primary); font-weight: 900; font-size: 0.75rem; }

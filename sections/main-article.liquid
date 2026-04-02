@@ -16,25 +16,18 @@
     </div>
   </div>
 
-  {%- if article.image -%}
-    <div class="article-hero">
-      <img src="{{ article.image | image_url: width: 1400 }}"
-           alt="{{ article.image.alt | escape | default: article.title }}"
-           width="1400" height="560" loading="eager">
-      <div class="article-hero__overlay">
-        <div class="container">
-          <h1 class="article-title">{{ article.title }}</h1>
-        </div>
-      </div>
-    </div>
-  {%- else -%}
-    <div class="container">
-      <h1 class="article-title article-title--no-hero">{{ article.title }}</h1>
-    </div>
-  {%- endif -%}
-
   <div class="container">
     <div class="article-layout">
+
+      {%- if article.image -%}
+        <div class="article-hero">
+          <img src="{{ article.image | image_url: width: 1200 }}"
+               alt="{{ article.image.alt | escape | default: article.title }}"
+               loading="eager">
+        </div>
+      {%- endif -%}
+
+      <h1 class="article-title">{{ article.title }}</h1>
 
       <div class="article-meta-bar">
         <span class="article-meta__date">{{ article.published_at | date: '%B %d, %Y' }}</span>
