@@ -295,7 +295,7 @@ document.addEventListener('change', function (e) {
   var SPARK_SIZE   = 10;
   var SPARK_RADIUS = 22;
   var SPARK_COUNT  = 8;
-  var DURATION     = 450;
+  var DURATION     = 900;
 
   var sparks    = [];
   var animating = false;
