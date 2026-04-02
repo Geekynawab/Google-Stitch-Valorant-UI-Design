@@ -8,7 +8,7 @@ const ElectricBorder = (() => {
 
   /* ── Noise helpers ─────────────────────────────────────────── */
   function random(x) {
-    return ((Math.sin(x * 12.9898) * 43758.5453) % 1 + 1) % 1;
+    return (Math.sin(x * 12.9898) * 43758.5453) % 1;
   }
 
   function noise2D(x, y) {
