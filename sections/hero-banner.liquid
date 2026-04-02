@@ -1,18 +1,7 @@
 <section class="hero-banner" id="hero-banner-{{ section.id }}">
 
-  <!-- Dome Gallery Background -->
-  <div class="sphere-root" id="dome-bg-{{ section.id }}" aria-hidden="true">
-    <main class="sphere-main">
-      <div class="stage">
-        <div class="sphere"></div>
-      </div>
-      <!-- Only directional edge fades — no radial vignette so sphere bleeds to edges -->
-      <div class="edge-fade edge-fade--top"></div>
-      <div class="edge-fade edge-fade--bottom"></div>
-      <div class="edge-fade edge-fade--left"></div>
-      <div class="edge-fade edge-fade--right"></div>
-    </main>
-  </div>
+  <!-- DomeGallery React mount point -->
+  <div id="dome-react-{{ section.id }}" class="dome-react-mount" aria-hidden="true"></div>
 
   <!-- Drag hint -->
   <div class="dome-drag-hint" id="dome-hint-{{ section.id }}" aria-hidden="true">
@@ -20,17 +9,6 @@
       <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3"/>
     </svg>
     <span>drag to spin</span>
-  </div>
-
-  <!-- Expand overlay (populated by JS) -->
-  <div id="dome-expand-{{ section.id }}" class="dome-expand-overlay" aria-modal="true" role="dialog">
-    <div class="dome-expand-card">
-      <button class="dome-expand-close" aria-label="Close">&#10005;</button>
-      <img class="dome-expand-img" src="" alt="">
-      <div class="dome-expand-footer">
-        <a class="dome-expand-btn" href="#">VIEW PRODUCT &rarr;</a>
-      </div>
-    </div>
   </div>
 
   <div class="hero-banner__overlay"></div>
@@ -50,16 +28,12 @@
             {%- endif -%}
           </h1>
         {%- endif -%}
-
         {%- if section.settings.subtitle != blank -%}
           <p class="hero-banner__subtitle">{{ section.settings.subtitle }}</p>
         {%- endif -%}
-
         <div class="hero-banner__actions">
           {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
-            <a href="{{ section.settings.cta_link }}" class="btn-primary">
-              {{ section.settings.cta_label }}
-            </a>
+            <a href="{{ section.settings.cta_link }}" class="btn-primary">{{ section.settings.cta_label }}</a>
           {%- endif -%}
         </div>
       </div>
@@ -74,10 +48,7 @@
               {%- for product in feat.products limit: 4 -%}
                 <a href="{{ product.url }}" class="hero-panel__item">
                   {%- if product.featured_image -%}
-                    <img
-                      src="{{ product.featured_image | image_url: width: 300 }}"
-                      alt="{{ product.title | escape }}"
-                      loading="lazy" width="300" height="300">
+                    <img src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" loading="lazy" width="300" height="300">
                   {%- endif -%}
                   <span class="hero-panel__item-title">{{ product.title }}</span>
                 </a>
@@ -92,472 +63,429 @@
   </div>
 </section>
 
+<!-- Shopify product data passed to React (outside raw block so Liquid processes it) -->
+<script id="dome-data-{{ section.id }}" type="application/json">
+{
+  "sectionId": {{ section.id | json }},
+  "images": [
+    {%- assign _first = true -%}
+    {%- for product in collections.all.products limit: 24 -%}
+      {%- if product.featured_image != blank -%}
+        {%- unless _first -%},{%- endunless -%}
+        {"src":{{ product.featured_image | image_url: width: 800 | json }},"alt":{{ product.title | json }},"url":{{ product.url | json }}}
+        {%- assign _first = false -%}
+      {%- endif -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+
 <style>
-/* ── Sphere background ───────────────────────────────────────────── */
-#dome-bg-{{ section.id }} {
+/* ── Dome mount ─────────────────────────────────────────────────────── */
+.dome-react-mount {
   position: absolute;
-  inset: 0 -12vw; /* bleed past hero edges so no gap */
+  inset: 0 -12vw;
   z-index: 0;
-  --segments-x: 22;
-  --segments-y: 22;
-  --overlay-blur-color: #050f19;
-  --image-filter: brightness(0.5);
-  --tile-radius: 12px;
+}
+
+/* ── DomeGallery CSS (ReactBits) ────────────────────────────────────── */
+.sphere-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
   --radius: 1500px;
   --circ: calc(var(--radius) * 3.14159);
-  --rot-y: calc(360deg / var(--segments-x) / 2);
-  --rot-x: calc(360deg / var(--segments-y) / 2);
-  --item-width:  calc(var(--circ) / var(--segments-x));
-  --item-height: calc(var(--circ) / var(--segments-y));
+  --rot-y: calc((360deg / var(--segments-x, 22)) / 2);
+  --rot-x: calc((360deg / var(--segments-y, 22)) / 2);
+  --item-width:  calc(var(--circ) / var(--segments-x, 22));
+  --item-height: calc(var(--circ) / var(--segments-y, 22));
 }
-
-#dome-bg-{{ section.id }} * { box-sizing: border-box; }
-
-#dome-bg-{{ section.id }} .sphere,
-#dome-bg-{{ section.id }} .item,
-#dome-bg-{{ section.id }} .item__image { transform-style: preserve-3d; }
-
-#dome-bg-{{ section.id }} .sphere-main {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
+.sphere-root * { box-sizing: border-box; }
+.sphere, .item, .item__image { transform-style: preserve-3d; }
+.sphere-main {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  overflow: hidden; touch-action: none;
+  user-select: none; -webkit-user-select: none;
   background: transparent;
 }
-
-#dome-bg-{{ section.id }} .stage {
+.stage {
   width: 100%; height: 100%;
-  display: grid;
-  place-items: center;
+  display: grid; place-items: center;
   perspective: calc(var(--radius) * 2);
   perspective-origin: 50% 50%;
   contain: layout paint size;
 }
-
-#dome-bg-{{ section.id }} .sphere {
+.sphere {
   transform: translateZ(calc(var(--radius) * -1));
   will-change: transform;
 }
-
-#dome-bg-{{ section.id }} .item {
-  --offset-x: 0; --offset-y: 0;
-  --item-size-x: 2; --item-size-y: 2;
-  width:  calc(var(--item-width)  * var(--item-size-x));
-  height: calc(var(--item-height) * var(--item-size-y));
+.item {
+  width:  calc(var(--item-width)  * var(--item-size-x, 2));
+  height: calc(var(--item-height) * var(--item-size-y, 2));
   position: absolute;
   top: -999px; bottom: -999px; left: -999px; right: -999px;
-  margin: auto;
-  transform-origin: 50% 50%;
+  margin: auto; transform-origin: 50% 50%;
   backface-visibility: hidden;
   transform:
-    rotateY(calc(var(--rot-y) * (var(--offset-x) + (var(--item-size-x) - 1) / 2)))
-    rotateX(calc(var(--rot-x) * (var(--offset-y) - (var(--item-size-y) - 1) / 2)))
+    rotateY(calc(var(--rot-y) * (var(--offset-x, 0) + (var(--item-size-x, 2) - 1) / 2)))
+    rotateX(calc(var(--rot-x) * (var(--offset-y, 0) - (var(--item-size-y, 2) - 1) / 2)))
     translateZ(var(--radius));
 }
-
-#dome-bg-{{ section.id }} .item__image {
-  position: absolute;
-  inset: 10px;
+.item__image {
+  position: absolute; inset: 10px;
   border-radius: var(--tile-radius, 12px);
-  overflow: hidden;
-  backface-visibility: hidden;
-  pointer-events: auto;
-  cursor: pointer;
+  overflow: hidden; backface-visibility: hidden;
+  pointer-events: auto; cursor: pointer;
   transition: filter 0.2s ease;
 }
-#dome-bg-{{ section.id }} .item__image:hover { filter: brightness(1.2); }
+.item__image:hover { filter: brightness(1.25); }
+.item__image img {
+  width: 100%; height: 100%; object-fit: cover;
+  pointer-events: none; backface-visibility: hidden;
+  filter: var(--image-filter, brightness(0.5));
+}
+.edge-fade { position: absolute; z-index: 5; pointer-events: none; }
+.edge-fade--top    { top: 0; left: 0; right: 0; height: 220px;
+  background: linear-gradient(to bottom, var(--overlay-blur-color, #000), transparent); }
+.edge-fade--bottom { bottom: 0; left: 0; right: 0; height: 220px;
+  background: linear-gradient(to top, var(--overlay-blur-color, #000), transparent); }
+.edge-fade--left   { top: 0; bottom: 0; left: 0; width: 10vw;
+  background: linear-gradient(to right, var(--overlay-blur-color, #000), transparent); }
+.edge-fade--right  { top: 0; bottom: 0; right: 0; width: 10vw;
+  background: linear-gradient(to left, var(--overlay-blur-color, #000), transparent); }
 
-#dome-bg-{{ section.id }} .item__image img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-  backface-visibility: hidden;
-  filter: var(--image-filter, none);
+/* ── Hero layout ────────────────────────────────────────────────────── */
+.hero-banner {
+  position: relative; overflow: hidden;
+  min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
+  background: var(--color-surface);
+}
+.hero-banner__overlay {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+}
+.hero-banner__inner {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-12); padding: var(--space-24) 0;
+}
+.hero-banner__content { flex: 0 0 auto; max-width: 520px; }
+.hero-banner__eyebrow {
+  display: inline-block; margin-bottom: var(--space-4);
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--color-accent-teal);
+}
+.hero-banner__eyebrow::before {
+  content: ''; display: block; width: 32px; height: 2px;
+  background-color: var(--color-accent-teal); margin-bottom: var(--space-2);
+}
+.hero-banner__title {
+  font-family: var(--font-valorant);
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 1.05; font-weight: 400;
+  text-transform: uppercase; letter-spacing: 0.03em;
+  color: var(--color-text-primary); margin-bottom: var(--space-6);
+  position: relative;
+}
+.hero-banner__title em { font-style: normal; color: var(--color-primary); }
+.hero-banner__subtitle {
+  font-size: 1.2rem; line-height: 1.6; color: var(--color-on-surface-variant);
+  margin-bottom: 1.75rem; font-family: var(--font-body);
+}
+.hero-banner__actions { display: flex; gap: var(--space-4); flex-wrap: wrap; }
+.hero-banner__panel {
+  flex: 0 0 auto; width: 300px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md); padding: var(--space-6);
+  backdrop-filter: blur(8px);
+}
+.hero-panel__label {
+  font-family: var(--font-headline); font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.18em; color: var(--color-primary); margin: 0 0 var(--space-4);
+}
+.hero-panel__grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-4); }
+.hero-panel__item {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm);
+  overflow: hidden; text-decoration: none; transition: border-color 0.2s;
+}
+.hero-panel__item:hover { border-color: var(--color-primary); transform: translateY(-2px); }
+.hero-panel__item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
+.hero-panel__item-title {
+  font-family: var(--font-headline); font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase; color: #fff; padding: var(--space-1) var(--space-2);
+}
+.hero-panel__more {
+  font-family: var(--font-headline); font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-primary);
+  text-decoration: none; display: block; text-align: right;
+}
+.hero-panel__more:hover { color: var(--color-primary-container); }
+@media (max-width: 900px) {
+  .hero-banner__inner { flex-direction: column; align-items: flex-start; }
+  .hero-banner__panel { width: 100%; }
 }
 
-/* Directional edge fades — no radial gap */
-#dome-bg-{{ section.id }} .edge-fade {
-  position: absolute;
-  z-index: 5;
-  pointer-events: none;
+/* ── Glitch animation ───────────────────────────────────────────────── */
+@keyframes glitch-1 {
+  0%, 100% { clip-path: inset(98% 0 0 0); transform: translate(2px, 0); color: var(--color-accent-teal); }
+  25% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 0); }
+  50% { clip-path: inset(60% 0 10% 0); transform: translate(2px, 0); }
+  75% { clip-path: inset(40% 0 40% 0); transform: translate(-2px, 0); }
 }
-#dome-bg-{{ section.id }} .edge-fade--top {
-  top: 0; left: 0; right: 0; height: 220px;
-  background: linear-gradient(to bottom, var(--overlay-blur-color), transparent);
+@keyframes glitch-2 {
+  0%, 100% { clip-path: inset(0 0 98% 0); transform: translate(-2px, 0); }
+  25% { clip-path: inset(60% 0 20% 0); transform: translate(2px, 0); }
+  50% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 0); }
+  75% { clip-path: inset(70% 0 10% 0); transform: translate(2px, 0); }
 }
-#dome-bg-{{ section.id }} .edge-fade--bottom {
-  bottom: 0; left: 0; right: 0; height: 220px;
-  background: linear-gradient(to top, var(--overlay-blur-color), transparent);
+.glitch { position: relative; }
+.glitch::before, .glitch::after {
+  content: attr(data-text); position: absolute; inset: 0;
+  color: var(--color-primary); pointer-events: none;
 }
-#dome-bg-{{ section.id }} .edge-fade--left {
-  top: 0; bottom: 0; left: 0; width: 10vw;
-  background: linear-gradient(to right, var(--overlay-blur-color), transparent);
-}
-#dome-bg-{{ section.id }} .edge-fade--right {
-  top: 0; bottom: 0; right: 0; width: 10vw;
-  background: linear-gradient(to left, var(--overlay-blur-color), transparent);
+.glitch::before { animation: glitch-1 4s infinite linear; }
+.glitch::after  { animation: glitch-2 4s infinite linear 0.1s; }
+
+/* ── Trust bar ──────────────────────────────────────────────────────── */
+.trust-bar { border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); padding: 0.75rem 0; background: var(--color-surface-container-low); }
+.trust-bar__list { display: flex; flex-wrap: wrap; justify-content: center; }
+.trust-bar__item { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1.5rem; }
+.trust-bar__item + .trust-bar__item { border-left: 1px solid var(--color-border); }
+.trust-bar__icon { color: var(--color-on-surface); opacity: 0.85; flex-shrink: 0; }
+.trust-bar__title { font-size: 0.75rem; font-weight: 700; color: var(--color-on-surface); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 0.1rem; }
+.trust-bar__text  { font-size: 0.7rem; color: var(--color-text-secondary); line-height: 1.4; }
+@media (max-width: 600px) {
+  .trust-bar__item + .trust-bar__item { border-left: none; border-top: 1px solid var(--color-border); }
 }
 
-/* ── Drag hint ───────────────────────────────────────────────────── */
+/* ── Drag hint ──────────────────────────────────────────────────────── */
 .dome-drag-hint {
-  position: absolute;
-  bottom: 1.75rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
+  position: absolute; bottom: 1.75rem; left: 50%;
+  transform: translateX(-50%); z-index: 10;
   color: rgba(255,255,255,0.92);
   background: rgba(0,0,0,0.55);
   border: 1px solid rgba(255,255,255,0.25);
-  padding: 0.55rem 1.25rem;
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.82rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  padding: 0.55rem 1.25rem; border-radius: 999px;
+  display: flex; align-items: center; gap: 0.6rem;
+  font-size: 0.82rem; letter-spacing: 0.18em; text-transform: uppercase;
   font-family: var(--font-headline, sans-serif);
-  pointer-events: none;
-  white-space: nowrap;
+  pointer-events: none; white-space: nowrap;
   transition: opacity 0.8s ease;
   animation: dome-hint-float 3s ease-in-out infinite;
 }
 .dome-drag-hint.hidden { opacity: 0; }
 @keyframes dome-hint-float {
-  0%, 100% { transform: translateX(-50%) translateY(0);   }
+  0%, 100% { transform: translateX(-50%) translateY(0); }
   50%       { transform: translateX(-50%) translateY(-6px); }
-}
-
-/* ── Expand overlay ──────────────────────────────────────────────── */
-.dome-expand-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  background: rgba(5,15,25,0);
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-  pointer-events: none;
-  transition: background 0.35s ease, backdrop-filter 0.35s ease;
-}
-.dome-expand-overlay.open {
-  background: rgba(5,15,25,0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  pointer-events: all;
-}
-.dome-expand-card {
-  position: relative;
-  max-width: 360px;
-  width: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #0a141e;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
-  transform: translateY(28px) scale(0.94);
-  opacity: 0;
-  transition: transform 0.35s ease, opacity 0.35s ease;
-}
-.dome-expand-overlay.open .dome-expand-card {
-  transform: translateY(0) scale(1);
-  opacity: 1;
-}
-.dome-expand-img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  display: block;
-}
-.dome-expand-footer {
-  padding: 1.25rem;
-  display: flex;
-  justify-content: center;
-}
-.dome-expand-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: var(--font-headline, sans-serif);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #fff;
-  background: #FF4655;
-  border-radius: 6px;
-  padding: 0.75rem 2rem;
-  text-decoration: none;
-  transition: background 0.15s ease;
-}
-.dome-expand-btn:hover { background: #ff6270; }
-.dome-expand-close {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  z-index: 1;
-  width: 30px; height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.55);
-  border: none;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 0.8rem;
-  cursor: pointer;
-  line-height: 1;
 }
 </style>
 
-<script>
+{% raw %}
+<script type="text/babel" data-presets="react">
 (function () {
-  var FIT      = 0.9;
-  var MIN_R    = 1500;
-  var SEG      = 22;
-  var MAX_VERT = 20;
-  var SENS     = 20;
-  var DAMP     = 2;
-  var AUTO_SPD = 0.025;
+  const { useEffect, useRef, useMemo, useCallback } = React;
 
-  function clamp(v, lo, hi) { return Math.min(Math.max(v, lo), hi); }
-  function wrapAngle(deg) {
-    var a = (((deg + 180) % 360) + 360) % 360;
-    return a - 180;
-  }
+  const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+  const wrapAngleSigned = (deg) => { const a = (((deg + 180) % 360) + 360) % 360; return a - 180; };
 
   function buildItems(pool, seg) {
-    var xCols = [];
-    for (var i = 0; i < seg; i++) xCols.push(-37 + i * 2);
-    var evenYs = [-4, -2, 0, 2, 4];
-    var oddYs  = [-3, -1, 1, 3, 5];
-    var coords = [];
-    xCols.forEach(function (x, c) {
-      var ys = c % 2 === 0 ? evenYs : oddYs;
-      ys.forEach(function (y) { coords.push({ x: x, y: y, sizeX: 2, sizeY: 2 }); });
-    });
-    if (!pool.length) return [];
-    var used = coords.map(function (_, i) { return pool[i % pool.length]; });
-    for (var i = 1; i < used.length; i++) {
+    const xCols = Array.from({ length: seg }, (_, i) => -37 + i * 2);
+    const evenYs = [-4, -2, 0, 2, 4];
+    const oddYs  = [-3, -1, 1, 3, 5];
+    const coords = xCols.flatMap((x, c) => (c % 2 === 0 ? evenYs : oddYs).map(y => ({ x, y, sizeX: 2, sizeY: 2 })));
+    if (!pool.length) return coords.map(c => ({ ...c, src: '', alt: '', url: '#' }));
+    const used = Array.from({ length: coords.length }, (_, i) => pool[i % pool.length]);
+    for (let i = 1; i < used.length; i++) {
       if (used[i].src === used[i - 1].src) {
-        for (var j = i + 1; j < used.length; j++) {
-          if (used[j].src !== used[i].src) {
-            var tmp = used[i]; used[i] = used[j]; used[j] = tmp;
-            break;
-          }
+        for (let j = i + 1; j < used.length; j++) {
+          if (used[j].src !== used[i].src) { [used[i], used[j]] = [used[j], used[i]]; break; }
         }
       }
     }
-    return coords.map(function (c, i) {
-      return { x: c.x, y: c.y, sizeX: 2, sizeY: 2,
-               src: used[i].src, alt: used[i].alt, url: used[i].url };
-    });
+    return coords.map((c, i) => ({ ...c, ...used[i] }));
   }
 
-  /* ── DOM ──────────────────────────────────────────────────────── */
-  var root        = document.getElementById('dome-bg-{{ section.id }}');
-  if (!root) return;
-  var heroSection = document.getElementById('hero-banner-{{ section.id }}');
-  var sphere      = root.querySelector('.sphere');
-  var hint        = document.getElementById('dome-hint-{{ section.id }}');
-  var expandOv    = document.getElementById('dome-expand-{{ section.id }}');
-  var expandImg   = expandOv.querySelector('.dome-expand-img');
-  var expandBtn   = expandOv.querySelector('.dome-expand-btn');
-  var expandClose = expandOv.querySelector('.dome-expand-close');
+  function DomeGallery({ images, fit = 0.9, minRadius = 1500, segments = 22, maxVertVert = 20, sens = 20, damp = 2, blurColor = '#000000', tileRadius = '12px', grayscale = false, hintId }) {
+    const rootRef   = useRef(null);
+    const mainRef   = useRef(null);
+    const sphereRef = useRef(null);
+    const rot       = useRef({ x: 0, y: 0 });
+    const startRot  = useRef({ x: 0, y: 0 });
+    const startPos  = useRef(null);
+    const prevPos   = useRef(null);
+    const prevTime  = useRef(0);
+    const vel       = useRef({ x: 0, y: 0 });
+    const dragging  = useRef(false);
+    const moved     = useRef(false);
+    const inertiaId = useRef(null);
+    const autoId    = useRef(null);
+    const lastDrag  = useRef(0);
 
-  /* ── Images (with product URLs) ──────────────────────────────── */
-  var images = [
-    {%- for product in collections.all.products limit: 24 -%}
-      {%- if product.featured_image != blank -%}
-        { src: "{{ product.featured_image | image_url: width: 800 }}",
-          alt: "{{ product.title | escape }}",
-          url: "{{ product.url }}" },
-      {%- endif -%}
-    {%- endfor -%}
-  ];
-  if (!images.length) return;
+    const items = useMemo(() => buildItems(images, segments), [images, segments]);
 
-  /* ── Build tiles ──────────────────────────────────────────────── */
-  var lastDragEndAt = 0;
-  var items = buildItems(images, SEG);
+    const applyTransform = useCallback((x, y) => {
+      if (sphereRef.current)
+        sphereRef.current.style.transform = `translateZ(calc(var(--radius) * -1)) rotateX(${x}deg) rotateY(${y}deg)`;
+    }, []);
 
-  items.forEach(function (it) {
-    if (!it.src) return;
-    var el = document.createElement('div');
-    el.className = 'item';
-    el.style.setProperty('--offset-x',    it.x);
-    el.style.setProperty('--offset-y',    it.y);
-    el.style.setProperty('--item-size-x', it.sizeX);
-    el.style.setProperty('--item-size-y', it.sizeY);
-
-    var imgDiv = document.createElement('div');
-    imgDiv.className = 'item__image';
-
-    var img = document.createElement('img');
-    img.src = it.src;
-    img.alt = it.alt;
-    img.draggable = false;
-    img.loading = 'lazy';
-
-    /* click → go to product page (only if not a drag) */
-    ;(function (url) {
-      imgDiv.addEventListener('click', function (e) {
-        if (performance.now() - lastDragEndAt < 120) return;
-        e.stopPropagation();
-        window.location.href = url;
+    /* ResizeObserver */
+    useEffect(() => {
+      const root = rootRef.current;
+      if (!root) return;
+      const ro = new ResizeObserver(([e]) => {
+        const { width: w, height: h } = e.contentRect;
+        const basis = w / h >= 1.3 ? w : Math.min(w, h);
+        const r = Math.max(basis * fit, minRadius);
+        root.style.setProperty('--radius', Math.round(r) + 'px');
+        root.style.setProperty('--segments-x', segments);
+        root.style.setProperty('--segments-y', segments);
+        root.style.setProperty('--overlay-blur-color', blurColor);
+        root.style.setProperty('--tile-radius', tileRadius);
+        root.style.setProperty('--image-filter', grayscale ? 'grayscale(1)' : 'brightness(0.5)');
+        applyTransform(rot.current.x, rot.current.y);
       });
-    }(it.url));
+      ro.observe(root);
+      return () => ro.disconnect();
+    }, [fit, minRadius, segments, blurColor, tileRadius, grayscale, applyTransform]);
 
-    imgDiv.appendChild(img);
-    el.appendChild(imgDiv);
-    sphere.appendChild(el);
+    /* Auto-rotate */
+    const stopAuto = useCallback(() => { if (autoId.current) { cancelAnimationFrame(autoId.current); autoId.current = null; } }, []);
+    const startAuto = useCallback(() => {
+      if (autoId.current) return;
+      const step = () => {
+        if (dragging.current) { autoId.current = null; return; }
+        rot.current.y = wrapAngleSigned(rot.current.y + 0.025);
+        applyTransform(rot.current.x, rot.current.y);
+        autoId.current = requestAnimationFrame(step);
+      };
+      autoId.current = requestAnimationFrame(step);
+    }, [applyTransform]);
+
+    /* Inertia */
+    const stopInertia = useCallback(() => { if (inertiaId.current) { cancelAnimationFrame(inertiaId.current); inertiaId.current = null; } }, []);
+    const startInertia = useCallback((vx, vy) => {
+      let iX = clamp(vx, -1.4, 1.4) * 80, iY = clamp(vy, -1.4, 1.4) * 80, frames = 0;
+      const d = clamp(damp, 0, 1), friction = 0.94 + 0.055 * d, thr = 0.015 - 0.01 * d, max = Math.round(90 + 270 * d);
+      stopInertia(); stopAuto();
+      const step = () => {
+        iX *= friction; iY *= friction;
+        if ((Math.abs(iX) < thr && Math.abs(iY) < thr) || ++frames > max) { inertiaId.current = null; startAuto(); return; }
+        const nx = clamp(rot.current.x - iY / 200, -maxVertVert, maxVertVert);
+        const ny = wrapAngleSigned(rot.current.y + iX / 200);
+        rot.current = { x: nx, y: ny };
+        applyTransform(nx, ny);
+        inertiaId.current = requestAnimationFrame(step);
+      };
+      inertiaId.current = requestAnimationFrame(step);
+    }, [damp, maxVertVert, stopInertia, stopAuto, startAuto, applyTransform]);
+
+    /* Pointer events (replaces @use-gesture/react) */
+    useEffect(() => {
+      const el = mainRef.current;
+      if (!el) return;
+      const onDown = (e) => {
+        stopInertia(); stopAuto();
+        dragging.current = true; moved.current = false;
+        startRot.current = { ...rot.current };
+        startPos.current = prevPos.current = { x: e.clientX, y: e.clientY };
+        prevTime.current = performance.now(); vel.current = { x: 0, y: 0 };
+        if (hintId) { const h = document.getElementById(hintId); if (h) h.classList.add('hidden'); }
+      };
+      const onMove = (e) => {
+        if (!dragging.current || !startPos.current) return;
+        const dx = e.clientX - startPos.current.x, dy = e.clientY - startPos.current.y;
+        if (!moved.current && dx * dx + dy * dy > 16) moved.current = true;
+        const dt = Math.max(1, performance.now() - prevTime.current);
+        vel.current = { x: (e.clientX - prevPos.current.x) / dt, y: (e.clientY - prevPos.current.y) / dt };
+        prevPos.current = { x: e.clientX, y: e.clientY }; prevTime.current = performance.now();
+        rot.current = {
+          x: clamp(startRot.current.x - dy / sens, -maxVertVert, maxVertVert),
+          y: wrapAngleSigned(startRot.current.y + dx / sens)
+        };
+        applyTransform(rot.current.x, rot.current.y);
+      };
+      const onUp = () => {
+        if (!dragging.current) return;
+        dragging.current = false;
+        const { x: vx, y: vy } = vel.current;
+        if (moved.current && (Math.abs(vx) > 0.01 || Math.abs(vy) > 0.01)) { lastDrag.current = performance.now(); startInertia(vx, vy); }
+        else startAuto();
+        moved.current = false;
+      };
+      el.addEventListener('pointerdown', onDown, { passive: true });
+      document.addEventListener('pointermove', onMove, { passive: true });
+      document.addEventListener('pointerup', onUp);
+      return () => {
+        el.removeEventListener('pointerdown', onDown);
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+      };
+    }, [sens, maxVertVert, stopInertia, stopAuto, startInertia, startAuto, applyTransform, hintId]);
+
+    /* Init */
+    useEffect(() => {
+      applyTransform(0, 0); startAuto();
+      return () => { stopInertia(); stopAuto(); };
+    }, [applyTransform, startAuto, stopInertia, stopAuto]);
+
+    const onTileClick = useCallback((e, url) => {
+      if (moved.current) return;
+      if (performance.now() - lastDrag.current < 80) return;
+      e.stopPropagation();
+      window.location.href = url;
+    }, []);
+
+    return (
+      <div ref={rootRef} className="sphere-root">
+        <main ref={mainRef} className="sphere-main">
+          <div className="stage">
+            <div ref={sphereRef} className="sphere">
+              {items.map((it, i) => it.src ? (
+                <div key={`${it.x},${it.y},${i}`} className="item" style={{ '--offset-x': it.x, '--offset-y': it.y, '--item-size-x': it.sizeX, '--item-size-y': it.sizeY }}>
+                  <div className="item__image" onClick={(e) => onTileClick(e, it.url)}>
+                    <img src={it.src} alt={it.alt} draggable={false} loading="lazy" />
+                  </div>
+                </div>
+              ) : null)}
+            </div>
+          </div>
+          <div className="edge-fade edge-fade--top" />
+          <div className="edge-fade edge-fade--bottom" />
+          <div className="edge-fade edge-fade--left" />
+          <div className="edge-fade edge-fade--right" />
+        </main>
+      </div>
+    );
+  }
+
+  /* Mount all uninitialized dome galleries on the page */
+  document.querySelectorAll('script[id^="dome-data-"]:not([data-initialized])').forEach(dataEl => {
+    dataEl.setAttribute('data-initialized', 'true');
+    const { sectionId, images } = JSON.parse(dataEl.textContent);
+    const container = document.getElementById('dome-react-' + sectionId);
+    if (!container || !images.length) return;
+    ReactDOM.createRoot(container).render(
+      <DomeGallery
+        images={images}
+        fit={0.9}
+        minRadius={1500}
+        segments={22}
+        maxVertVert={20}
+        sens={20}
+        damp={2}
+        blurColor="#000000"
+        tileRadius="12px"
+        grayscale={false}
+        hintId={'dome-hint-' + sectionId}
+      />
+    );
   });
-
-  /* ── Expand overlay ───────────────────────────────────────────── */
-  function openExpand(src, alt, url) {
-    expandImg.src = src;
-    expandImg.alt = alt;
-    expandBtn.href = url;
-    expandOv.classList.add('open');
-  }
-  function closeExpand() {
-    expandOv.classList.remove('open');
-  }
-  expandClose.addEventListener('click', closeExpand);
-  expandOv.addEventListener('click', function (e) {
-    if (e.target === expandOv) closeExpand();
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeExpand();
-  });
-
-  /* ── State ────────────────────────────────────────────────────── */
-  var rot      = { x: 0, y: 0 };
-  var startRot = { x: 0, y: 0 };
-  var startPos = null;
-  var dragging = false;
-  var moved    = false;
-  var vX = 0, vY = 0;
-  var prevPos  = null;
-  var prevTime = 0;
-  var inertiaRAF = null;
-  var autoRAF    = null;
-  var hintDismissed = false;
-
-  function applyTransform(x, y) {
-    sphere.style.transform =
-      'translateZ(calc(var(--radius) * -1)) rotateX(' + x + 'deg) rotateY(' + y + 'deg)';
-  }
-
-  /* ── Auto-rotate ──────────────────────────────────────────────── */
-  function stopAuto() {
-    if (autoRAF) { cancelAnimationFrame(autoRAF); autoRAF = null; }
-  }
-  function startAuto() {
-    if (autoRAF) return;
-    function step() {
-      if (dragging) { autoRAF = null; return; }
-      rot.y = wrapAngle(rot.y + AUTO_SPD);
-      applyTransform(rot.x, rot.y);
-      autoRAF = requestAnimationFrame(step);
-    }
-    autoRAF = requestAnimationFrame(step);
-  }
-
-  /* ── Inertia ──────────────────────────────────────────────────── */
-  function stopInertia() {
-    if (inertiaRAF) { cancelAnimationFrame(inertiaRAF); inertiaRAF = null; }
-  }
-  function startInertia(vx, vy) {
-    var MAX_V = 1.4;
-    var iVX   = clamp(vx, -MAX_V, MAX_V) * 80;
-    var iVY   = clamp(vy, -MAX_V, MAX_V) * 80;
-    var frames = 0;
-    var d = clamp(DAMP, 0, 1);
-    var friction  = 0.94 + 0.055 * d;
-    var threshold = 0.015 - 0.01 * d;
-    var maxFrames = Math.round(90 + 270 * d);
-    stopInertia(); stopAuto();
-    function step() {
-      iVX *= friction; iVY *= friction;
-      if ((Math.abs(iVX) < threshold && Math.abs(iVY) < threshold) || ++frames > maxFrames) {
-        inertiaRAF = null; startAuto(); return;
-      }
-      var nx = clamp(rot.x - iVY / 200, -MAX_VERT, MAX_VERT);
-      var ny = wrapAngle(rot.y + iVX / 200);
-      rot.x = nx; rot.y = ny;
-      applyTransform(nx, ny);
-      inertiaRAF = requestAnimationFrame(step);
-    }
-    inertiaRAF = requestAnimationFrame(step);
-  }
-
-  /* ── Pointer events ───────────────────────────────────────────── */
-  heroSection.addEventListener('pointerdown', function (e) {
-    stopInertia(); stopAuto();
-    dragging = true; moved = false;
-    startRot.x = rot.x; startRot.y = rot.y;
-    startPos = { x: e.clientX, y: e.clientY };
-    prevPos  = { x: e.clientX, y: e.clientY };
-    prevTime = performance.now();
-    vX = 0; vY = 0;
-    /* dismiss hint on first interaction */
-    if (!hintDismissed && hint) {
-      hintDismissed = true;
-      hint.classList.add('hidden');
-    }
-  });
-
-  document.addEventListener('pointermove', function (e) {
-    if (!dragging || !startPos) return;
-    var dxT = e.clientX - startPos.x;
-    var dyT = e.clientY - startPos.y;
-    if (!moved && (dxT * dxT + dyT * dyT) > 16) moved = true;
-    var now = performance.now();
-    var dt  = Math.max(1, now - prevTime);
-    vX = (e.clientX - prevPos.x) / dt;
-    vY = (e.clientY - prevPos.y) / dt;
-    prevPos  = { x: e.clientX, y: e.clientY };
-    prevTime = now;
-    rot.x = clamp(startRot.x - dyT / SENS, -MAX_VERT, MAX_VERT);
-    rot.y = wrapAngle(startRot.y + dxT / SENS);
-    applyTransform(rot.x, rot.y);
-  });
-
-  document.addEventListener('pointerup', function () {
-    if (!dragging) return;
-    dragging = false;
-    if (moved && (Math.abs(vX) > 0.01 || Math.abs(vY) > 0.01)) {
-      lastDragEndAt = performance.now();
-      startInertia(vX, vY);
-    } else {
-      startAuto();
-    }
-    moved = false;
-  });
-
-  /* ── ResizeObserver ───────────────────────────────────────────── */
-  new ResizeObserver(function (entries) {
-    var cr = entries[0].contentRect;
-    var w  = Math.max(1, cr.width);
-    var h  = Math.max(1, cr.height);
-    var basis  = w / h >= 1.3 ? w : Math.min(w, h);
-    var radius = Math.max(basis * FIT, MIN_R);
-    root.style.setProperty('--radius', Math.round(radius) + 'px');
-    applyTransform(rot.x, rot.y);
-  }).observe(root);
-
-  applyTransform(0, 0);
-  startAuto();
 })();
 </script>
+{% endraw %}
 
 {% schema %}
 {
