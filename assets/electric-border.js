@@ -126,9 +126,11 @@ const ElectricBorder = (() => {
       ctx.scale(dpr, dpr);
 
       ctx.strokeStyle = color;
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 2.5;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 14;
 
       const bw = w - 2*OFFSET, bh = h - 2*OFFSET;
       const maxR = Math.min(bw, bh) / 2;

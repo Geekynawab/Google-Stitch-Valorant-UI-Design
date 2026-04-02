@@ -35,16 +35,16 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: 0 0 18px 4px var(--electric-border-color, #FF4655);
-  opacity: 0.35;
+  box-shadow: 0 0 12px 3px var(--electric-border-color, #FF4655);
+  opacity: 0.6;
 }
 
 .eb-glow-2 {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: 0 0 40px 8px var(--electric-border-color, #FF4655);
-  opacity: 0.15;
+  box-shadow: 0 0 28px 6px var(--electric-border-color, #FF4655);
+  opacity: 0.25;
 }
 
 .eb-background-glow {
