@@ -194,23 +194,33 @@ document.addEventListener('click', function (e) {
   if (body) body.classList.toggle('open', !isOpen);
 });
 
-// Wishlist heart — add to cart on click
+// Wishlist heart — toggle add/remove from cart
 document.addEventListener('click', function (e) {
   var btn = e.target.closest('.product-card__wishlist');
-  if (!btn) return;
+  if (!btn || btn.disabled) return;
   e.preventDefault();
-  if (btn.classList.contains('is-wishlisted')) return;
   var variantId = btn.dataset.variantId;
   if (!variantId) return;
+  var wishlisted = btn.classList.contains('is-wishlisted');
+  // Toggle state instantly
+  btn.classList.toggle('is-wishlisted', !wishlisted);
   btn.disabled = true;
-  fetch('/cart/add.js', {
+  var url, body;
+  if (wishlisted) {
+    url = '/cart/change.js';
+    body = JSON.stringify({ id: variantId, quantity: 0 });
+  } else {
+    url = '/cart/add.js';
+    body = JSON.stringify({ id: variantId, quantity: 1 });
+  }
+  fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id: variantId, quantity: 1 })
-  }).then(function () {
-    btn.classList.add('is-wishlisted');
-    btn.disabled = false;
+    body: body
   }).catch(function () {
+    // Revert on failure
+    btn.classList.toggle('is-wishlisted', wishlisted);
+  }).finally(function () {
     btn.disabled = false;
   });
 });
