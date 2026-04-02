@@ -66,9 +66,9 @@
             {%- for tag in collection.all_tags -%}
               {%- assign th = tag | handle -%}
               {%- assign _excl = false -%}
-              {%- for e in grp2 -%}{%- if e | strip | handle == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
-              {%- for e in grp3 -%}{%- if e | strip | handle == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
-              {%- for e in grp4 -%}{%- if e | strip | handle == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
+              {%- for e in grp2 -%}{%- assign eh = e | strip | handle -%}{%- if eh == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
+              {%- for e in grp3 -%}{%- assign eh = e | strip | handle -%}{%- if eh == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
+              {%- for e in grp4 -%}{%- assign eh = e | strip | handle -%}{%- if eh == th -%}{%- assign _excl = true -%}{%- endif -%}{%- endfor -%}
               {%- unless _excl -%}
                 <li>
                   <a href="{{ collection.url }}/{{ th }}"
