@@ -1,40 +1,64 @@
+{%- comment -%} Derive patch number {%- endcomment -%}
+{%- assign patch_num = nil -%}
+{%- for tag in article.tags -%}
+  {%- if tag contains 'patch:' -%}{%- assign patch_num = tag | remove: 'patch:' -%}{%- endif -%}
+{%- endfor -%}
+{%- assign patch_num = patch_num | default: article.published_at | date: '%y.%m' -%}
+
 <div class="container">{% render 'breadcrumb' %}</div>
 
 <article class="article-page">
 
+  <div class="article-patch-header">
+    <div class="container">
+      <span class="article-patch-eyebrow">// PATCH NOTES</span>
+      <span class="article-patch-number">{{ patch_num }}</span>
+    </div>
+  </div>
+
   {%- if article.image -%}
     <div class="article-hero">
-      <img src="{{ article.image | image_url: width: 1200 }}"
+      <img src="{{ article.image | image_url: width: 1400 }}"
            alt="{{ article.image.alt | escape | default: article.title }}"
-           width="1200" height="600" loading="eager">
+           width="1400" height="560" loading="eager">
+      <div class="article-hero__overlay">
+        <div class="container">
+          <h1 class="article-title">{{ article.title }}</h1>
+        </div>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="container">
+      <h1 class="article-title article-title--no-hero">{{ article.title }}</h1>
     </div>
   {%- endif -%}
 
   <div class="container">
     <div class="article-layout">
 
-      <header class="article-header">
-        {%- if article.tags.size > 0 -%}
-          <div class="article-tags">
-            {%- for tag in article.tags -%}
-              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article-tag">{{ tag }}</a>
-            {%- endfor -%}
-          </div>
+      <div class="article-meta-bar">
+        <span class="article-meta__date">{{ article.published_at | date: '%B %d, %Y' }}</span>
+        {%- if article.author != blank -%}
+          <span class="article-meta__sep">//</span>
+          <span class="article-meta__author">{{ article.author | upcase }}</span>
         {%- endif -%}
-        <h1 class="article-title">{{ article.title }}</h1>
-        <p class="article-meta">
-          {{ article.published_at | date: '%B %d, %Y' }}
-          {%- if article.author != blank %} &mdash; {{ article.author }}{%- endif -%}
-        </p>
-      </header>
+        {%- if article.tags.size > 0 -%}
+          {%- for tag in article.tags -%}
+            {%- unless tag contains 'patch:' -%}
+              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article-tag">{{ tag }}</a>
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
 
       <div class="article-body rte">
         {{ article.content }}
       </div>
 
       <footer class="article-footer">
+        <div class="article-footer__line"></div>
         <a href="{{ blog.url }}" class="article-back">
-          <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">arrow_back</span>
+          <span class="material-symbols-outlined" style="font-size:15px;vertical-align:middle;">arrow_back</span>
           Back to {{ blog.title }}
         </a>
       </footer>

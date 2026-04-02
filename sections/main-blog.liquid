@@ -2,7 +2,10 @@
 
 <div class="collection-header">
   <div class="container">
-    <h1>{{ blog.title }}</h1>
+    <div class="blog-header-inner">
+      <span class="blog-header__label">// DISPATCH</span>
+      <h1>{{ blog.title | upcase }}</h1>
+    </div>
   </div>
 </div>
 
@@ -12,10 +15,18 @@
     {%- paginate blog.articles by 12 -%}
 
       {%- if blog.articles.size == 0 -%}
-        <p class="collection-empty">No posts yet. Check back soon.</p>
+        <p class="collection-empty">No dispatches yet. Stand by.</p>
       {%- else -%}
         <div class="blog-grid">
           {%- for article in blog.articles -%}
+
+            {%- comment -%} Derive patch number from tag (patch:X.XX) or fallback to date {%- endcomment -%}
+            {%- assign patch_num = nil -%}
+            {%- for tag in article.tags -%}
+              {%- if tag contains 'patch:' -%}{%- assign patch_num = tag | remove: 'patch:' -%}{%- endif -%}
+            {%- endfor -%}
+            {%- assign patch_num = patch_num | default: article.published_at | date: '%y.%m' -%}
+
             <a href="{{ article.url }}" class="blog-card">
 
               <div class="blog-card__img-wrap">
@@ -26,14 +37,19 @@
                 {%- else -%}
                   <div class="blog-card__img-placeholder"></div>
                 {%- endif -%}
+                <div class="blog-card__patch-badge">// {{ patch_num }}</div>
               </div>
 
               <div class="blog-card__body">
-                {%- if article.tags.size > 0 -%}
-                  <span class="blog-card__tag">{{ article.tags | first }}</span>
-                {%- endif -%}
+                <div class="blog-card__meta-row">
+                  {%- if article.tags.size > 0 -%}
+                    {%- assign display_tag = article.tags | first -%}
+                    {%- if display_tag contains 'patch:' -%}{%- assign display_tag = article.tags[1] | default: 'UPDATE' -%}{%- endif -%}
+                    <span class="blog-card__tag">{{ display_tag | upcase }}</span>
+                  {%- endif -%}
+                  <span class="blog-card__date">{{ article.published_at | date: '%b %d, %Y' }}</span>
+                </div>
                 <h2 class="blog-card__title">{{ article.title }}</h2>
-                <p class="blog-card__date">{{ article.published_at | date: '%b %d, %Y' }}</p>
                 {%- if article.excerpt != blank -%}
                   <p class="blog-card__excerpt">{{ article.excerpt | strip_html | truncate: 110 }}</p>
                 {%- endif -%}
@@ -48,10 +64,8 @@
         <nav class="pagination" aria-label="Pagination">
           {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}">&larr;</a>{%- endif -%}
           {%- for part in paginate.parts -%}
-            {%- if part.is_link -%}
-              <a href="{{ part.url }}">{{ part.title }}</a>
-            {%- else -%}
-              <span{%- if part.title == paginate.current_page %} class="current"{%- endif -%}>{{ part.title }}</span>
+            {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>
+            {%- else -%}<span{%- if part.title == paginate.current_page %} class="current"{%- endif -%}>{{ part.title }}</span>
             {%- endif -%}
           {%- endfor -%}
           {%- if paginate.next -%}<a href="{{ paginate.next.url }}">&rarr;</a>{%- endif -%}
