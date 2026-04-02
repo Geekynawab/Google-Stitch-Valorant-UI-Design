@@ -30,13 +30,6 @@
         "product_count": 4
       }
     },
-    "dome": {
-      "type": "dome-gallery",
-      "settings": {
-        "heading": "THE ARMORY",
-        "product_limit": 12
-      }
-    },
     "model-showcase": {
       "type": "model-showcase",
       "settings": {
@@ -49,5 +42,5 @@
       }
     }
   },
-  "order": ["hero","weapon-categories","trust","categories","featured","dome","model-showcase"]
+  "order": ["hero","weapon-categories","trust","categories","featured","model-showcase"]
 }
