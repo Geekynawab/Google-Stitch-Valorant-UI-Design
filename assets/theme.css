@@ -805,3 +805,52 @@ body.template-policies #main-content * { text-align: left !important; }
   .dome-scene { height: 380px; perspective: 700px; }
   .dome-item { width: 110px; }
 }
+
+/* ── Volume Discount ──────────────────────────────────────────── */
+.volume-discount {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(255,70,85,0.06);
+  border: 1px solid rgba(255,70,85,0.25);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+}
+.volume-discount__tier { display: flex; align-items: center; gap: var(--space-2); }
+.volume-discount__badge {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #FF4655;
+  background: rgba(255,70,85,0.15);
+  border: 1px solid rgba(255,70,85,0.4);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+}
+.volume-discount__badge--gold {
+  color: #ffd700;
+  background: rgba(255,215,0,0.1);
+  border-color: rgba(255,215,0,0.4);
+}
+.volume-discount__label { font-size: 0.82rem; color: var(--color-text-secondary); }
+.volume-discount__divider { width: 1px; height: 24px; background: var(--color-border); margin: 0 var(--space-2); }
+
+/* ── FAQ Page ─────────────────────────────────────────────────── */
+.page-faq { padding: var(--space-16) 0; }
+.page-faq__title {
+  font-family: var(--font-valorant);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-4);
+  letter-spacing: 0.04em;
+}
+.page-faq__intro {
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  margin-bottom: var(--space-8);
+  max-width: 640px;
+}
+.page-faq__list { display: flex; flex-direction: column; gap: var(--space-2); max-width: 800px; }
+.page-faq__empty { color: var(--color-text-muted); font-size: 0.9rem; }

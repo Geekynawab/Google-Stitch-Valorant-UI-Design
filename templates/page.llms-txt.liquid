@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>llms.txt — {{ shop.name }}</title>
+  <style>
+    body { background: #fff; color: #000; font-family: monospace; white-space: pre-wrap; padding: 2rem; max-width: 800px; }
+    h1, h2 { font-family: monospace; }
+  </style>
+</head>
+<body>
+# {{ shop.name }}
+
+{{ shop.description }}
+
+## Store URL
+{{ shop.url }}
+
+## Collections
+{%- for collection in collections -%}
+{%- unless collection.handle == 'frontpage' -%}
+- [{{ collection.title }}]({{ shop.url }}/collections/{{ collection.handle }}){%- if collection.description != blank %}: {{ collection.description | strip_html | truncate: 120 }}{%- endif %}
+{%- endunless -%}
+{%- endfor %}
+
+## Products
+{%- assign all_products = collections.all.products -%}
+{%- for product in all_products limit: 50 -%}
+### {{ product.title }}
+Price: {{ product.price | money }}
+URL: {{ shop.url }}/products/{{ product.handle }}
+{%- if product.description != blank %}
+{{ product.description | strip_html | truncate: 300 }}
+{%- endif %}
+{%- if product.metafields.custom.fun_fact.value != blank %}
+Lore: {{ product.metafields.custom.fun_fact.value }}
+{%- endif %}
+
+{%- endfor %}
+
+## Blog Posts
+{%- for blog in blogs -%}
+{%- for article in blog.articles limit: 20 -%}
+### {{ article.title }}
+URL: {{ shop.url }}/blogs/{{ blog.handle }}/{{ article.handle }}
+Published: {{ article.published_at | date: '%Y-%m-%d' }}
+{%- if article.excerpt != blank %}
+{{ article.excerpt | strip_html }}
+{%- else %}
+{{ article.content | strip_html | truncate: 300 }}
+{%- endif %}
+
+{%- endfor -%}
+{%- endfor %}
+
+## Policies
+- Shipping: {{ shop.url }}/policies/shipping-policy
+- Refunds: {{ shop.url }}/policies/refund-policy
+- Privacy: {{ shop.url }}/policies/privacy-policy
+- Terms: {{ shop.url }}/policies/terms-of-service
+</body>
+</html>

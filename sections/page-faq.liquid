@@ -1,0 +1,92 @@
+{%- if section.blocks.size > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for block in section.blocks -%}
+    {
+      "@type": "Question",
+      "name": {{ block.settings.question | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ block.settings.answer | json }}
+      }
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+
+<section class="page-faq section-padding">
+  <div class="page-width">
+
+    {%- if section.settings.title != blank -%}
+      <h1 class="page-faq__title">{{ section.settings.title }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.intro != blank -%}
+      <p class="page-faq__intro">{{ section.settings.intro }}</p>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="page-faq__list">
+        {%- for block in section.blocks -%}
+          <div class="product-accordion" {{ block.shopify_attributes }}>
+            <button class="product-accordion__trigger" aria-expanded="false">
+              <span class="product-accordion__label">{{ block.settings.question }}</span>
+              <span class="material-symbols-outlined product-accordion__chevron">expand_more</span>
+            </button>
+            <div class="product-accordion__body">
+              <div class="product-accordion__content">{{ block.settings.answer }}</div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="page-faq__empty">No questions added yet. Add FAQ items in the theme editor.</p>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro text"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "FAQ Page" }
+  ]
+}
+{% endschema %}

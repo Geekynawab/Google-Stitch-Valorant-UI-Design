@@ -46,6 +46,19 @@
           {%- render 'price', variant: current_variant -%}
         </div>
 
+        <!-- Volume discounts -->
+        <div class="volume-discount">
+          <div class="volume-discount__tier">
+            <span class="volume-discount__badge">15% OFF</span>
+            <span class="volume-discount__label">Buy 2</span>
+          </div>
+          <div class="volume-discount__divider"></div>
+          <div class="volume-discount__tier">
+            <span class="volume-discount__badge volume-discount__badge--gold">25% OFF</span>
+            <span class="volume-discount__label">Buy 3</span>
+          </div>
+        </div>
+
         <!-- HUD chips -->
         {%- assign _has_length_tag = false -%}
         {%- for tag in product.tags -%}{%- if tag contains 'length:' -%}{%- assign _has_length_tag = true -%}{%- endif -%}{%- endfor -%}

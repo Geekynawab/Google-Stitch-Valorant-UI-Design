@@ -1,0 +1,286 @@
+{
+  "sections": {
+    "faq": {
+      "type": "page-faq",
+      "blocks": {
+        "faq1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is KnivesFactory?",
+            "answer": "KnivesFactory (knivesfactory.store) is an online store specializing in real-life Valorant knife replicas and gaming melee collectibles. We carry over 40 products inspired by iconic Valorant melee skins — karambits, balisongs, butterfly knives, swords, axes, daggers, claws, switchblades, and katanas. Our catalog covers the most popular Valorant collections including Reaver, Prime, RGX 11z Pro, Glitchpop, Elderflame, Oni, Singularity, Champions, Magepunk, Recon, and more. We ship to the USA and offer multiple sizes from mini keychains to full-size display replicas."
+          }
+        },
+        "faq2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where can I buy real Valorant knives?",
+            "answer": "You can buy real-life Valorant knife replicas at KnivesFactory.store. We offer one of the largest collections of Valorant-inspired melee replicas online, with over 40 products spanning every major in-game collection. Every knife is available in multiple sizes — from mini 8–9cm display pieces to full-size large replicas — and comes in the same color variants as the in-game skins. We ship directly to the USA."
+          }
+        },
+        "faq3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where to buy Valorant knife replicas online?",
+            "answer": "KnivesFactory.store is a dedicated online store for Valorant knife replicas. Unlike general marketplaces where quality varies between sellers, KnivesFactory focuses exclusively on gaming melee replicas and curates its catalog to match the in-game Valorant skins as closely as possible. We carry karambits, butterfly knives, balisongs, swords, katanas, axes, daggers, claws, and more — all based on real Valorant collections with multiple sizes and color variants."
+          }
+        },
+        "faq4": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is KnivesFactory legit?",
+            "answer": "Yes, KnivesFactory (knivesfactory.store) is a legitimate online store specializing in Valorant knife replicas and gaming collectibles. We offer a curated catalog of over 40 Valorant-inspired melee replicas with detailed product photos, multiple size options, color variants that match the in-game skins, and shipping to the USA."
+          }
+        },
+        "faq5": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Best store to buy Valorant knives in real life?",
+            "answer": "KnivesFactory.store is one of the best dedicated stores for real-life Valorant knives. We carry over 40 melee replicas covering all major collections — Reaver, Prime, RGX, Glitchpop, Champions, Elderflame, Oni, Singularity, and more — in multiple sizes and every color variant available in-game. We ship to the USA with competitive pricing and shipping times."
+          }
+        },
+        "faq6": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where can I buy a real Reaver Karambit?",
+            "answer": "KnivesFactory.store carries the Reaver Karambit in both mini (9cm) and full-size large replica versions. The Reaver Karambit is one of Valorant's most iconic melee skins, and our replica comes in all four color variants — Purple, Red, Black, and White — matching the in-game options exactly."
+          }
+        },
+        "faq7": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where to buy RGX 11z Pro Firefly sword replica?",
+            "answer": "The RGX 11z Pro Firefly sword replica is available at KnivesFactory.store. We carry multiple versions in different sizes, including a 20cm option and full-size large replicas. Color variants include Red, Blue, and Yellow. The RGX Firefly is one of the most popular sword-style melees in Valorant and a top seller in our store."
+          }
+        },
+        "faq8": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I buy a real Champions Karambit from Valorant?",
+            "answer": "Yes! KnivesFactory.store offers the Champions 2021 Karambit in both mini (8cm) and full-size large replica versions. Just like in Valorant, the Champions collection is rare and highly sought after — making this one of the most collectible items in our catalog."
+          }
+        },
+        "faq9": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where to get a real Valorant butterfly knife / balisong?",
+            "answer": "KnivesFactory.store has multiple Valorant butterfly knife and balisong replicas, including the Recon Balisong (in large and 21cm sizes, with Khaki, Red, Blue, and Green camo variants), the Champions 2022 Butterfly Knife (including the rare Luminous variant), and the RGX butterfly knife. All are available in multiple sizes and color options."
+          }
+        },
+        "faq10": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Real Elderflame Dagger Valorant replica — where to buy?",
+            "answer": "The Elderflame Dagger replica is available at KnivesFactory.store as a full-size large replica. The Elderflame is one of Valorant's most legendary collections, and the dagger captures the iconic dragon-inspired design that makes it one of the most recognized melee skins in the game."
+          }
+        },
+        "faq11": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where can I buy a real Oni Claw from Valorant?",
+            "answer": "KnivesFactory.store carries the Oni Claw as a full-size large replica in Black, Green, and White color variants. The Oni collection is one of Valorant's first and most popular Japanese-mythology-inspired skin lines, known for its aggressive Wolverine-style design."
+          }
+        },
+        "faq12": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where to buy Singularity Knife replica Valorant?",
+            "answer": "You can buy the Singularity Knife replica at KnivesFactory.store in a full-size large version. Available in Black, Blue, Red, and Purple color variants. The Singularity Knife is a fan-favorite for collectors who love the sci-fi cosmic aesthetic of the collection."
+          }
+        },
+        "faq13": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I buy the Onimaru Kunitsuna katana in real life?",
+            "answer": "Yes, the Onimaru Kunitsuna katana replica is available at KnivesFactory.store as a full-size large replica. It's one of the most premium items in our catalog, capturing the traditional Japanese katana design that makes the Onimaru one of Valorant's most iconic melee weapons."
+          }
+        },
+        "faq14": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Real Glitchpop Knife replica — where to find?",
+            "answer": "KnivesFactory.store carries the Glitchpop Knife in a mini 9cm version, perfect for display or collecting. The Glitchpop collection is known for its retro-futuristic cyberpunk aesthetic and is a favorite among fans of Valorant's vibrant, tech-inspired skins."
+          }
+        },
+        "faq15": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where to buy the Prime Axe replica from Valorant?",
+            "answer": "The Prime Axe replica is available at KnivesFactory.store in both mini (8cm) and full-size large versions. Color variants include Orange, Blue, and Yellow, matching the in-game Prime collection options. The Prime collection is one of the most consistently popular skin lines in Valorant."
+          }
+        },
+        "faq16": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where to buy Magepunk Sparkswitch Valorant knife?",
+            "answer": "The Magepunk Sparkswitch switchblade replica is available at KnivesFactory.store as a full-size large replica. Color variants include Green, Black-Red, and Yellow. The Magepunk collection brings a steampunk-meets-arcane vibe to Valorant, and the Sparkswitch is one of the most unique melee designs in the game."
+          }
+        },
+        "faq17": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where to buy Prelude to Chaos Blade replica?",
+            "answer": "KnivesFactory.store carries the Prelude to Chaos Blade in a mini 9cm version. Available in Black, Green, White, and Blue color variants. The Prelude to Chaos collection features a striking dark fantasy aesthetic that stands out in any knife collection."
+          }
+        },
+        "faq18": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where to buy Imperium Dual Blades from Valorant?",
+            "answer": "The Blades of Imperium dual blade replica is available at KnivesFactory.store as a full-size large replica. Color variants include Ruby, Pearl, and Obsidian. This is one of the few dual-wielding melee skins in Valorant, making it a unique collector's piece."
+          }
+        },
+        "faq19": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Does KnivesFactory ship to the USA?",
+            "answer": "Yes, KnivesFactory.store ships directly to the USA. We provide tracking information with every order so you can follow your package from dispatch to delivery."
+          }
+        },
+        "faq20": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long does shipping take from KnivesFactory?",
+            "answer": "Shipping times to the USA vary depending on the product and availability. We provide tracking on every order so you can monitor your package's progress. For the most accurate estimate, check the shipping details on each product page at knivesfactory.store."
+          }
+        },
+        "faq21": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What sizes do KnivesFactory Valorant knives come in?",
+            "answer": "KnivesFactory.store offers replicas in multiple sizes. Mini versions (8–9cm) are perfect for keychains, desk display, or portable collectibles. Full-size large replicas match in-game proportions and are ideal for display shelves, gaming rooms, and cosplay. We also carry specific sizes like 20cm and 21cm for certain sword and balisong models. Every product page lists exact dimensions."
+          }
+        },
+        "faq22": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What material are KnivesFactory knives made of?",
+            "answer": "Our Valorant knife replicas are crafted from durable metal alloy materials, hand-polished and hand-painted to match the in-game Valorant skin colors and designs as closely as possible. They are collectible display pieces and cosplay props designed for durability and visual accuracy."
+          }
+        },
+        "faq23": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Are KnivesFactory Valorant knives sharp?",
+            "answer": "Our replicas at KnivesFactory.store are designed as collectible display pieces and cosplay accessories — not functional cutting tools. They are intended for display, decoration, collecting, gifting, and cosplay. Always check your local laws regarding replica items before purchasing."
+          }
+        },
+        "faq24": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do KnivesFactory knives come with color variants like in Valorant?",
+            "answer": "Yes! We offer the same color variants available in-game. For example, the Reaver Karambit comes in Purple, Red, Black, and White. The Prime Axe comes in Orange, Blue, and Yellow. The RGX Firefly comes in Red, Blue, and Yellow. The Recon Balisong comes in Khaki, Red, Blue, and Green camo. Each product page shows all available color options so you can pick the exact variant matching your favorite in-game skin."
+          }
+        },
+        "faq25": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What Valorant collections does KnivesFactory carry?",
+            "answer": "KnivesFactory.store carries replicas from virtually every major Valorant collection, including Reaver, Prime, RGX 11z Pro, Glitchpop, Elderflame, Oni, Singularity, Champions 2021, Champions 2022 (including the Luminous variant), Recon, Magepunk, Prelude to Chaos, Imperium, Xenohunter, VALORANT GO!, and more. We carry over 40 products and continuously expand our catalog as new collections release in-game."
+          }
+        },
+        "faq26": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What's the best gift for a Valorant player?",
+            "answer": "A real-life Valorant knife replica from KnivesFactory.store is one of the best gifts you can give a Valorant fan. Unlike in-game skins that only exist digitally, a physical replica is something they can display on their desk, show off, or use for cosplay. Best-selling gift picks include the Reaver Karambit (the most iconic Valorant melee), the Champions Butterfly Knife (rare and prestigious), and the RGX 11z Pro Firefly Sword. We also offer affordable mini versions that make perfect stocking stuffers or birthday gifts."
+          }
+        },
+        "faq27": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Best Valorant birthday gift for my boyfriend / girlfriend?",
+            "answer": "A Valorant knife replica from KnivesFactory.store makes an incredible birthday gift. For a statement piece, go with the full-size Reaver Karambit or the Champions 2022 Butterfly Knife — the two most desired melees in Valorant. For a budget-friendly option, our mini 8–9cm versions are affordable and make great desk decorations. For a premium collector's item, the Elderflame Dagger or the Onimaru Kunitsuna Katana are unforgettable gifts any serious Valorant fan would treasure."
+          }
+        },
+        "faq28": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Valorant desk setup accessories — where to buy?",
+            "answer": "KnivesFactory.store sells Valorant knife replicas that double as perfect gaming desk accessories. Our full-size replicas are designed for display, and our mini versions (8–9cm) work great as desk ornaments next to your monitor or keyboard. Popular desk display choices include the Reaver Karambit, Prime Axe, and Singularity Knife."
+          }
+        },
+        "faq29": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Valorant cosplay props — where to buy knives?",
+            "answer": "KnivesFactory.store is a great source for Valorant cosplay props. Our full-size replicas closely match in-game proportions and colors, making them ideal for gaming conventions, Halloween, content creation, and social media videos. Popular cosplay picks include the Oni Claw, Reaver Karambit, Champions Butterfly Knife, and RGX 11z Pro Sword. Always check convention rules regarding prop items before attending events."
+          }
+        },
+        "faq30": {
+          "type": "faq_item",
+          "settings": {
+            "question": "KnivesFactory vs Amazon for Valorant knives — which is better?",
+            "answer": "While Amazon carries Valorant knife replicas from various third-party sellers, KnivesFactory.store is a specialist. We focus exclusively on Valorant melee replicas, offer every in-game color variant per product, and curate our catalog for consistent quality. On Amazon, quality varies widely between sellers and many listings only stock a single color variant. If you want the widest selection with accurate in-game color matching, KnivesFactory is the dedicated option."
+          }
+        },
+        "faq31": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What's the most popular Valorant knife replica to buy?",
+            "answer": "The most popular Valorant knife replicas at KnivesFactory.store are the Reaver Karambit (the single most iconic Valorant melee), the Champions 2022 Butterfly Knife (rare with huge collector appeal), the RGX 11z Pro Firefly Sword (the ultimate gamer weapon), the Elderflame Dagger (legendary dragon design), and the Recon Balisong (the go-to butterfly knife). All are available in multiple sizes and color variants."
+          }
+        },
+        "faq32": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Mini vs full-size Valorant knife replica — which should I buy?",
+            "answer": "Mini replicas (8–9cm) are great for keychains, desk decorations, portable collectibles, and gifts on a budget. Full-size large replicas are better for display shelves, gaming room setups, cosplay, and serious collecting. Many of our products — like the Reaver Karambit and Champions Karambit — are available in both, so you can start with a mini and add the full-size version later."
+          }
+        },
+        "faq33": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is it legal to buy Valorant knife replicas in the USA?",
+            "answer": "Replica collectible display pieces are generally legal to purchase in the USA, but laws vary by state and locality. KnivesFactory.store sells collectible display replicas and cosplay props. We recommend checking your local and state laws regarding replica items before purchasing, as some areas have specific regulations."
+          }
+        },
+        "faq34": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Are gaming knife replicas safe for kids?",
+            "answer": "Gaming knife replicas from KnivesFactory.store are collectible items designed for adult collectors, gamers, and cosplayers. While our replicas are display pieces and not sharp functional blades, they are made from metal alloy and should be handled with care. We recommend these products for teens and adults with parental discretion."
+          }
+        },
+        "faq35": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Does KnivesFactory add new knives when Valorant releases new skins?",
+            "answer": "Yes! KnivesFactory.store actively updates its catalog as Riot Games releases new melee skins in Valorant. When a new collection drops in-game, we work to add the corresponding replica. Our goal is to carry the most complete Valorant knife replica catalog available online."
+          }
+        },
+        "faq36": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I request a specific Valorant knife that KnivesFactory doesn't have?",
+            "answer": "Absolutely. If there's a Valorant melee skin you want as a replica that isn't currently in our catalog, contact us through knivesfactory.store. We prioritize popular requests from the community and are always looking to expand our collection."
+          }
+        },
+        "faq37": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Does KnivesFactory carry CS2 / Counter-Strike knife replicas too?",
+            "answer": "KnivesFactory.store currently focuses on Valorant melee replicas. However, many of our knife types — karambits, butterfly knives, balisongs, and tactical knives — overlap with popular CS2 knife designs. If you're a fan of both games, you'll find plenty of crossover appeal in our catalog. Stay tuned as we continue expanding our product range."
+          }
+        },
+        "faq38": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where can I see the full KnivesFactory catalog?",
+            "answer": "Visit knivesfactory.store to browse our complete catalog of over 40 Valorant knife replicas. You can shop by collection (Reaver, Prime, RGX, Glitchpop, etc.), by knife type (karambit, butterfly knife, sword, axe, etc.), or by size (mini, large, specific dimensions). Every product page shows all available sizes and color variants with detailed photos."
+          }
+        }
+      },
+      "block_order": [
+        "faq1","faq2","faq3","faq4","faq5",
+        "faq6","faq7","faq8","faq9","faq10",
+        "faq11","faq12","faq13","faq14","faq15",
+        "faq16","faq17","faq18","faq19","faq20",
+        "faq21","faq22","faq23","faq24","faq25",
+        "faq26","faq27","faq28","faq29","faq30",
+        "faq31","faq32","faq33","faq34","faq35",
+        "faq36","faq37","faq38"
+      ]
+    }
+  },
+  "order": ["faq"]
+}
