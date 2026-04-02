@@ -13,21 +13,35 @@
 <!-- Filter bar -->
 {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 {%- assign current_tag = current_tags | first -%}
-
-{%- comment -%} Determine weapon dropdown label {%- endcomment -%}
-{%- assign weapon_btn_label = section.settings.group_3_label -%}
+{%- assign grp1 = section.settings.group_1_tags | split: ',' -%}
 {%- assign grp2 = section.settings.group_2_tags | split: ',' -%}
 {%- assign grp3 = section.settings.group_3_tags | split: ',' -%}
 {%- assign grp4 = section.settings.group_4_tags | split: ',' -%}
-{%- for t in grp2 -%}{%- assign tc = t | strip -%}{%- if tc != blank and current_tags contains tc -%}{%- assign weapon_btn_label = tc -%}{%- endif -%}{%- endfor -%}
+
+{%- comment -%} Collection button label {%- endcomment -%}
+{%- assign coll_btn_label = section.settings.group_1_label -%}
+{%- for t in grp1 -%}{%- assign tc = t | strip -%}{%- if tc != blank and current_tags contains tc -%}{%- assign coll_btn_label = tc -%}{%- endif -%}{%- endfor -%}
+
+{%- comment -%} Weapon button label — default to Knife (group 3) {%- endcomment -%}
+{%- assign weapon_btn_label = section.settings.group_3_label -%}
 {%- for t in grp3 -%}{%- assign tc = t | strip -%}{%- if tc != blank and current_tags contains tc -%}{%- assign weapon_btn_label = tc -%}{%- endif -%}{%- endfor -%}
+{%- for t in grp2 -%}{%- assign tc = t | strip -%}{%- if tc != blank and current_tags contains tc -%}{%- assign weapon_btn_label = tc -%}{%- endif -%}{%- endfor -%}
 {%- for t in grp4 -%}{%- assign tc = t | strip -%}{%- if tc != blank and current_tags contains tc -%}{%- assign weapon_btn_label = tc -%}{%- endif -%}{%- endfor -%}
+
+{%- comment -%} Sort button label {%- endcomment -%}
+{%- assign sort_label = 'Relevance' -%}
+{%- if sort_by == 'best-selling' -%}{%- assign sort_label = 'Best Selling' -%}
+{%- elsif sort_by == 'price-ascending' -%}{%- assign sort_label = 'Low → High' -%}
+{%- elsif sort_by == 'price-descending' -%}{%- assign sort_label = 'High → Low' -%}
+{%- elsif sort_by == 'created-descending' -%}{%- assign sort_label = 'Newest' -%}
+{%- elsif sort_by == 'title-ascending' -%}{%- assign sort_label = 'A – Z' -%}
+{%- endif -%}
 
 <div class="collection-filter-bar">
   <div class="container">
     <div class="collection-filter-bar__inner">
 
-      <!-- Active filter badge + clear -->
+      <!-- Active filter clear badge -->
       {%- if current_tag -%}
         <a href="{{ collection.url }}" class="filter-clear">
           <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">close</span>
@@ -35,33 +49,15 @@
         </a>
       {%- endif -%}
 
-      <!-- Collection select (Group 1) -->
-      {%- assign grp1 = section.settings.group_1_tags | split: ',' -%}
+      <!-- Collection dropdown -->
       {%- if section.settings.group_1_label != blank and grp1.size > 0 -%}
-        <select class="filter-group-select filter-sort-select"
-                data-collection="{{ collection.url }}"
-                aria-label="Filter by {{ section.settings.group_1_label }}">
-          <option value="">{{ section.settings.group_1_label }}</option>
-          {%- for tag in grp1 -%}
-            {%- assign t = tag | strip -%}
-            {%- if t != blank -%}
-              <option value="{{ t | handle }}" {% if current_tags contains t %}selected{% endif %}>{{ t }}</option>
-            {%- endif -%}
-          {%- endfor -%}
-        </select>
-      {%- endif -%}
-
-      <!-- Combined Weapon Type — Valorant-style dropdown (Groups 2 + 3 + 4) -->
-      <div class="valo-dropdown" data-collection="{{ collection.url }}">
-        <button class="valo-dropdown__btn" aria-expanded="false" aria-haspopup="listbox">
-          {{ weapon_btn_label | upcase }}
-          <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">arrow_drop_down</span>
-        </button>
-        <ul class="valo-dropdown__menu" role="listbox">
-
-          {%- if section.settings.group_2_label != blank and grp2.size > 0 -%}
-            <li class="valo-dropdown__sep">{{ section.settings.group_2_label }}</li>
-            {%- for tag in grp2 -%}
+        <div class="valo-dropdown" data-collection="{{ collection.url }}">
+          <button class="valo-dropdown__btn" aria-expanded="false" aria-haspopup="listbox">
+            {{ coll_btn_label | upcase }}
+            <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">arrow_drop_down</span>
+          </button>
+          <ul class="valo-dropdown__menu" role="listbox">
+            {%- for tag in grp1 -%}
               {%- assign t = tag | strip -%}
               {%- if t != blank -%}
                 <li>
@@ -72,19 +68,34 @@
                 </li>
               {%- endif -%}
             {%- endfor -%}
-          {%- endif -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      <!-- Weapon type dropdown (Knife first, then Rifle, then Other) -->
+      <div class="valo-dropdown" data-collection="{{ collection.url }}">
+        <button class="valo-dropdown__btn" aria-expanded="false" aria-haspopup="listbox">
+          {{ weapon_btn_label | upcase }}
+          <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">arrow_drop_down</span>
+        </button>
+        <ul class="valo-dropdown__menu" role="listbox">
 
           {%- if section.settings.group_3_label != blank and grp3.size > 0 -%}
             <li class="valo-dropdown__sep">{{ section.settings.group_3_label }}</li>
             {%- for tag in grp3 -%}
               {%- assign t = tag | strip -%}
               {%- if t != blank -%}
-                <li>
-                  <a href="{{ collection.url }}/{{ t | handle }}"
-                     class="{% if current_tags contains t %}valo-dropdown__item--active{% endif %}">
-                    {{ t }}
-                  </a>
-                </li>
+                <li><a href="{{ collection.url }}/{{ t | handle }}" class="{% if current_tags contains t %}valo-dropdown__item--active{% endif %}">{{ t }}</a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- if section.settings.group_2_label != blank and grp2.size > 0 -%}
+            <li class="valo-dropdown__sep">{{ section.settings.group_2_label }}</li>
+            {%- for tag in grp2 -%}
+              {%- assign t = tag | strip -%}
+              {%- if t != blank -%}
+                <li><a href="{{ collection.url }}/{{ t | handle }}" class="{% if current_tags contains t %}valo-dropdown__item--active{% endif %}">{{ t }}</a></li>
               {%- endif -%}
             {%- endfor -%}
           {%- endif -%}
@@ -94,12 +105,7 @@
             {%- for tag in grp4 -%}
               {%- assign t = tag | strip -%}
               {%- if t != blank -%}
-                <li>
-                  <a href="{{ collection.url }}/{{ t | handle }}"
-                     class="{% if current_tags contains t %}valo-dropdown__item--active{% endif %}">
-                    {{ t }}
-                  </a>
-                </li>
+                <li><a href="{{ collection.url }}/{{ t | handle }}" class="{% if current_tags contains t %}valo-dropdown__item--active{% endif %}">{{ t }}</a></li>
               {%- endif -%}
             {%- endfor -%}
           {%- endif -%}
@@ -111,16 +117,19 @@
       <div style="flex:1;"></div>
 
       <!-- Sort dropdown -->
-      <div class="collection-filter-bar__sort">
-        <span class="collection-filter-bar__label">Sort</span>
-        <select class="filter-sort-select" id="collection-sort" aria-label="Sort products">
-          <option value="relevance"          {% if sort_by == 'relevance' %}selected{% endif %}>Relevance</option>
-          <option value="best-selling"       {% if sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
-          <option value="price-ascending"    {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
-          <option value="price-descending"   {% if sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
-          <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
-          <option value="title-ascending"    {% if sort_by == 'title-ascending' %}selected{% endif %}>A – Z</option>
-        </select>
+      <div class="valo-dropdown valo-dropdown--right">
+        <button class="valo-dropdown__btn" aria-expanded="false" aria-haspopup="listbox">
+          {{ sort_label | upcase }}
+          <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">arrow_drop_down</span>
+        </button>
+        <ul class="valo-dropdown__menu" role="listbox">
+          <li><a href="#" data-sort-val="relevance"          class="{% if sort_by == 'relevance' %}valo-dropdown__item--active{% endif %}">Relevance</a></li>
+          <li><a href="#" data-sort-val="best-selling"       class="{% if sort_by == 'best-selling' %}valo-dropdown__item--active{% endif %}">Best Selling</a></li>
+          <li><a href="#" data-sort-val="price-ascending"    class="{% if sort_by == 'price-ascending' %}valo-dropdown__item--active{% endif %}">Price: Low to High</a></li>
+          <li><a href="#" data-sort-val="price-descending"   class="{% if sort_by == 'price-descending' %}valo-dropdown__item--active{% endif %}">Price: High to Low</a></li>
+          <li><a href="#" data-sort-val="created-descending" class="{% if sort_by == 'created-descending' %}valo-dropdown__item--active{% endif %}">Newest</a></li>
+          <li><a href="#" data-sort-val="title-ascending"    class="{% if sort_by == 'title-ascending' %}valo-dropdown__item--active{% endif %}">A – Z</a></li>
+        </ul>
       </div>
 
     </div>
@@ -145,9 +154,7 @@
 
       {%- if paginate.pages > 1 -%}
         <nav class="pagination" aria-label="Pagination">
-          {%- if paginate.previous -%}
-            <a href="{{ paginate.previous.url }}">&larr;</a>
-          {%- endif -%}
+          {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}">&larr;</a>{%- endif -%}
           {%- for part in paginate.parts -%}
             {%- if part.is_link -%}
               <a href="{{ part.url }}">{{ part.title }}</a>
@@ -155,9 +162,7 @@
               <span {%- if part.title == paginate.current_page %} class="current"{%- endif -%}>{{ part.title }}</span>
             {%- endif -%}
           {%- endfor -%}
-          {%- if paginate.next -%}
-            <a href="{{ paginate.next.url }}">&rarr;</a>
-          {%- endif -%}
+          {%- if paginate.next -%}<a href="{{ paginate.next.url }}">&rarr;</a>{%- endif -%}
         </nav>
       {%- endif -%}
 
@@ -167,13 +172,21 @@
 </section>
 
 <script>
-  // Valo dropdown toggle
+  // Toggle all valo dropdowns
   document.querySelectorAll('.valo-dropdown').forEach(function (dd) {
     var btn = dd.querySelector('.valo-dropdown__btn');
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
-      var open = dd.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', open);
+      var opening = !dd.classList.contains('is-open');
+      // close all first
+      document.querySelectorAll('.valo-dropdown.is-open').forEach(function (x) {
+        x.classList.remove('is-open');
+        x.querySelector('.valo-dropdown__btn').setAttribute('aria-expanded', 'false');
+      });
+      if (opening) {
+        dd.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
     });
   });
   document.addEventListener('click', function () {
@@ -182,24 +195,23 @@
       dd.querySelector('.valo-dropdown__btn').setAttribute('aria-expanded', 'false');
     });
   });
-
-  // Group filter selects (Collection)
-  document.querySelectorAll('.filter-group-select').forEach(function (sel) {
-    sel.addEventListener('change', function () {
-      var base = this.dataset.collection;
-      var tag  = this.value;
-      var sort = new URLSearchParams(window.location.search).get('sort_by');
-      var url  = tag ? (base + '/' + tag) : base;
-      if (sort) url += '?sort_by=' + sort;
-      window.location = url;
-    });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.valo-dropdown.is-open').forEach(function (dd) {
+        dd.classList.remove('is-open');
+        dd.querySelector('.valo-dropdown__btn').setAttribute('aria-expanded', 'false');
+      });
+    }
   });
 
-  // Sort
-  document.getElementById('collection-sort').addEventListener('change', function () {
-    var url = new URL(window.location.href);
-    url.searchParams.set('sort_by', this.value);
-    window.location = url.toString();
+  // Sort items
+  document.querySelectorAll('[data-sort-val]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var url = new URL(window.location.href);
+      url.searchParams.set('sort_by', this.dataset.sortVal);
+      window.location = url.toString();
+    });
   });
 </script>
 
@@ -220,7 +232,7 @@
     { "type": "header", "content": "Filter Group 2 — Rifles" },
     { "type": "text", "id": "group_2_label", "label": "Group label", "default": "Rifle" },
     { "type": "text", "id": "group_2_tags",  "label": "Tags (comma-separated)", "default": "Vandal, Phantom, Spectre, Bulldog" },
-    { "type": "header", "content": "Filter Group 3 — Knives" },
+    { "type": "header", "content": "Filter Group 3 — Knives (shown first)" },
     { "type": "text", "id": "group_3_label", "label": "Group label", "default": "Knife" },
     { "type": "text", "id": "group_3_tags",  "label": "Tags (comma-separated)", "default": "Karambit, Kunai, Butterfly" },
     { "type": "header", "content": "Filter Group 4 — Other" },
