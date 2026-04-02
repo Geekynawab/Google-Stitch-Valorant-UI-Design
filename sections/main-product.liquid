@@ -110,6 +110,77 @@
           </div>
         {%- endif -%}
 
+        <!-- Accordions -->
+        <div class="product-accordions">
+
+          {%- if section.settings.materials_content != blank -%}
+          <div class="product-accordion">
+            <button class="product-accordion__trigger" aria-expanded="false">
+              <span class="product-accordion__icon">
+                <span class="material-symbols-outlined">inventory_2</span>
+              </span>
+              <span class="product-accordion__label">Materials</span>
+              <span class="material-symbols-outlined product-accordion__chevron">expand_more</span>
+            </button>
+            <div class="product-accordion__body">
+              <div class="product-accordion__content">{{ section.settings.materials_content }}</div>
+            </div>
+          </div>
+          {%- endif -%}
+
+          {%- if section.settings.dimensions_content != blank -%}
+          <div class="product-accordion">
+            <button class="product-accordion__trigger" aria-expanded="false">
+              <span class="product-accordion__icon">
+                <span class="material-symbols-outlined">straighten</span>
+              </span>
+              <span class="product-accordion__label">Dimensions</span>
+              <span class="material-symbols-outlined product-accordion__chevron">expand_more</span>
+            </button>
+            <div class="product-accordion__body">
+              <div class="product-accordion__content">{{ section.settings.dimensions_content }}</div>
+            </div>
+          </div>
+          {%- endif -%}
+
+          {%- if section.settings.shipping_content != blank -%}
+          <div class="product-accordion">
+            <button class="product-accordion__trigger" aria-expanded="false">
+              <span class="product-accordion__icon">
+                <span class="material-symbols-outlined">local_shipping</span>
+              </span>
+              <span class="product-accordion__label">Shipping &amp; Returns</span>
+              <span class="material-symbols-outlined product-accordion__chevron">expand_more</span>
+            </button>
+            <div class="product-accordion__body">
+              <div class="product-accordion__content">{{ section.settings.shipping_content }}</div>
+            </div>
+          </div>
+          {%- endif -%}
+
+          {%- if section.settings.fun_facts_content != blank -%}
+          <div class="product-accordion">
+            <button class="product-accordion__trigger" aria-expanded="false">
+              <span class="product-accordion__icon">
+                <span class="material-symbols-outlined">favorite</span>
+              </span>
+              <span class="product-accordion__label">Fun Facts</span>
+              <span class="material-symbols-outlined product-accordion__chevron">expand_more</span>
+            </button>
+            <div class="product-accordion__body">
+              <div class="product-accordion__content">{{ section.settings.fun_facts_content }}</div>
+            </div>
+          </div>
+          {%- endif -%}
+
+        </div>
+
+        <!-- Share -->
+        <button class="product-share-btn" onclick="navigator.share ? navigator.share({ title: '{{ product.title | escape }}', url: window.location.href }) : navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied!'))">
+          <span class="material-symbols-outlined">ios_share</span>
+          Share
+        </button>
+
       </div>
     </div>
 
@@ -136,6 +207,47 @@
 {% schema %}
 {
   "name": "Product Page",
-  "settings": []
+  "settings": [
+    {
+      "type": "header",
+      "content": "Accordion — Materials"
+    },
+    {
+      "type": "richtext",
+      "id": "materials_content",
+      "label": "Materials content",
+      "default": "<p>High-grade stainless steel blade with a zinc alloy handle. Each piece is crafted with precision and finished with a matte black coating for durability.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion — Dimensions"
+    },
+    {
+      "type": "richtext",
+      "id": "dimensions_content",
+      "label": "Dimensions content",
+      "default": "<p>Overall length: 30 cm / 11.8 in<br>Blade length: 15 cm / 5.9 in<br>Weight: 220 g / 7.7 oz</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion — Shipping & Returns"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_content",
+      "label": "Shipping & Returns content",
+      "default": "<p>Free shipping on orders over $50. Delivered in 5–10 business days. Returns accepted within 30 days of delivery — item must be unused and in original packaging.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Accordion — Fun Facts"
+    },
+    {
+      "type": "richtext",
+      "id": "fun_facts_content",
+      "label": "Fun Facts content",
+      "default": "<p>This knife skin was inspired by the Valorant Champions 2021 tournament. Only a handful of players in the world earned it in-game — now you can own a physical replica.</p>"
+    }
+  ]
 }
 {% endschema %}

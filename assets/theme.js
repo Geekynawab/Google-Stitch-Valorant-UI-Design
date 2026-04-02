@@ -159,6 +159,16 @@ document.addEventListener('click', function (e) {
   }).then(function () { window.location.reload(); });
 });
 
+// Product page accordions
+document.addEventListener('click', function (e) {
+  var trigger = e.target.closest('.product-accordion__trigger');
+  if (!trigger) return;
+  var isOpen = trigger.getAttribute('aria-expanded') === 'true';
+  trigger.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+  var body = trigger.nextElementSibling;
+  if (body) body.classList.toggle('open', !isOpen);
+});
+
 // Cart quantity update (AJAX)
 document.addEventListener('change', function (e) {
   if (!e.target.matches('[data-cart-qty]')) return;
