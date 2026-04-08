@@ -40,7 +40,7 @@
       <div class="fp-row__header">
         <h2>{{ section.settings.heading_2 }}</h2>
       </div>
-      <div class="fp-scroll-row fp-coll-row">
+      <div class="fp-scroll-row fp-coll-row" id="fp-row-collections">
         {%- if coll_blocks.size > 0 -%}
           {%- for block in coll_blocks -%}
             {%- assign coll = collections[block.settings.collection] -%}
@@ -90,6 +90,15 @@
         group.insertBefore(cards[j], cards[i]);
       }
     });
+
+    var collRow = document.getElementById('fp-row-collections');
+    if (collRow) {
+      var tiles = Array.from(collRow.children);
+      for (var i = tiles.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        collRow.insertBefore(tiles[j], tiles[i]);
+      }
+    }
   });
 </script>
 
