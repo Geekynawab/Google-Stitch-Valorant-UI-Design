@@ -38,7 +38,7 @@
         "coll_6":  { "type": "collection_link", "settings": { "collection": "oni",              "label": "ONI" } },
         "coll_7":  { "type": "collection_link", "settings": { "collection": "singularity",      "label": "SINGULARITY" } },
         "coll_8":  { "type": "collection_link", "settings": { "collection": "recon",            "label": "RECON" } },
-        "coll_9":  { "type": "collection_link", "settings": { "collection": "rgx",              "label": "RGX" } }
+        "coll_9":  { "type": "collection_link", "settings": { "collection": "rgx-11z-pro",     "label": "RGX" } }
       }
     },
     "model-showcase": {
