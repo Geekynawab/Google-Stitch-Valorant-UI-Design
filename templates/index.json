@@ -46,5 +46,5 @@
       "settings": {}
     }
   },
-  "order": ["hero","trust","categories","featured","model-showcase"]
+  "order": ["hero","model-showcase","trust","categories","featured"]
 }

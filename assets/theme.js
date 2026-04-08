@@ -310,6 +310,48 @@ document.addEventListener('click', function (e) {
   }
 });
 
+// Sticky Add to Cart (mobile)
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    var bar     = document.getElementById('sticky-atc');
+    var mainBtn = document.querySelector('.product-info__add-btn');
+    if (!bar || !mainBtn) return;
+
+    /* tap on sticky button clicks the real form button */
+    var stickyBtn = document.getElementById('sticky-atc-btn');
+    if (stickyBtn) {
+      stickyBtn.addEventListener('click', function () { mainBtn.click(); });
+    }
+
+    /* show sticky bar once the real button scrolls off screen */
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        bar.classList.toggle('is-visible', !entries[0].isIntersecting);
+      }, { rootMargin: '0px 0px -20px 0px' });
+      obs.observe(mainBtn);
+    }
+  });
+})();
+
+// Scroll reveal
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  document.addEventListener('DOMContentLoaded', function () {
+    var targets = document.querySelectorAll(
+      '.trust-bar, .category-grid, .featured-products, .model-showcase, .fp-row'
+    );
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.06 });
+    targets.forEach(function (el) { el.classList.add('reveal'); obs.observe(el); });
+  });
+})();
+
 // Touch swipe for product gallery
 (function () {
   document.addEventListener('DOMContentLoaded', function () {

@@ -226,6 +226,17 @@
   </div>
 </section>
 
+{%- if current_variant.available -%}
+<div class="sticky-atc" id="sticky-atc">
+  <div class="container">
+    <div class="sticky-atc__inner">
+      <span class="sticky-atc__title">{{ product.title | truncate: 38 }}</span>
+      <button class="sticky-atc__btn btn-primary" id="sticky-atc-btn">Add to Cart</button>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "Product Page",
