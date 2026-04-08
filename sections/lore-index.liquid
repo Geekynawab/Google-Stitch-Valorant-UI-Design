@@ -1,0 +1,45 @@
+<div class="lore-index">
+  <div class="container">
+    <div class="lore-index__header">
+      <h1 class="lore-index__title">Product Lore</h1>
+      <p class="lore-index__subtitle">Discover the stories behind our weapons</p>
+    </div>
+
+    <div class="lore-index__grid">
+      {%- for product in shop.products -%}
+        {%- if product.metafields.custom.lore -%}
+          <div class="lore-index__card">
+            <div class="lore-index__image">
+              {%- if product.featured_image -%}
+                <img
+                  src="{{ product.featured_image | image_url: width: 300 }}"
+                  alt="{{ product.title }}"
+                  loading="lazy">
+              {%- endif -%}
+            </div>
+            <div class="lore-index__content">
+              <h3 class="lore-index__product-name">{{ product.title }}</h3>
+              <p class="lore-index__collection">
+                {%- if product.collections.first -%}
+                  {{ product.collections.first.title }}
+                {%- endif -%}
+              </p>
+              <p class="lore-index__excerpt">
+                {{ product.metafields.custom.lore | strip_html | truncatewords: 20 }}
+              </p>
+              <a href="/lore/{{ product.handle }}" class="lore-index__link">Read Lore</a>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Lore Index",
+  "limit": 1,
+  "settings": []
+}
+{% endschema %}
