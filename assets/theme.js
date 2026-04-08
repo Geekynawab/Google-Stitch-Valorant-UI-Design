@@ -77,10 +77,18 @@ if (window.location.pathname.indexOf('/policies/') === 0) {
       if (!this.item || !this.menu) return;
       this.btn = this.item.querySelector('.desktop-nav__btn');
       var self = this;
+      /* hover for mouse devices */
       on(this.item, 'mouseenter', function () { clearTimeout(self.timer); self.open(); });
       on(this.item, 'mouseleave', function () { self.timer = setTimeout(function () { self.close(); }, 160); });
       on(this.menu, 'mouseenter', function () { clearTimeout(self.timer); });
       on(this.menu, 'mouseleave', function () { self.timer = setTimeout(function () { self.close(); }, 160); });
+      /* click/tap toggle for touch devices */
+      if (this.btn) {
+        on(this.btn, 'click', function (e) {
+          e.preventDefault();
+          self.menu.classList.contains('open') ? self.close() : self.open();
+        });
+      }
       on(document, 'click', function (e) {
         if (!self.item.contains(e.target) && !self.menu.contains(e.target)) self.close();
       });

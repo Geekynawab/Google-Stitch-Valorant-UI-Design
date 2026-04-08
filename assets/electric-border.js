@@ -176,6 +176,9 @@ const ElectricBorder = (() => {
     if (onlyOnHover) {
       container.addEventListener('mouseenter', start);
       container.addEventListener('mouseleave', stop);
+      /* touch support */
+      container.addEventListener('touchstart', start, { passive: true });
+      container.addEventListener('touchend', function () { setTimeout(stop, 400); }, { passive: true });
     } else {
       start();
     }
