@@ -1,8 +1,0 @@
-{
-  "sections": {
-    "lore_index": {
-      "type": "lore-index"
-    }
-  },
-  "order": ["lore_index"]
-}

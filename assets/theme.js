@@ -468,6 +468,73 @@ document.addEventListener('change', function (e) {
   }).then(function () { window.location.reload(); });
 });
 
+// Currency Switcher — change currency and redirect to home
+(function () {
+  var CURRENCY_KEY = 'kf-currency-selection';
+  var countryMap = {
+    'US': 'USD', 'CA': 'CAD', 'GB': 'GBP', 'IE': 'EUR',
+    'DE': 'EUR', 'FR': 'EUR', 'IT': 'EUR', 'ES': 'EUR', 'NL': 'EUR',
+    'BE': 'EUR', 'AT': 'EUR', 'PT': 'EUR', 'FI': 'EUR', 'GR': 'EUR',
+    'AU': 'AUD', 'NZ': 'NZD', 'JP': 'JPY', 'IN': 'INR',
+    'CN': 'CNY', 'HK': 'HKD', 'TW': 'TWD', 'KR': 'KRW',
+    'SG': 'SGD', 'MY': 'MYR', 'TH': 'THB', 'ID': 'IDR',
+    'PH': 'PHP', 'VN': 'VND', 'BD': 'BDT', 'PK': 'PKR',
+    'CH': 'CHF', 'SE': 'SEK', 'NO': 'NOK', 'DK': 'DKK',
+    'PL': 'PLN', 'CZ': 'CZK', 'HU': 'HUF', 'RO': 'RON',
+    'TR': 'TRY', 'RU': 'RUB', 'UA': 'UAH', 'IL': 'ILS',
+    'AE': 'AED', 'SA': 'SAR', 'QA': 'QAR', 'KW': 'KWD',
+    'BH': 'BHD', 'OM': 'OMR', 'JO': 'JOD',
+    'ZA': 'ZAR', 'NG': 'NGN', 'EG': 'EGP', 'KE': 'KES', 'GH': 'GHS',
+    'MX': 'MXN', 'BR': 'BRL', 'AR': 'ARS', 'CL': 'CLP', 'CO': 'COP',
+    'PE': 'PEN', 'UY': 'UYU', 'CR': 'CRC', 'GT': 'GTQ',
+    'DO': 'DOP', 'JM': 'JMD', 'TT': 'TTD', 'PA': 'PAB',
+    'GE': 'GEL', 'AM': 'AMD', 'AZ': 'AZN', 'KZ': 'KZT',
+    'MA': 'MAD', 'TN': 'TND', 'DZ': 'DZD', 'LY': 'LYD'
+  };
+
+  function getDefaultCurrency() {
+    var saved = localStorage.getItem(CURRENCY_KEY);
+    if (saved) return saved;
+    var country = Shopify && Shopify.country ? Shopify.country : 'US';
+    return countryMap[country] || 'USD';
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var headerSelect = document.getElementById('header-currency-select');
+    var footerSelect = document.getElementById('currency-select');
+    var headerForm = document.getElementById('header-currency-form');
+    var footerForm = document.getElementById('footer-currency-form');
+    var selects = [headerSelect, footerSelect].filter(Boolean);
+    if (!selects.length) return;
+
+    var defaultCurrency = getDefaultCurrency();
+    selects.forEach(function (s) { s.value = defaultCurrency; });
+
+    selects.forEach(function (s) {
+      s.addEventListener('change', function () {
+        var currency = this.value;
+        localStorage.setItem(CURRENCY_KEY, currency);
+
+        // Sync both selects
+        selects.forEach(function (other) {
+          if (other !== s) other.value = currency;
+        });
+
+        // Prevent default form submission and redirect to home instead
+        var form = this.closest('form');
+        if (form) {
+          fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form)
+          }).then(function () {
+            window.location.href = '/';
+          });
+        }
+      });
+    });
+  });
+})();
+
 // ============================================================ CLICK SPARK
 (function () {
   var canvas = document.createElement('canvas');
