@@ -52,7 +52,7 @@
             {%- if tile_img == blank and coll.products.size > 0 -%}
               {%- assign tile_img = coll.products.first.featured_image -%}
             {%- endif -%}
-            <a href="{{ tile_url }}" class="fp-coll-tile" {{ block.shopify_attributes }}>
+            <a href="{{ tile_url }}" class="fp-coll-tile" data-electric-border {{ block.shopify_attributes }}>
               {%- if tile_img != blank -%}
                 <img src="{{ tile_img | image_url: width: 400 }}"
                      alt="{{ tile_label | escape }}"
