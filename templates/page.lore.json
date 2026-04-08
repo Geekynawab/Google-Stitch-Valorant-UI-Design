@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-lore",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

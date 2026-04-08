@@ -1,0 +1,142 @@
+{% paginate shop.products by 250 %}
+
+<script type="application/json" id="lore-products-data">
+  [
+    {% for product in shop.products %}
+      {% if product.metafields.custom.lore != blank %}
+      {
+        "handle": {{ product.handle | json }},
+        "title": {{ product.title | json }},
+        "url": {{ product.url | json }},
+        "image": {{ product.featured_image | image_url: width: 700 | json }},
+        "thumb": {{ product.featured_image | image_url: width: 320 | json }},
+        "lore": {{ product.metafields.custom.lore | json }},
+        "collection": {{ product.collections.first.title | default: '' | json }}
+      },
+      {% endif %}
+    {% endfor %}
+    null
+  ]
+</script>
+
+{% endpaginate %}
+
+<div class="lore-page container">
+
+  <!-- Index View -->
+  <div id="lore-index-view">
+    <div class="lore-index__header">
+      <h1 class="lore-index__title">Weapon Lore</h1>
+      <p class="lore-index__subtitle">Discover the stories behind every weapon</p>
+    </div>
+    <div class="lore-index__grid" id="lore-grid"></div>
+    <p id="lore-empty" style="display:none;text-align:center;color:#999;padding:4rem 0;">
+      No lore found. Make sure your products have the <code>custom.lore</code> metafield populated.
+    </p>
+  </div>
+
+  <!-- Detail View -->
+  <div id="lore-detail-view" style="display:none">
+    <div class="lore-detail__breadcrumb">
+      <a href="#" id="lore-back-btn">&#8592; Back to Lore</a>
+    </div>
+    <div class="lore-detail__wrapper">
+      <div class="lore-detail__image-section">
+        <img id="lore-detail-image" src="" alt="" class="lore-detail__image">
+      </div>
+      <div class="lore-detail__content-section">
+        <p id="lore-detail-collection" class="lore-detail__collection"></p>
+        <h1 id="lore-detail-title" class="lore-detail__title"></h1>
+        <div id="lore-detail-text" class="lore-detail__text"></div>
+        <a id="lore-detail-shop" href="#" class="lore-detail__shop-button">Shop Now</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var products = JSON.parse(document.getElementById('lore-products-data').textContent).filter(Boolean);
+
+  var indexView  = document.getElementById('lore-index-view');
+  var detailView = document.getElementById('lore-detail-view');
+  var grid       = document.getElementById('lore-grid');
+  var emptyMsg   = document.getElementById('lore-empty');
+
+  /* ── Render index grid ── */
+  function renderIndex() {
+    if (products.length === 0) {
+      emptyMsg.style.display = 'block';
+      return;
+    }
+    grid.innerHTML = products.map(function (p) {
+      var excerpt = p.lore.length > 120 ? p.lore.substring(0, 120) + '…' : p.lore;
+      var img = p.thumb ? '<img src="' + p.thumb + '" alt="' + p.title + '" loading="lazy">' : '';
+      return '<div class="lore-index__card">'
+        + '<div class="lore-index__image">' + img + '</div>'
+        + '<div class="lore-index__content">'
+        + '<h3 class="lore-index__product-name">' + p.title + '</h3>'
+        + (p.collection ? '<p class="lore-index__collection">' + p.collection + '</p>' : '')
+        + '<p class="lore-index__excerpt">' + excerpt + '</p>'
+        + '<a href="#' + p.handle + '" class="lore-index__link">Read Lore</a>'
+        + '</div></div>';
+    }).join('');
+  }
+
+  /* ── Render detail view ── */
+  function renderDetail(handle) {
+    var p = products.find(function (x) { return x.handle === handle; });
+    if (!p) { showIndex(); return; }
+
+    document.getElementById('lore-detail-image').src = p.image || '';
+    document.getElementById('lore-detail-image').alt = p.title;
+    document.getElementById('lore-detail-title').textContent = p.title;
+    document.getElementById('lore-detail-collection').textContent = p.collection;
+    document.getElementById('lore-detail-text').textContent = p.lore;
+    document.getElementById('lore-detail-shop').href = p.url;
+
+    indexView.style.display  = 'none';
+    detailView.style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  /* ── Show index ── */
+  function showIndex() {
+    indexView.style.display  = 'block';
+    detailView.style.display = 'none';
+  }
+
+  /* ── Route based on URL hash ── */
+  function route() {
+    var handle = window.location.hash.replace('#', '');
+    if (handle) {
+      renderDetail(handle);
+    } else {
+      showIndex();
+    }
+  }
+
+  /* ── Back button ── */
+  document.getElementById('lore-back-btn').addEventListener('click', function (e) {
+    e.preventDefault();
+    history.pushState(null, '', window.location.pathname);
+    showIndex();
+  });
+
+  /* ── Init ── */
+  renderIndex();
+  route();
+
+  window.addEventListener('hashchange', route);
+  window.addEventListener('popstate', route);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Lore",
+  "limit": 1,
+  "settings": []
+}
+{% endschema %}
