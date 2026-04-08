@@ -226,6 +226,18 @@
   .hero-banner__panel { width: 100%; }
   .hero-marquee__tile { width: 200px; height: 260px; }
 }
+@media (max-width: 600px) {
+  .hero-banner { min-height: 100svh; }
+  .hero-banner__inner { padding: var(--space-8) 0; gap: var(--space-6); }
+  .hero-banner__content { padding: 1.25rem; }
+  .hero-banner__title { font-size: clamp(1.5rem, 8vw, 2.2rem); }
+  .hero-banner__subtitle { font-size: 0.9rem; margin-bottom: 1.25rem; }
+  .hero-banner__panel { display: none; }
+  .hero-marquee__tile { width: 140px; height: 185px; border-radius: 6px; }
+  .hero-marquee { gap: 10px; padding: 24px 0; }
+  .hero-banner__actions { gap: var(--space-3); }
+  .hero-banner__actions .btn-primary { font-size: 0.75rem; padding: 0.6rem 1.1rem; }
+}
 
 /* ── Glitch animation ───────────────────────────────────────────────── */
 @keyframes glitch-1 {
