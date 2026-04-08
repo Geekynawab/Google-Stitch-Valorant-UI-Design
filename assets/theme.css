@@ -828,13 +828,13 @@ body.template-policies #main-content * { text-align: left !important; }
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: var(--space-4);
+  padding-bottom: var(--space-6);
   scrollbar-width: auto;
   scrollbar-color: var(--color-primary) rgba(255,255,255,0.08);
 }
-.fp-scroll-row::-webkit-scrollbar { height: 8px; }
-.fp-scroll-row::-webkit-scrollbar-track { background: rgba(255,255,255,0.08); border-radius: 4px; }
-.fp-scroll-row::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 4px; }
+.fp-scroll-row::-webkit-scrollbar { height: 14px; }
+.fp-scroll-row::-webkit-scrollbar-track { background: rgba(255,255,255,0.08); border-radius: 7px; }
+.fp-scroll-row::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 7px; }
 .fp-scroll-row .product-card {
   flex: 0 0 calc(16.666% - var(--space-4) * 5 / 6);
   min-width: 200px;
