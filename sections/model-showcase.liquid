@@ -234,12 +234,12 @@ model-viewer {
 /* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .model-showcase__layout { flex-direction: column; }
-  .model-showcase__viewer-wrap { width: 100%; height: 380px; }
+  .model-showcase__viewer-wrap { flex: none; width: 100%; height: 380px; }
   .model-showcase__text { max-width: 100%; }
 }
 @media (max-width: 600px) {
   .model-showcase { padding: var(--space-12) 0; }
-  .model-showcase__viewer-wrap { height: 280px; }
+  .model-showcase__viewer-wrap { flex: none; width: 100%; height: 300px; }
   .model-showcase__title { font-size: clamp(1.3rem, 7vw, 2rem); }
   .model-showcase__desc { font-size: 0.85rem; }
   .model-showcase__price { font-size: 1.2rem; }
