@@ -132,6 +132,7 @@
   top: -999px; bottom: -999px; left: -999px; right: -999px;
   margin: auto; transform-origin: 50% 50%;
   backface-visibility: hidden;
+  pointer-events: none;
   transform:
     rotateY(calc(var(--rot-y) * (var(--offset-x, 0) + (var(--item-size-x, 2) - 1) / 2)))
     rotateX(calc(var(--rot-x) * (var(--offset-y, 0) - (var(--item-size-y, 2) - 1) / 2)))
