@@ -14,7 +14,7 @@
       "blocks": {
         "cat_1": { "type": "category", "settings": { "title": "KARAMBITS", "url": "/collections/karambit" } },
         "cat_2": { "type": "category", "settings": { "title": "BUTTERFLY KNIVES", "url": "/collections/butterfly-knives" } },
-        "cat_3": { "type": "category", "settings": { "title": "DUAL WIELD", "url": "/collections/dual-wield" } },
+        "cat_3": { "type": "category", "settings": { "title": "KUNAI", "url": "/collections/kunai" } },
         "cat_4": { "type": "category", "settings": { "title": "KEYCHAINS", "url": "/collections/keychains-1" } }
       }
     },
