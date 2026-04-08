@@ -42,6 +42,7 @@ if (window.location.pathname.indexOf('/policies/') === 0) {
       this.overlay   = $('#mobile-nav-overlay');
       if (!this.hamburger) return;
       on(this.hamburger, 'click', function () { MobileNav.toggle(); });
+      on(this.hamburger, 'touchend', function (e) { e.preventDefault(); MobileNav.toggle(); });
       if (this.overlay) on(this.overlay, 'click', function () { MobileNav.close(); });
       on(this.nav, 'click', function (e) {
         var toggle = e.target.closest('[data-mobile-toggle]');
