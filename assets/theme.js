@@ -310,6 +310,57 @@ document.addEventListener('click', function (e) {
   }
 });
 
+// Touch swipe for product gallery
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    var mainEl = document.querySelector('.product-gallery__main');
+    if (!mainEl) return;
+
+    var startX = 0, startY = 0, active = false, dirLocked = false;
+
+    mainEl.addEventListener('touchstart', function (e) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      active = true;
+      dirLocked = false;
+    }, { passive: true });
+
+    mainEl.addEventListener('touchmove', function (e) {
+      if (!active) return;
+      var dx = e.touches[0].clientX - startX;
+      var dy = e.touches[0].clientY - startY;
+
+      if (!dirLocked) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        dirLocked = true;
+        if (Math.abs(dy) > Math.abs(dx)) { active = false; return; } // vertical scroll wins
+      }
+
+      e.preventDefault();
+      var img = mainEl.querySelector('img');
+      if (img) img.style.transform = 'translateX(' + (dx * 0.3) + 'px)';
+    }, { passive: false });
+
+    mainEl.addEventListener('touchend', function (e) {
+      if (!active) return;
+      active = false;
+      var dx = e.changedTouches[0].clientX - startX;
+      var img = mainEl.querySelector('img');
+      if (img) img.style.transform = '';
+
+      if (Math.abs(dx) < 50) return;
+      var wrap = mainEl.closest('.product-page__gallery');
+      if (!wrap) return;
+      var current = galleryCurrentIndex(wrap);
+      if (dx < 0) {
+        galleryGoTo(wrap, current + 1, 'next');
+      } else {
+        galleryGoTo(wrap, current - 1, 'prev');
+      }
+    }, { passive: true });
+  });
+})();
+
 // Cart item remove (AJAX)
 document.addEventListener('click', function (e) {
   if (!e.target.matches('[data-cart-remove]')) return;
