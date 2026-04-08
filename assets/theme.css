@@ -835,8 +835,8 @@ body.template-policies #main-content * { text-align: left !important; }
 .fp-scroll-row::-webkit-scrollbar-track { background: transparent; }
 .fp-scroll-row::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
 .fp-scroll-row .product-card {
-  flex: 0 0 calc(20% - var(--space-4) * 4 / 5);
-  min-width: 220px;
+  flex: 0 0 calc(16.666% - var(--space-4) * 5 / 6);
+  min-width: 200px;
   scroll-snap-align: start;
 }
 @media (max-width: 900px) {
@@ -847,8 +847,8 @@ body.template-policies #main-content * { text-align: left !important; }
 }
 
 .fp-coll-tile {
-  flex: 0 0 calc(20% - var(--space-4) * 4 / 5);
-  min-width: 260px;
+  flex: 0 0 calc(16.666% - var(--space-4) * 5 / 6);
+  min-width: 200px;
   height: 400px;
   border-radius: var(--radius-card);
   overflow: hidden;
@@ -884,10 +884,10 @@ body.template-policies #main-content * { text-align: left !important; }
   text-align: center;
 }
 @media (max-width: 900px) {
-  .fp-coll-tile { min-width: 200px; height: 320px; }
+  .fp-coll-tile { min-width: 180px; height: 320px; }
 }
 @media (max-width: 600px) {
-  .fp-coll-tile { flex: 0 0 180px; min-width: 180px; height: 270px; }
+  .fp-coll-tile { flex: 0 0 170px; min-width: 170px; height: 270px; }
 }
 
 /* ── Category Grid Slideshow ──────────────────────────────────── */
