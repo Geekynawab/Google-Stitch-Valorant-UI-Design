@@ -86,6 +86,7 @@
                     <button type="button"
                             class="variant-btn{%- if option.selected_value == value %} active{%- endif -%}"
                             data-variant-id="{{ variant_for_value.id }}"
+                            {%- if variant_for_value.featured_image %}data-variant-image="{{ variant_for_value.featured_image | image_url: width: 1600 }}"{%- endif -%}
                             {%- unless variant_for_value.available %} disabled{%- endunless -%}>
                       {{ value }}
                     </button>

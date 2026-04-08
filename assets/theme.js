@@ -176,6 +176,12 @@ document.addEventListener('click', function (e) {
   const variantId = e.target.dataset.variantId;
   const input = form.querySelector('[name="id"]');
   if (input) input.value = variantId;
+
+  const variantImage = e.target.dataset.variantImage;
+  if (variantImage) {
+    const mainImg = document.getElementById('main-product-image');
+    if (mainImg) mainImg.src = variantImage;
+  }
 });
 
 // Buy Now — add to cart then go straight to checkout
