@@ -27,7 +27,7 @@
       "block_order": ["pg_knives_1","pg_knives_2","pg_rifles","pg_keychains","coll_1","coll_2","coll_3","coll_4","coll_5","coll_6","coll_7","coll_8","coll_9"],
       "blocks": {
         "pg_knives_1": { "type": "product_group", "settings": { "collection": "karambit",        "limit": 3 } },
-        "pg_knives_2": { "type": "product_group", "settings": { "collection": "butterfly-knives","limit": 2 } },
+        "pg_knives_2": { "type": "product_group", "settings": { "collection": "kunai",           "limit": 2 } },
         "pg_rifles":   { "type": "product_group", "settings": { "collection": "rifle",           "limit": 2 } },
         "pg_keychains":{ "type": "product_group", "settings": { "collection": "keychains-1",     "limit": 2 } },
         "coll_1":  { "type": "collection_link", "settings": { "collection": "champions",        "label": "CHAMPIONS" } },
