@@ -1,5 +1,10 @@
 {% paginate shop.products by 250 %}
 
+<!-- DEBUG: total products in page = {{ shop.products.size }}, paginate count = {{ paginate.items }} -->
+{% for product in shop.products limit: 1 %}
+<!-- DEBUG: first product = {{ product.title }}, lore = {{ product.metafields.custom.lore | truncate: 80 }}, all metafields = {{ product.metafields | json | truncate: 200 }} -->
+{% endfor %}
+
 <script type="application/json" id="lore-products-data">
   [
     {% for product in shop.products %}
