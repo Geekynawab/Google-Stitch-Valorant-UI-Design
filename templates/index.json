@@ -43,14 +43,7 @@
     },
     "model-showcase": {
       "type": "model-showcase",
-      "settings": {
-        "eyebrow": "Featured Weapon",
-        "title": "Valorant Katana",
-        "description": "A blade built for those who move in silence. Wide. Swift. Unmistakable.",
-        "cta_label": "Shop Now",
-        "model_file": "katana_valorant_draft.glb",
-        "auto_rotate": false
-      }
+      "settings": {}
     }
   },
   "order": ["hero","trust","categories","featured","model-showcase"]

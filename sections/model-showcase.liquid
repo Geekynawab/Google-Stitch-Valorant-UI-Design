@@ -1,38 +1,55 @@
+{%- assign ms_products = "onimaru-kunitsuna,reaver-karambit,prime-karambit-keychain-8cm,champions-2022-butterfly-knife-luminous,glitchpop-knife-keychain-9cm" | split: "," -%}
+{%- assign ms_models   = "katana_valorant_draft.glb,reaver_karambit.glb,karambit_prime_2.0_valorant.glb,valorant_champions_butterfly_knife.glb,valorant_glitchpop_dagger.glb" | split: "," -%}
+{%- assign ms_eyebrows = "Featured Weapon,Featured Weapon,Featured Weapon,Featured Weapon,Featured Weapon" | split: "," -%}
+
 <section class="model-showcase" id="model-showcase-{{ section.id }}">
   <div class="container">
     <div class="model-showcase__layout">
 
-      <div class="model-showcase__text">
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="model-showcase__eyebrow">{{ section.settings.eyebrow }}</p>
-        {%- endif -%}
-        {%- if section.settings.title != blank -%}
-          <h2 class="model-showcase__title">{{ section.settings.title }}</h2>
-        {%- endif -%}
-        {%- if section.settings.description != blank -%}
-          <p class="model-showcase__desc">{{ section.settings.description }}</p>
-        {%- endif -%}
-        {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
-          <a href="{{ section.settings.cta_link }}" class="btn-primary">{{ section.settings.cta_label }}</a>
-        {%- endif -%}
+      <!-- Left: text panel -->
+      <div class="model-showcase__text" id="ms-text-{{ section.id }}">
+        <p class="model-showcase__eyebrow" id="ms-eyebrow-{{ section.id }}">Featured Weapon</p>
+        <h2 class="model-showcase__title"  id="ms-title-{{ section.id }}">—</h2>
+        <p class="model-showcase__desc"    id="ms-desc-{{ section.id }}"></p>
+        <p class="model-showcase__price"   id="ms-price-{{ section.id }}"></p>
+        <a href="#" class="btn-primary model-showcase__cta" id="ms-cta-{{ section.id }}">Shop Now</a>
+
+        <!-- Dot navigation -->
+        <div class="ms-dots" id="ms-dots-{{ section.id }}">
+          {%- for i in (0..4) -%}
+            <button class="ms-dot{% if i == 0 %} ms-dot--active{% endif %}" data-index="{{ i }}" aria-label="Slide {{ i | plus: 1 }}"></button>
+          {%- endfor -%}
+        </div>
       </div>
 
+      <!-- Right: 3D viewer -->
       <div class="model-showcase__viewer-wrap">
         <model-viewer
-          src="{{ section.settings.model_file | default: 'katana_valorant_draft.glb' | asset_url }}"
+          id="ms-viewer-{{ section.id }}"
+          src="{{ ms_models[0] | asset_url }}"
           camera-controls
           camera-orbit="0deg 75deg 70%"
           shadow-intensity="1"
           shadow-softness="0.5"
           exposure="0.9"
           environment-image="neutral"
-          {%- if section.settings.auto_rotate %}auto-rotate auto-rotate-delay="0"{%- endif %}
+          auto-rotate
+          auto-rotate-delay="0"
           style="width:100%;height:100%;background:transparent;"
         >
           <div slot="progress-bar" class="model-showcase__progress">
             <div class="model-showcase__progress-bar"></div>
           </div>
         </model-viewer>
+
+        <!-- Prev / Next arrows -->
+        <button class="ms-arrow ms-arrow--prev" id="ms-prev-{{ section.id }}" aria-label="Previous">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <button class="ms-arrow ms-arrow--next" id="ms-next-{{ section.id }}" aria-label="Next">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+
         <div class="model-showcase__drag-hint">
           <span class="material-symbols-outlined">drag_pan</span>
           Drag to rotate
@@ -43,9 +60,74 @@
   </div>
 </section>
 
+<!-- Slide data from Shopify -->
+<script id="ms-slide-data-{{ section.id }}" type="application/json">
+[
+  {%- for handle in ms_products -%}
+    {%- assign p = all_products[handle] -%}
+    {%- unless forloop.first -%},{%- endunless -%}
+    {
+      "model": {{ ms_models[forloop.index0] | asset_url | json }},
+      "title": {{ p.title | default: handle | json }},
+      "desc":  {{ p.description | strip_html | truncate: 180 | json }},
+      "price": {{ p.price | money | json }},
+      "url":   {{ p.url | default: '#' | json }}
+    }
+  {%- endfor -%}
+]
+</script>
+
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 
+<script>
+(function () {
+  var id      = {{ section.id | json }};
+  var slides  = JSON.parse(document.getElementById('ms-slide-data-' + id).textContent);
+  var viewer  = document.getElementById('ms-viewer-'  + id);
+  var elTitle = document.getElementById('ms-title-'   + id);
+  var elDesc  = document.getElementById('ms-desc-'    + id);
+  var elPrice = document.getElementById('ms-price-'   + id);
+  var elCta   = document.getElementById('ms-cta-'     + id);
+  var elText  = document.getElementById('ms-text-'    + id);
+  var dots    = document.querySelectorAll('#ms-dots-' + id + ' .ms-dot');
+  var current = 0;
+
+  function show(idx) {
+    current = (idx + slides.length) % slides.length;
+    var s = slides[current];
+
+    /* fade text out → update → fade in */
+    elText.classList.add('ms-text--fade');
+    setTimeout(function () {
+      elTitle.textContent = s.title;
+      elDesc.textContent  = s.desc;
+      elPrice.textContent = s.price;
+      elCta.href          = s.url;
+      elText.classList.remove('ms-text--fade');
+    }, 200);
+
+    /* swap model */
+    viewer.src = s.model;
+
+    /* update dots */
+    dots.forEach(function (d, i) {
+      d.classList.toggle('ms-dot--active', i === current);
+    });
+  }
+
+  document.getElementById('ms-prev-' + id).addEventListener('click', function () { show(current - 1); });
+  document.getElementById('ms-next-' + id).addEventListener('click', function () { show(current + 1); });
+  dots.forEach(function (d) {
+    d.addEventListener('click', function () { show(parseInt(d.dataset.index)); });
+  });
+
+  /* init first slide text */
+  show(0);
+})();
+</script>
+
 <style>
+/* ── Layout ───────────────────────────────────────────────────── */
 .model-showcase {
   padding: var(--space-24) 0;
   background: var(--color-surface);
@@ -56,67 +138,96 @@
   align-items: center;
   gap: var(--space-16);
 }
+/* ── Text panel ───────────────────────────────────────────────── */
 .model-showcase__text {
   flex: 0 0 auto;
-  max-width: 380px;
+  max-width: 400px;
+  transition: opacity 0.2s ease;
 }
+.ms-text--fade { opacity: 0; }
 .model-showcase__eyebrow {
   font-size: 0.7rem; font-weight: 700; letter-spacing: 0.22em;
-  text-transform: uppercase; color: var(--color-accent);
-  margin-bottom: var(--space-4);
+  text-transform: uppercase; color: var(--color-primary);
+  margin-bottom: var(--space-3);
 }
 .model-showcase__title {
   font-family: var(--font-valorant);
-  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-size: clamp(1.6rem, 2.8vw, 2.8rem);
   line-height: 1.1; text-transform: uppercase;
   color: var(--color-text-primary); margin-bottom: var(--space-4);
 }
 .model-showcase__desc {
-  font-size: 1rem; line-height: 1.6;
-  color: var(--color-on-surface-variant); margin-bottom: var(--space-8);
+  font-size: 0.95rem; line-height: 1.65;
+  color: var(--color-on-surface-variant); margin-bottom: var(--space-4);
 }
+.model-showcase__price {
+  font-family: var(--font-headline); font-size: 1.5rem; font-weight: 900;
+  color: var(--color-primary); margin-bottom: var(--space-6);
+}
+.model-showcase__cta { display: inline-block; }
+
+/* ── Dots ─────────────────────────────────────────────────────── */
+.ms-dots {
+  display: flex; gap: 10px; margin-top: var(--space-8);
+}
+.ms-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); border: none; cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+  padding: 0;
+}
+.ms-dot--active {
+  background: var(--color-primary);
+  transform: scale(1.3);
+}
+
+/* ── Viewer wrap ──────────────────────────────────────────────── */
 .model-showcase__viewer-wrap {
-  flex: 1;
-  min-width: 0;
-  position: relative;
-  height: 520px;
+  flex: 1; min-width: 0;
+  position: relative; height: 520px;
   border-radius: 16px;
-  border: 1px solid rgba(255, 70, 85, 0.3);
-  overflow: hidden;
-  background: transparent;
+  border: 1px solid rgba(255,70,85,0.3);
+  overflow: hidden; background: transparent;
 }
+
+/* ── Arrows ───────────────────────────────────────────────────── */
+.ms-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15);
+  color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  z-index: 5;
+}
+.ms-arrow:hover { background: var(--color-primary); border-color: var(--color-primary); }
+.ms-arrow--prev { left: 12px; }
+.ms-arrow--next { right: 12px; }
+.ms-arrow .material-symbols-outlined { font-size: 1.4rem; }
+
+/* ── Drag hint ────────────────────────────────────────────────── */
 .model-showcase__drag-hint {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: rgba(0,0,0,0.55);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.7);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-family: var(--font-headline);
-  pointer-events: none;
-  white-space: nowrap;
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 999px;
+  background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7); font-size: 0.72rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  font-family: var(--font-headline); pointer-events: none; white-space: nowrap;
 }
 .model-showcase__drag-hint .material-symbols-outlined { font-size: 1rem; opacity: 0.8; }
+
+/* ── Progress bar ─────────────────────────────────────────────── */
 .model-showcase__progress {
   width: 100%; height: 3px;
   background: var(--color-surface-container);
   position: absolute; top: 0; left: 0;
 }
 .model-showcase__progress-bar {
-  height: 100%;
-  background: var(--color-accent);
-  width: var(--progress-bar-width, 0%);
-  transition: width 0.2s;
+  height: 100%; background: var(--color-primary);
+  width: var(--progress-bar-width, 0%); transition: width 0.2s;
 }
+
+/* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .model-showcase__layout { flex-direction: column-reverse; }
   .model-showcase__viewer-wrap { width: 100%; height: 380px; }
@@ -128,68 +239,7 @@
 {
   "name": "Model Showcase",
   "tag": "section",
-  "settings": [
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Featured Weapon"
-    },
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Title",
-      "default": "Valorant Katana"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Description",
-      "default": "A blade built for those who move in silence. Wide. Swift. Unmistakable."
-    },
-    {
-      "type": "text",
-      "id": "cta_label",
-      "label": "Button text",
-      "default": "Shop Now"
-    },
-    {
-      "type": "url",
-      "id": "cta_link",
-      "label": "Button link"
-    },
-    {
-      "type": "select",
-      "id": "model_file",
-      "label": "3D Model",
-      "options": [
-        { "value": "katana_valorant_draft.glb",              "label": "Katana Draft" },
-        { "value": "valorant_champions_butterfly_knife.glb", "label": "Champions Butterfly Knife" },
-        { "value": "karambit_prime_2.0_valorant.glb",        "label": "Prime 2.0 Karambit" },
-        { "value": "reaver_karambit.glb",                    "label": "Reaver Karambit" },
-        { "value": "valorant_glitchpop_dagger.glb",          "label": "Glitchpop Dagger" }
-      ],
-      "default": "katana_valorant_draft.glb"
-    },
-    {
-      "type": "checkbox",
-      "id": "auto_rotate",
-      "label": "Auto-rotate",
-      "default": false
-    }
-  ],
-  "presets": [
-    {
-      "name": "Model Showcase",
-      "settings": {
-        "eyebrow": "Featured Weapon",
-        "title": "Valorant Katana",
-        "description": "A blade built for those who move in silence. Wide. Swift. Unmistakable.",
-        "cta_label": "Shop Now",
-        "model_file": "katana_valorant_draft.glb",
-        "auto_rotate": false
-      }
-    }
-  ]
+  "settings": [],
+  "presets": [{ "name": "Model Showcase" }]
 }
 {% endschema %}
