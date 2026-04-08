@@ -8,6 +8,7 @@
       </div>
       <div class="fp-scroll-row" id="fp-row-bestsellers">
         {%- assign group_blocks = section.blocks | where: 'type', 'product_group' -%}
+
         {%- if group_blocks.size > 0 -%}
           {%- for block in group_blocks -%}
             {%- assign grp_coll = collections[block.settings.collection] -%}
@@ -30,6 +31,9 @@
             </div>
           {%- endfor -%}
         {%- endif -%}
+      </div>
+      <div class="fp-scrollbar-track" data-for="fp-row-bestsellers">
+        <div class="fp-scrollbar-thumb"></div>
       </div>
     </div>
 
@@ -75,6 +79,9 @@
           {%- endfor -%}
         {%- endif -%}
       </div>
+      <div class="fp-scrollbar-track" data-for="fp-row-collections">
+        <div class="fp-scrollbar-thumb"></div>
+      </div>
     </div>
     {%- endif -%}
 
@@ -83,6 +90,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    /* ── Shuffle bestsellers within groups ── */
     document.querySelectorAll('#fp-row-bestsellers .fp-group').forEach(function (group) {
       var cards = Array.from(group.children);
       for (var i = cards.length - 1; i > 0; i--) {
@@ -91,6 +99,7 @@
       }
     });
 
+    /* ── Shuffle collection tiles ── */
     var collRow = document.getElementById('fp-row-collections');
     if (collRow) {
       var tiles = Array.from(collRow.children);
@@ -99,6 +108,52 @@
         collRow.insertBefore(tiles[j], tiles[i]);
       }
     }
+
+    /* ── Custom scrollbars ── */
+    document.querySelectorAll('.fp-scrollbar-track').forEach(function (track) {
+      var row = document.getElementById(track.dataset.for);
+      var thumb = track.querySelector('.fp-scrollbar-thumb');
+      if (!row || !thumb) return;
+
+      function update() {
+        var scrollable = row.scrollWidth - row.clientWidth;
+        if (scrollable <= 0) { track.style.display = 'none'; return; }
+        var thumbPct = (row.clientWidth / row.scrollWidth) * 100;
+        var leftPct  = (row.scrollLeft / scrollable) * (100 - thumbPct);
+        thumb.style.width = thumbPct + '%';
+        thumb.style.left  = leftPct + '%';
+      }
+
+      row.addEventListener('scroll', update);
+      window.addEventListener('resize', update);
+      update();
+
+      /* drag support */
+      var dragging = false, startX, startLeft;
+      thumb.addEventListener('mousedown', function (e) {
+        dragging = true;
+        startX = e.clientX;
+        startLeft = row.scrollLeft;
+        e.preventDefault();
+      });
+      document.addEventListener('mousemove', function (e) {
+        if (!dragging) return;
+        var trackW   = track.clientWidth;
+        var thumbW   = thumb.offsetWidth;
+        var scrollable = row.scrollWidth - row.clientWidth;
+        var dx = e.clientX - startX;
+        row.scrollLeft = startLeft + dx / (trackW - thumbW) * scrollable;
+      });
+      document.addEventListener('mouseup', function () { dragging = false; });
+
+      /* click on track to jump */
+      track.addEventListener('click', function (e) {
+        if (e.target === thumb) return;
+        var rect = track.getBoundingClientRect();
+        var ratio = (e.clientX - rect.left) / rect.width;
+        row.scrollLeft = ratio * (row.scrollWidth - row.clientWidth);
+      });
+    });
   });
 </script>
 
