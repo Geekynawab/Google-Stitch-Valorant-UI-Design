@@ -6,7 +6,7 @@
       <div class="hero-marquee__track">
         {%- for product in collections.all.products limit: 8 -%}
           {%- if product.featured_image -%}
-            <a href="{{ product.url }}" class="hero-marquee__tile" tabindex="-1">
+            <a href="{{ product.url }}" class="hero-marquee__tile">
               <img src="{{ product.featured_image | image_url: width: 480 }}" alt="{{ product.title | escape }}" loading="lazy" draggable="false">
             </a>
           {%- endif -%}
@@ -17,14 +17,7 @@
       <div class="hero-marquee__track">
         {%- for product in collections.all.products limit: 8 offset: 4 -%}
           {%- if product.featured_image -%}
-            <a href="{{ product.url }}" class="hero-marquee__tile" tabindex="-1">
-              <img src="{{ product.featured_image | image_url: width: 480 }}" alt="{{ product.title | escape }}" loading="lazy" draggable="false">
-            </a>
-          {%- endif -%}
-        {%- endfor -%}
-        {%- for product in collections.all.products limit: 4 -%}
-          {%- if product.featured_image -%}
-            <a href="{{ product.url }}" class="hero-marquee__tile" tabindex="-1">
+            <a href="{{ product.url }}" class="hero-marquee__tile">
               <img src="{{ product.featured_image | image_url: width: 480 }}" alt="{{ product.title | escape }}" loading="lazy" draggable="false">
             </a>
           {%- endif -%}
@@ -111,6 +104,7 @@
   padding: 48px 0;
 }
 .hero-marquee__row { overflow: hidden; width: 100%; }
+.hero-marquee__row:hover .hero-marquee__track { animation-play-state: paused; }
 .hero-marquee__track {
   display: flex;
   gap: 16px;
@@ -171,7 +165,9 @@
   position: relative; z-index: 2;
   display: flex; align-items: center; justify-content: space-between;
   gap: var(--space-12); padding: var(--space-24) 0;
+  pointer-events: none;
 }
+.hero-banner__content, .hero-banner__panel { pointer-events: auto; }
 .hero-banner__content { flex: 0 0 auto; max-width: 520px; }
 .hero-banner__eyebrow {
   display: inline-block; margin-bottom: var(--space-4);
