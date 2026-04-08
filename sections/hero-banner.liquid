@@ -1,16 +1,36 @@
 <section class="hero-banner" id="hero-banner-{{ section.id }}">
 
-  <!-- DomeGallery React mount point -->
-  <div id="dome-react-{{ section.id }}" class="dome-react-mount" aria-hidden="true"></div>
-
-  <!-- Hint -->
-  <div class="dome-drag-hint" id="dome-hint-{{ section.id }}" aria-hidden="true">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M6 9l6 6 6-6"/>
-      <circle cx="12" cy="5" r="2"/>
-      <path d="M4 20h16"/>
-    </svg>
-    <span>click any tile to shop</span>
+  <!-- Marquee background -->
+  <div class="hero-marquee" aria-hidden="true">
+    <div class="hero-marquee__row" id="marquee-row-1">
+      <div class="hero-marquee__track">
+        {%- for product in collections.all.products limit: 16 -%}
+          {%- if product.featured_image -%}
+            <a href="{{ product.url }}" class="hero-marquee__tile" tabindex="-1">
+              <img src="{{ product.featured_image | image_url: width: 480 }}" alt="{{ product.title | escape }}" loading="lazy" draggable="false">
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    <div class="hero-marquee__row hero-marquee__row--rev" id="marquee-row-2">
+      <div class="hero-marquee__track">
+        {%- for product in collections.all.products limit: 16 offset: 8 -%}
+          {%- if product.featured_image -%}
+            <a href="{{ product.url }}" class="hero-marquee__tile" tabindex="-1">
+              <img src="{{ product.featured_image | image_url: width: 480 }}" alt="{{ product.title | escape }}" loading="lazy" draggable="false">
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- for product in collections.all.products limit: 8 -%}
+          {%- if product.featured_image -%}
+            <a href="{{ product.url }}" class="hero-marquee__tile" tabindex="-1">
+              <img src="{{ product.featured_image | image_url: width: 480 }}" alt="{{ product.title | escape }}" loading="lazy" draggable="false">
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
   </div>
 
   <div class="hero-banner__overlay"></div>
@@ -68,98 +88,71 @@
   </div>
 </section>
 
-<!-- Shopify product data passed to React (outside raw block so Liquid processes it) -->
-<script id="dome-data-{{ section.id }}" type="application/json">
-{
-  "sectionId": {{ section.id | json }},
-  "images": [
-    {%- assign _first = true -%}
-    {%- for product in collections.all.products limit: 24 -%}
-      {%- if product.featured_image != blank -%}
-        {%- unless _first -%},{%- endunless -%}
-        {"src":{{ product.featured_image | image_url: width: 800 | json }},"alt":{{ product.title | json }},"url":{{ product.url | json }}}
-        {%- assign _first = false -%}
-      {%- endif -%}
-    {%- endfor -%}
-  ]
-}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.hero-marquee__track').forEach(function (track) {
+      /* duplicate tiles for seamless infinite loop */
+      track.innerHTML += track.innerHTML;
+    });
+  });
 </script>
 
 <style>
-/* ── Dome mount ─────────────────────────────────────────────────────── */
-.dome-react-mount {
+/* ── Marquee background ─────────────────────────────────────────────── */
+.hero-marquee {
   position: absolute;
-  inset: 0 -12vw;
+  inset: 0;
   z-index: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  overflow: hidden;
+  padding: 48px 0;
 }
-
-/* ── DomeGallery CSS (ReactBits) ────────────────────────────────────── */
-.sphere-root {
-  position: relative;
+.hero-marquee__row { overflow: hidden; width: 100%; }
+.hero-marquee__track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: marquee-fwd 45s linear infinite;
+}
+.hero-marquee__row--rev .hero-marquee__track {
+  animation: marquee-rev 45s linear infinite;
+}
+@keyframes marquee-fwd {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes marquee-rev {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+.hero-marquee__tile {
+  flex-shrink: 0;
+  display: block;
+  width: 260px;
+  height: 340px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: border-color 0.25s ease, transform 0.25s ease;
+  cursor: pointer;
+}
+.hero-marquee__tile:hover {
+  border-color: rgba(255,70,85,0.7);
+  transform: scale(1.04);
+  z-index: 1;
+}
+.hero-marquee__tile img {
   width: 100%;
   height: 100%;
-  --radius: 1500px;
-  --circ: calc(var(--radius) * 3.14159);
-  --rot-y: calc((360deg / var(--segments-x, 22)) / 2);
-  --rot-x: calc((360deg / var(--segments-y, 22)) / 2);
-  --item-width:  calc(var(--circ) / var(--segments-x, 22));
-  --item-height: calc(var(--circ) / var(--segments-y, 22));
-}
-.sphere-root * { box-sizing: border-box; }
-.sphere, .item, .item__image { transform-style: preserve-3d; }
-.sphere-main {
-  position: absolute; inset: 0;
-  display: grid; place-items: center;
-  overflow: hidden; touch-action: none;
-  user-select: none; -webkit-user-select: none;
-  background: transparent;
-}
-.stage {
-  width: 100%; height: 100%;
-  display: grid; place-items: center;
-  perspective: calc(var(--radius) * 2);
-  perspective-origin: 50% 50%;
-  contain: layout paint size;
-}
-.sphere {
-  transform: translateZ(calc(var(--radius) * -1));
-  will-change: transform;
-}
-.item {
-  width:  calc(var(--item-width)  * var(--item-size-x, 2));
-  height: calc(var(--item-height) * var(--item-size-y, 2));
-  position: absolute;
-  top: -999px; bottom: -999px; left: -999px; right: -999px;
-  margin: auto; transform-origin: 50% 50%;
-  backface-visibility: hidden;
+  object-fit: cover;
   pointer-events: none;
-  transform:
-    rotateY(calc(var(--rot-y) * (var(--offset-x, 0) + (var(--item-size-x, 2) - 1) / 2)))
-    rotateX(calc(var(--rot-x) * (var(--offset-y, 0) - (var(--item-size-y, 2) - 1) / 2)))
-    translateZ(var(--radius));
+  transition: filter 0.25s ease;
+  filter: brightness(0.55);
 }
-.item__image {
-  position: absolute; inset: 2px;
-  border-radius: var(--tile-radius, 12px);
-  overflow: hidden; backface-visibility: hidden;
-  pointer-events: auto; cursor: pointer;
-  transition: filter 0.2s ease;
-}
-.item__image:hover { filter: brightness(1.25); }
-.item__image img {
-  width: 100%; height: 100%; object-fit: cover;
-  pointer-events: none; backface-visibility: hidden;
-  filter: var(--image-filter, brightness(0.5));
-}
-.edge-fade { position: absolute; z-index: 5; pointer-events: none; }
-.edge-fade--top    { top: 0; left: 0; right: 0; height: 220px;
-  background: linear-gradient(to bottom, var(--overlay-blur-color, #000), transparent); }
-.edge-fade--bottom { bottom: 0; left: 0; right: 0; height: 220px;
-  background: linear-gradient(to top, var(--overlay-blur-color, #000), transparent); }
-.edge-fade--left   { top: 0; bottom: 0; left: 0; width: 10vw;
-  background: linear-gradient(to right, var(--overlay-blur-color, #000), transparent); }
-.edge-fade--right  { top: 0; bottom: 0; right: 0; width: 10vw;
-  background: linear-gradient(to left, var(--overlay-blur-color, #000), transparent); }
+.hero-marquee__tile:hover img { filter: brightness(0.85); }
 
 /* ── Hero layout ────────────────────────────────────────────────────── */
 .hero-banner {
@@ -169,7 +162,10 @@
 }
 .hero-banner__overlay {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+  background:
+    linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.35) 55%, transparent 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 30%),
+    linear-gradient(to top,   rgba(0,0,0,0.4) 0%, transparent 30%);
 }
 .hero-banner__inner {
   position: relative; z-index: 2;
@@ -232,6 +228,7 @@
 @media (max-width: 900px) {
   .hero-banner__inner { flex-direction: column; align-items: flex-start; }
   .hero-banner__panel { width: 100%; }
+  .hero-marquee__tile { width: 200px; height: 260px; }
 }
 
 /* ── Glitch animation ───────────────────────────────────────────────── */
@@ -254,244 +251,7 @@
 }
 .glitch::before { animation: glitch-1 4s infinite linear; }
 .glitch::after  { animation: glitch-2 4s infinite linear 0.1s; }
-
-/* ── Trust bar ──────────────────────────────────────────────────────── */
-.trust-bar { border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); padding: 0.75rem 0; background: var(--color-surface-container-low); }
-.trust-bar__list { display: flex; flex-wrap: wrap; justify-content: center; }
-.trust-bar__item { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1.5rem; }
-.trust-bar__item + .trust-bar__item { border-left: 1px solid var(--color-border); }
-.trust-bar__icon { color: var(--color-on-surface); opacity: 0.85; flex-shrink: 0; }
-.trust-bar__title { font-size: 0.75rem; font-weight: 700; color: var(--color-on-surface); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 0.1rem; }
-.trust-bar__text  { font-size: 0.7rem; color: var(--color-text-secondary); line-height: 1.4; }
-@media (max-width: 600px) {
-  .trust-bar__item + .trust-bar__item { border-left: none; border-top: 1px solid var(--color-border); }
-}
-
-/* ── Drag hint ──────────────────────────────────────────────────────── */
-.dome-drag-hint {
-  position: absolute; bottom: 1.75rem; left: 50%;
-  transform: translateX(-50%); z-index: 10;
-  color: rgba(255,255,255,0.92);
-  background: rgba(0,0,0,0.55);
-  border: 1px solid rgba(255,255,255,0.25);
-  padding: 0.55rem 1.25rem; border-radius: 999px;
-  display: flex; align-items: center; gap: 0.6rem;
-  font-size: 0.82rem; letter-spacing: 0.18em; text-transform: uppercase;
-  font-family: var(--font-headline, sans-serif);
-  pointer-events: none; white-space: nowrap;
-  transition: opacity 0.8s ease;
-  animation: dome-hint-float 3s ease-in-out infinite;
-}
-.dome-drag-hint.hidden { opacity: 0; }
-@keyframes dome-hint-float {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%       { transform: translateX(-50%) translateY(-6px); }
-}
 </style>
-
-{% raw %}
-<script type="text/babel" data-presets="react">
-(function () {
-  const { useEffect, useRef, useMemo, useCallback } = React;
-
-  const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
-  const wrapAngleSigned = (deg) => { const a = (((deg + 180) % 360) + 360) % 360; return a - 180; };
-
-  function buildItems(pool, seg) {
-    const xCols = Array.from({ length: seg }, (_, i) => -37 + i * 2);
-    const evenYs = [-4, -2, 0, 2, 4];
-    const oddYs  = [-3, -1, 1, 3, 5];
-    const coords = xCols.flatMap((x, c) => (c % 2 === 0 ? evenYs : oddYs).map(y => ({ x, y, sizeX: 1.4, sizeY: 1.4 })));
-    if (!pool.length) return coords.map(c => ({ ...c, src: '', alt: '', url: '#' }));
-    const used = Array.from({ length: coords.length }, (_, i) => pool[i % pool.length]);
-    for (let i = 1; i < used.length; i++) {
-      if (used[i].src === used[i - 1].src) {
-        for (let j = i + 1; j < used.length; j++) {
-          if (used[j].src !== used[i].src) { [used[i], used[j]] = [used[j], used[i]]; break; }
-        }
-      }
-    }
-    return coords.map((c, i) => ({ ...c, ...used[i] }));
-  }
-
-  function DomeGallery({ images, fit = 0.9, minRadius = 1500, segments = 22, maxVertVert = 20, sens = 20, damp = 2, blurColor = '#000000', tileRadius = '12px', grayscale = false, hintId }) {
-    const rootRef   = useRef(null);
-    const mainRef   = useRef(null);
-    const sphereRef = useRef(null);
-    const rot       = useRef({ x: 0, y: 0 });
-    const startRot  = useRef({ x: 0, y: 0 });
-    const startPos  = useRef(null);
-    const prevPos   = useRef(null);
-    const prevTime  = useRef(0);
-    const vel       = useRef({ x: 0, y: 0 });
-    const dragging  = useRef(false);
-    const moved     = useRef(false);
-    const inertiaId = useRef(null);
-    const autoId    = useRef(null);
-    const lastDrag  = useRef(0);
-
-    const items = useMemo(() => buildItems(images, segments), [images, segments]);
-
-    const applyTransform = useCallback((x, y) => {
-      if (sphereRef.current)
-        sphereRef.current.style.transform = `translateZ(calc(var(--radius) * -1)) rotateX(${x}deg) rotateY(${y}deg)`;
-    }, []);
-
-    /* ResizeObserver */
-    useEffect(() => {
-      const root = rootRef.current;
-      if (!root) return;
-      const ro = new ResizeObserver(([e]) => {
-        const { width: w, height: h } = e.contentRect;
-        const basis = w / h >= 1.3 ? w : Math.min(w, h);
-        const r = Math.max(basis * fit, minRadius);
-        root.style.setProperty('--radius', Math.round(r) + 'px');
-        root.style.setProperty('--segments-x', segments);
-        root.style.setProperty('--segments-y', segments);
-        root.style.setProperty('--overlay-blur-color', blurColor);
-        root.style.setProperty('--tile-radius', tileRadius);
-        root.style.setProperty('--image-filter', grayscale ? 'grayscale(1)' : 'brightness(0.5)');
-        applyTransform(rot.current.x, rot.current.y);
-      });
-      ro.observe(root);
-      return () => ro.disconnect();
-    }, [fit, minRadius, segments, blurColor, tileRadius, grayscale, applyTransform]);
-
-    /* Auto-rotate */
-    const stopAuto = useCallback(() => { if (autoId.current) { cancelAnimationFrame(autoId.current); autoId.current = null; } }, []);
-    const startAuto = useCallback(() => {
-      if (autoId.current) return;
-      const step = () => {
-        if (dragging.current) { autoId.current = null; return; }
-        rot.current.y = wrapAngleSigned(rot.current.y + 0.01);
-        applyTransform(rot.current.x, rot.current.y);
-        autoId.current = requestAnimationFrame(step);
-      };
-      autoId.current = requestAnimationFrame(step);
-    }, [applyTransform]);
-
-    /* Inertia */
-    const stopInertia = useCallback(() => { if (inertiaId.current) { cancelAnimationFrame(inertiaId.current); inertiaId.current = null; } }, []);
-    const startInertia = useCallback((vx, vy) => {
-      let iX = clamp(vx, -1.4, 1.4) * 80, iY = clamp(vy, -1.4, 1.4) * 80, frames = 0;
-      const d = clamp(damp, 0, 1), friction = 0.94 + 0.055 * d, thr = 0.015 - 0.01 * d, max = Math.round(90 + 270 * d);
-      stopInertia(); stopAuto();
-      const step = () => {
-        iX *= friction; iY *= friction;
-        if ((Math.abs(iX) < thr && Math.abs(iY) < thr) || ++frames > max) { inertiaId.current = null; startAuto(); return; }
-        const nx = clamp(rot.current.x - iY / 200, -maxVertVert, maxVertVert);
-        const ny = wrapAngleSigned(rot.current.y + iX / 200);
-        rot.current = { x: nx, y: ny };
-        applyTransform(nx, ny);
-        inertiaId.current = requestAnimationFrame(step);
-      };
-      inertiaId.current = requestAnimationFrame(step);
-    }, [damp, maxVertVert, stopInertia, stopAuto, startAuto, applyTransform]);
-
-    /* Pointer events (replaces @use-gesture/react) */
-    useEffect(() => {
-      const el = mainRef.current;
-      if (!el) return;
-      const onDown = (e) => {
-        stopInertia(); stopAuto();
-        dragging.current = true; moved.current = false;
-        startRot.current = { ...rot.current };
-        startPos.current = prevPos.current = { x: e.clientX, y: e.clientY };
-        prevTime.current = performance.now(); vel.current = { x: 0, y: 0 };
-        if (hintId) { const h = document.getElementById(hintId); if (h) h.classList.add('hidden'); }
-      };
-      const onMove = (e) => {
-        if (!dragging.current || !startPos.current) return;
-        const dx = e.clientX - startPos.current.x, dy = e.clientY - startPos.current.y;
-        if (!moved.current && dx * dx + dy * dy > 16) moved.current = true;
-        const dt = Math.max(1, performance.now() - prevTime.current);
-        vel.current = { x: (e.clientX - prevPos.current.x) / dt, y: (e.clientY - prevPos.current.y) / dt };
-        prevPos.current = { x: e.clientX, y: e.clientY }; prevTime.current = performance.now();
-        rot.current = {
-          x: clamp(startRot.current.x - dy / sens, -maxVertVert, maxVertVert),
-          y: wrapAngleSigned(startRot.current.y + dx / sens)
-        };
-        applyTransform(rot.current.x, rot.current.y);
-      };
-      const onUp = () => {
-        if (!dragging.current) return;
-        dragging.current = false;
-        const { x: vx, y: vy } = vel.current;
-        if (moved.current && (Math.abs(vx) > 0.01 || Math.abs(vy) > 0.01)) { lastDrag.current = performance.now(); startInertia(vx, vy); }
-        else startAuto();
-        moved.current = false;
-      };
-      el.addEventListener('pointerdown', onDown, { passive: true });
-      document.addEventListener('pointermove', onMove, { passive: true });
-      document.addEventListener('pointerup', onUp);
-      return () => {
-        el.removeEventListener('pointerdown', onDown);
-        document.removeEventListener('pointermove', onMove);
-        document.removeEventListener('pointerup', onUp);
-      };
-    }, [sens, maxVertVert, stopInertia, stopAuto, startInertia, startAuto, applyTransform, hintId]);
-
-    /* Init */
-    useEffect(() => {
-      applyTransform(0, 0); startAuto();
-      return () => { stopInertia(); stopAuto(); };
-    }, [applyTransform, startAuto, stopInertia, stopAuto]);
-
-    const onTileClick = useCallback((e, url) => {
-      if (moved.current) return;
-      if (performance.now() - lastDrag.current < 80) return;
-      e.stopPropagation();
-      window.location.href = url;
-    }, []);
-
-    return (
-      <div ref={rootRef} className="sphere-root">
-        <main ref={mainRef} className="sphere-main">
-          <div className="stage">
-            <div ref={sphereRef} className="sphere">
-              {items.map((it, i) => it.src ? (
-                <div key={`${it.x},${it.y},${i}`} className="item" style={{ '--offset-x': it.x, '--offset-y': it.y, '--item-size-x': it.sizeX, '--item-size-y': it.sizeY }}>
-                  <div className="item__image" onClick={(e) => onTileClick(e, it.url)}>
-                    <img src={it.src} alt={it.alt} draggable={false} loading="lazy" />
-                  </div>
-                </div>
-              ) : null)}
-            </div>
-          </div>
-          <div className="edge-fade edge-fade--top" />
-          <div className="edge-fade edge-fade--bottom" />
-          <div className="edge-fade edge-fade--left" />
-          <div className="edge-fade edge-fade--right" />
-        </main>
-      </div>
-    );
-  }
-
-  /* Mount all uninitialized dome galleries on the page */
-  document.querySelectorAll('script[id^="dome-data-"]:not([data-initialized])').forEach(dataEl => {
-    dataEl.setAttribute('data-initialized', 'true');
-    const { sectionId, images } = JSON.parse(dataEl.textContent);
-    const container = document.getElementById('dome-react-' + sectionId);
-    if (!container || !images.length) return;
-    ReactDOM.createRoot(container).render(
-      <DomeGallery
-        images={images}
-        fit={0.9}
-        minRadius={1500}
-        segments={22}
-        maxVertVert={20}
-        sens={20}
-        damp={2}
-        blurColor="#000000"
-        tileRadius="12px"
-        grayscale={false}
-        hintId={'dome-hint-' + sectionId}
-      />
-    );
-  });
-})();
-</script>
-{% endraw %}
 
 {% schema %}
 {
