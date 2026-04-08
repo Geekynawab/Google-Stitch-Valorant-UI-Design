@@ -1,0 +1,65 @@
+{%- assign product_handle = request.path | split: '/' | last -%}
+{%- assign lore_product = shop.products | where: 'handle', product_handle | first -%}
+
+<div class="lore-detail">
+  <div class="container">
+    {%- if lore_product -%}
+      {%- if lore_product.metafields.custom.lore -%}
+        <div class="lore-detail__wrapper">
+          <!-- Left: Product Image -->
+          <div class="lore-detail__image-section">
+            {%- if lore_product.featured_image -%}
+              <img
+                src="{{ lore_product.featured_image | image_url: width: 600 }}"
+                alt="{{ lore_product.title }}"
+                class="lore-detail__image"
+                loading="eager">
+            {%- endif -%}
+          </div>
+
+          <!-- Right: Lore Content & Shop Button -->
+          <div class="lore-detail__content-section">
+            <div class="lore-detail__breadcrumb">
+              <a href="/lore">← Back to Lore</a>
+            </div>
+
+            <h1 class="lore-detail__title">{{ lore_product.title }}</h1>
+
+            {%- if lore_product.collections.first -%}
+              <p class="lore-detail__collection">{{ lore_product.collections.first.title }}</p>
+            {%- endif -%}
+
+            <div class="lore-detail__text">
+              {{ lore_product.metafields.custom.lore }}
+            </div>
+
+            <a
+              href="{{ lore_product.url }}"
+              class="lore-detail__shop-button button button--primary">
+              Shop Now
+            </a>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="lore-detail__error">
+          <p>This product doesn't have lore information yet.</p>
+          <a href="/lore">← Back to Lore Index</a>
+        </div>
+      {%- endif -%}
+    {%- else -%}
+      <div class="lore-detail__error">
+        <h2>Lore Not Found</h2>
+        <p>This weapon's lore couldn't be found.</p>
+        <a href="/lore">← Back to Lore Index</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Lore Detail",
+  "limit": 1,
+  "settings": []
+}
+{% endschema %}
