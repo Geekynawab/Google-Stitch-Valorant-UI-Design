@@ -826,7 +826,7 @@ body.template-policies #main-content * { text-align: left !important; }
   gap: var(--space-4);
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 0;
   scrollbar-width: none;
@@ -850,7 +850,7 @@ body.template-policies #main-content * { text-align: left !important; }
   background: var(--color-primary);
   border-radius: 7px;
   cursor: grab;
-  transition: left 0.05s linear;
+  will-change: left, width;
 }
 .fp-scrollbar-thumb:active { cursor: grabbing; }
 .fp-scroll-row .product-card {

@@ -115,43 +115,65 @@
       var thumb = track.querySelector('.fp-scrollbar-thumb');
       if (!row || !thumb) return;
 
-      function update() {
+      var currentLeft = 0, targetLeft = 0, currentWidth = 0, rafId = null;
+
+      function getMetrics() {
         var scrollable = row.scrollWidth - row.clientWidth;
-        if (scrollable <= 0) { track.style.display = 'none'; return; }
+        if (scrollable <= 0) return null;
         var thumbPct = (row.clientWidth / row.scrollWidth) * 100;
         var leftPct  = (row.scrollLeft / scrollable) * (100 - thumbPct);
-        thumb.style.width = thumbPct + '%';
-        thumb.style.left  = leftPct + '%';
+        return { thumbPct: thumbPct, leftPct: leftPct };
       }
 
-      row.addEventListener('scroll', update);
-      window.addEventListener('resize', update);
-      update();
+      function loop() {
+        var m = getMetrics();
+        if (!m) { track.style.display = 'none'; return; }
+        track.style.display = '';
+        /* lerp towards target for fluid feel */
+        currentLeft  += (m.leftPct  - currentLeft)  * 0.18;
+        currentWidth += (m.thumbPct - currentWidth)  * 0.18;
+        thumb.style.width = currentWidth + '%';
+        thumb.style.left  = currentLeft  + '%';
+        rafId = requestAnimationFrame(loop);
+      }
 
-      /* drag support */
-      var dragging = false, startX, startLeft;
+      function startLoop() {
+        if (!rafId) loop();
+      }
+      function stopLoop() {
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      }
+
+      /* init */
+      var m0 = getMetrics();
+      if (m0) { currentLeft = m0.leftPct; currentWidth = m0.thumbPct; }
+      startLoop();
+      window.addEventListener('resize', function () {
+        stopLoop(); startLoop();
+      });
+
+      /* drag */
+      var dragging = false, startX, startScrollLeft;
       thumb.addEventListener('mousedown', function (e) {
         dragging = true;
         startX = e.clientX;
-        startLeft = row.scrollLeft;
+        startScrollLeft = row.scrollLeft;
         e.preventDefault();
       });
       document.addEventListener('mousemove', function (e) {
         if (!dragging) return;
-        var trackW   = track.clientWidth;
-        var thumbW   = thumb.offsetWidth;
         var scrollable = row.scrollWidth - row.clientWidth;
         var dx = e.clientX - startX;
-        row.scrollLeft = startLeft + dx / (trackW - thumbW) * scrollable;
+        row.scrollLeft = startScrollLeft + dx / (track.clientWidth - thumb.offsetWidth) * scrollable;
       });
       document.addEventListener('mouseup', function () { dragging = false; });
 
-      /* click on track to jump */
+      /* click track to smooth-scroll */
       track.addEventListener('click', function (e) {
         if (e.target === thumb) return;
         var rect = track.getBoundingClientRect();
         var ratio = (e.clientX - rect.left) / rect.width;
-        row.scrollLeft = ratio * (row.scrollWidth - row.clientWidth);
+        row.scrollTo({ left: ratio * (row.scrollWidth - row.clientWidth), behavior: 'smooth' });
       });
     });
   });
