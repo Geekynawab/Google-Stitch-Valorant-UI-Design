@@ -4,10 +4,6 @@
       "type": "hero-banner",
       "settings": {}
     },
-    "weapon-categories": {
-      "type": "weapon-categories",
-      "settings": {}
-    },
     "trust": {
       "type": "trust-bar",
       "settings": {}
@@ -16,18 +12,37 @@
       "type": "category-grid",
       "block_order": ["cat_1","cat_2","cat_3","cat_4"],
       "blocks": {
-        "cat_1": { "type": "category", "settings": { "title": "KARAMBITS" } },
-        "cat_2": { "type": "category", "settings": { "title": "BUTTERFLY KNIVES" } },
-        "cat_3": { "type": "category", "settings": { "title": "BAYONETS" } },
-        "cat_4": { "type": "category", "settings": { "title": "KEYCHAINS" } }
+        "cat_1": { "type": "category", "settings": { "title": "KARAMBITS", "url": "/collections/karambit" } },
+        "cat_2": { "type": "category", "settings": { "title": "BUTTERFLY KNIVES", "url": "/collections/butterfly-knives" } },
+        "cat_3": { "type": "category", "settings": { "title": "DUAL WIELD", "url": "/collections/dual-wield" } },
+        "cat_4": { "type": "category", "settings": { "title": "KEYCHAINS", "url": "/collections/keychains-1" } }
       }
     },
     "featured": {
       "type": "featured-products",
       "settings": {
-        "eyebrow": "Deployment Ready",
         "heading": "BESTSELLERS",
-        "product_count": 4
+        "heading_2": "SHOP BY COLLECTION"
+      },
+      "block_order": ["pg_knives_1","pg_knives_2","pg_rifles","pg_keychains","coll_1","coll_2","coll_3","coll_4","coll_5","coll_6","coll_7","coll_8","coll_9","coll_10","coll_11","coll_12","coll_13"],
+      "blocks": {
+        "pg_knives_1": { "type": "product_group", "settings": { "collection": "karambit",        "limit": 3 } },
+        "pg_knives_2": { "type": "product_group", "settings": { "collection": "butterfly-knives","limit": 2 } },
+        "pg_rifles":   { "type": "product_group", "settings": { "collection": "rifles",          "limit": 3 } },
+        "pg_keychains":{ "type": "product_group", "settings": { "collection": "keychains-1",     "limit": 3 } },
+        "coll_1":  { "type": "collection_link", "settings": { "collection": "champions",        "label": "CHAMPIONS" } },
+        "coll_2":  { "type": "collection_link", "settings": { "collection": "elderflame",       "label": "ELDERFLAME" } },
+        "coll_3":  { "type": "collection_link", "settings": { "collection": "glitchpop",        "label": "GLITCHPOP" } },
+        "coll_4":  { "type": "collection_link", "settings": { "collection": "imperium",         "label": "IMPERIUM" } },
+        "coll_5":  { "type": "collection_link", "settings": { "collection": "oni",              "label": "ONI" } },
+        "coll_6":  { "type": "collection_link", "settings": { "collection": "prelude-to-chaos", "label": "PRELUDE TO CHAOS" } },
+        "coll_7":  { "type": "collection_link", "settings": { "collection": "prime",            "label": "PRIME" } },
+        "coll_8":  { "type": "collection_link", "settings": { "collection": "reaver",           "label": "REAVER" } },
+        "coll_9":  { "type": "collection_link", "settings": { "collection": "recon",            "label": "RECON" } },
+        "coll_10": { "type": "collection_link", "settings": { "collection": "rgx",              "label": "RGX" } },
+        "coll_11": { "type": "collection_link", "settings": { "collection": "singularity",      "label": "SINGULARITY" } },
+        "coll_12": { "type": "collection_link", "settings": { "collection": "valorant-go-vol-1","label": "VALORANT GO! VOL.1" } },
+        "coll_13": { "type": "collection_link", "settings": { "collection": "xerohunter",       "label": "XEROHUNTER" } }
       }
     },
     "model-showcase": {
@@ -42,5 +57,5 @@
       }
     }
   },
-  "order": ["hero","weapon-categories","trust","categories","featured","model-showcase"]
+  "order": ["hero","trust","categories","featured","model-showcase"]
 }
