@@ -4,7 +4,7 @@
   <div class="hero-marquee" aria-hidden="true">
     <div class="hero-marquee__row" id="marquee-row-1">
       <div class="hero-marquee__track">
-        {%- for product in collections.all.products limit: 16 -%}
+        {%- for product in collections.all.products limit: 8 -%}
           {%- if product.featured_image -%}
             <a href="{{ product.url }}" class="hero-marquee__tile" tabindex="-1">
               <img src="{{ product.featured_image | image_url: width: 480 }}" alt="{{ product.title | escape }}" loading="lazy" draggable="false">
@@ -15,14 +15,14 @@
     </div>
     <div class="hero-marquee__row hero-marquee__row--rev" id="marquee-row-2">
       <div class="hero-marquee__track">
-        {%- for product in collections.all.products limit: 16 offset: 8 -%}
+        {%- for product in collections.all.products limit: 8 offset: 4 -%}
           {%- if product.featured_image -%}
             <a href="{{ product.url }}" class="hero-marquee__tile" tabindex="-1">
               <img src="{{ product.featured_image | image_url: width: 480 }}" alt="{{ product.title | escape }}" loading="lazy" draggable="false">
             </a>
           {%- endif -%}
         {%- endfor -%}
-        {%- for product in collections.all.products limit: 8 -%}
+        {%- for product in collections.all.products limit: 4 -%}
           {%- if product.featured_image -%}
             <a href="{{ product.url }}" class="hero-marquee__tile" tabindex="-1">
               <img src="{{ product.featured_image | image_url: width: 480 }}" alt="{{ product.title | escape }}" loading="lazy" draggable="false">
@@ -115,10 +115,10 @@
   display: flex;
   gap: 16px;
   width: max-content;
-  animation: marquee-fwd 45s linear infinite;
+  animation: marquee-fwd 80s linear infinite;
 }
 .hero-marquee__row--rev .hero-marquee__track {
-  animation: marquee-rev 45s linear infinite;
+  animation: marquee-rev 80s linear infinite;
 }
 @keyframes marquee-fwd {
   from { transform: translateX(0); }
