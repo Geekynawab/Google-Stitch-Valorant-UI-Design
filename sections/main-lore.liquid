@@ -1,21 +1,17 @@
-{% paginate shop.products by 250 %}
+{% paginate collections.all.products by 250 %}
 
-<!-- DEBUG: total products in page = {{ shop.products.size }}, paginate count = {{ paginate.items }} -->
-{% for product in shop.products limit: 1 %}
-<!-- DEBUG: first product = {{ product.title }}, lore = {{ product.metafields.custom.lore | truncate: 80 }}, all metafields = {{ product.metafields | json | truncate: 200 }} -->
-{% endfor %}
 
 <script type="application/json" id="lore-products-data">
   [
-    {% for product in shop.products %}
-      {% if product.metafields.custom.lore != blank %}
+    {% for product in collections.all.products %}
+      {% if product.metafields.custom.fun_fact.value != blank %}
       {
         "handle": {{ product.handle | json }},
         "title": {{ product.title | json }},
         "url": {{ product.url | json }},
         "image": {{ product.featured_image | image_url: width: 700 | json }},
         "thumb": {{ product.featured_image | image_url: width: 320 | json }},
-        "lore": {{ product.metafields.custom.lore | json }},
+        "lore": {{ product.metafields.custom.fun_fact.value | json }},
         "collection": {{ product.collections.first.title | default: '' | json }}
       },
       {% endif %}
@@ -53,7 +49,7 @@
         <p id="lore-detail-collection" class="lore-detail__collection"></p>
         <h1 id="lore-detail-title" class="lore-detail__title"></h1>
         <div id="lore-detail-text" class="lore-detail__text"></div>
-        <a id="lore-detail-shop" href="#" class="lore-detail__shop-button">Shop Now</a>
+        <a id="lore-detail-shop" href="#" class="btn-primary btn-clip">Shop Now</a>
       </div>
     </div>
   </div>
@@ -75,17 +71,18 @@
       emptyMsg.style.display = 'block';
       return;
     }
-    grid.innerHTML = products.map(function (p) {
-      var excerpt = p.lore.length > 120 ? p.lore.substring(0, 120) + '…' : p.lore;
-      var img = p.thumb ? '<img src="' + p.thumb + '" alt="' + p.title + '" loading="lazy">' : '';
-      return '<div class="lore-index__card">'
-        + '<div class="lore-index__image">' + img + '</div>'
-        + '<div class="lore-index__content">'
-        + '<h3 class="lore-index__product-name">' + p.title + '</h3>'
+    grid.innerHTML = products.map(function (p, i) {
+      var excerpt = p.lore.length > 200 ? p.lore.substring(0, 200) + '…' : p.lore;
+      var img = p.thumb ? '<div class="lore-index__image"><img src="' + p.thumb + '" alt="' + p.title + '" loading="lazy"></div>' : '';
+      var num = String(i + 1).padStart(2, '0');
+      return '<a href="#' + p.handle + '" class="lore-index__card">'
+        + img
+        + '<div class="lore-index__card-content" data-index="' + num + '">'
         + (p.collection ? '<p class="lore-index__collection">' + p.collection + '</p>' : '')
+        + '<h3 class="lore-index__product-name">' + p.title + '</h3>'
         + '<p class="lore-index__excerpt">' + excerpt + '</p>'
-        + '<a href="#' + p.handle + '" class="lore-index__link">Read Lore</a>'
-        + '</div></div>';
+        + '<span class="lore-index__link">Read Lore →</span>'
+        + '</div></a>';
     }).join('');
   }
 
