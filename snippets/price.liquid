@@ -11,7 +11,8 @@
   {%- assign compare_at = price | times: 10 | divided_by: 7 -%}
 {%- endunless -%}
 
-<span class="product-card__price">{{ price | money }}</span>
-<span class="product-card__compare-price" style="color:rgba(217,227,242,0.4);text-decoration:line-through;font-size:0.875rem;margin-left:0.5rem;">
-  {{ compare_at | money }}
+<span style="display:inline-flex;align-items:center;gap:0.25rem;flex-wrap:wrap;">
+  <span class="product-card__price">{{ price | money }}</span>
+  <span class="product-card__compare-price" style="color:rgba(217,227,242,0.75);text-decoration:line-through;font-size:1rem;">{{ compare_at | money }}</span>
+  <span class="launch-offer-badge" style="margin-left:0.6rem;">Launch Offer</span>
 </span>
