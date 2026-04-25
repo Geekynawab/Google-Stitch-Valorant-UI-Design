@@ -1062,7 +1062,7 @@ body.template-policies #main-content * { text-align: left !important; }
   background: rgba(255,215,0,0.1);
   border-color: rgba(255,215,0,0.4);
 }
-.volume-discount__label { font-size: 0.82rem; color: var(--color-text-secondary); }
+.volume-discount__label { font-size: 0.95rem; color: #fff; font-weight: 700; letter-spacing: 0.03em; }
 .volume-discount__divider { width: 1px; height: 24px; background: var(--color-border); margin: 0 var(--space-2); }
 
 /* ── FAQ Page ─────────────────────────────────────────────────── */
